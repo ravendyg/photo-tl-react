@@ -9,6 +9,17 @@ import {TodoApp} from './components/TodoApp.tsx';
 // const TodoApp = require('./components/TodoApp.tsx');
 
 // reducers
+const nextTodo = (state = 0, action: IAction) => {
+    switch (action.type) {
+        
+        case consts.ADD_TODO:
+            return state+1;
+            
+        default:
+            return state
+    }
+};
+
 const todo = (state, action: IAction) => {
     switch (action.type) {
         
@@ -88,6 +99,7 @@ const visibilityFilter = (state = consts.SHOW_ALL, action: IAction) => {
 // }
 
 const todoApp = Redux.combineReducers({
+    nextTodo,
     todos,
     visibilityFilter
 });

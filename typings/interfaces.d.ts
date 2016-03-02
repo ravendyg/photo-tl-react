@@ -24,6 +24,7 @@ interface IRedux {
 interface ReactComponent {
     new (args?: any []): ReactComponent;   
     props: any; 
+    input: HTMLInputElement;
 }
 
 interface IReact {

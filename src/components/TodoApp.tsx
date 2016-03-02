@@ -7,7 +7,7 @@ const React: IReact = vendor.React;
 const store: IStore = require('./../store.ts');
 
 
-let nextTodo = 0;
+// let nextTodo = 0;
 
 export class TodoApp extends React.Component {
     constructor () {
@@ -17,22 +17,28 @@ export class TodoApp extends React.Component {
     render () {
         return (
             <div>
+                <input ref={node => {
+                    this.input = node;
+                }} />
                 <button onClick={() => {
                     store.dispatch({
                         type: 'ADD_TODO',
                         payload: {
-                            text: 'test',
-                            id: nextTodo++
+                            text: this.input.value,
+                            id: store.getState().nextTodo
                         }
                     });
+                    this.input.value = '';
                 }}>
                     Add Todo
                 </button>
-                {store.getState().todos.map(todo => 
-                    <li key={todo.id}>
-                        {todo.text}
-                    </li>
-                )}
+                <ul>
+                    {store.getState().todos.map(todo => 
+                        <li key={todo.id}>
+                            {todo.text}
+                        </li>
+                    )}
+                </ul>
             </div>
         );
     }
