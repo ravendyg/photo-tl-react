@@ -8,9 +8,11 @@ var debug = process.env.NODE_ENV !== "production";
 var webpack = require('webpack');
 var path = require('path')
 
+console.log(NODE_ENV);
+
 module.exports = {  
     entry: {
-      app: './src/app.tsx',
+      app: './src/todo.tsx',
       vendor: './src/vendor.tsx'  
     },
     output: {

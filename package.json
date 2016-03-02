@@ -11,6 +11,7 @@
   "devDependencies": {
     "babel-core": "^6.5.2",
     "babel-loader": "^6.2.4",
+    "express": "^4.13.4",
     "jasmine": "^2.4.1",
     "jasmine-webpack-plugin": "^0.1.1",
     "react": "^0.14.7",
