@@ -13,9 +13,7 @@ import {TodoApp} from './components/TodoApp.tsx';
 // view
 const render = () => {
     ReactDom.render(
-        <TodoApp
-            todos={store.getState().todos}
-        />,
+        <TodoApp />,
         document.getElementById(`root`)
     );
 };

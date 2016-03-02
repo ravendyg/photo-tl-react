@@ -1,12 +1,13 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-export = {
-    // actions
-    ADD_TODO: `ADD_TODO`,
-    TOGGLE_TODO: `TOGGLE_TODO`,
-    SET_VISIBITY_FILTER: `SET_VISIBITY_FILTER`,
-    
-    SHOW_COMPLETED: `SHOW_COMPLETED`,
-    SHOW_ACTIVE: `SHOW_ACTIVE`,
-    SHOW_ALL: `SHOW_ALL`
-};
+export enum Actions {
+    ADD_TODO = 0,
+    TOGGLE_TODO = 1,
+    SET_VISIBITY_FILTER = 2
+}
+
+export enum Filters {
+    SHOW_ALL = 0,    
+    SHOW_ACTIVE = 1,
+    SHOW_COMPLETED = 2   
+}

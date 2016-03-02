@@ -3,7 +3,8 @@
 const Redux: IRedux = vendor.Redux;
 
 const polyfils = require('./utils/polyfils.ts');
-const consts = require('./consts.ts');
+const actions: Actions = require('./consts.ts').Actions;
+const filters: Filters = require('./consts.ts').Filters;
 
 import {TodoApp} from './components/TodoApp.tsx';
 // const TodoApp = require('./components/TodoApp.tsx');
@@ -12,7 +13,7 @@ import {TodoApp} from './components/TodoApp.tsx';
 const nextTodo = (state = 0, action: IAction) => {
     switch (action.type) {
         
-        case consts.ADD_TODO:
+        case actions.ADD_TODO:
             return state+1;
             
         default:
@@ -23,14 +24,14 @@ const nextTodo = (state = 0, action: IAction) => {
 const todo = (state, action: IAction) => {
     switch (action.type) {
         
-        case consts.ADD_TODO:
+        case actions.ADD_TODO:
             return {
                 id: action.payload.id,
                 text: action.payload.text,
                 completed: false
             }
             
-        case consts.TOGGLE_TODO:
+        case actions.TOGGLE_TODO:
             if (state.id === action.payload.id) {
                 return polyfils.objectAssign({}, [state, {completed: !state.completed}]);
             } else {
@@ -45,13 +46,13 @@ const todo = (state, action: IAction) => {
 const todos = (state = [], action: IAction) => {
     switch (action.type) {
         
-        case consts.ADD_TODO:
+        case actions.ADD_TODO:
             return [
                 ...state,
                 todo(undefined, action)                
             ];
             
-        case consts.TOGGLE_TODO:
+        case actions.TOGGLE_TODO:
             return state.map( t => todo(t, action));
     
         default:
@@ -59,10 +60,10 @@ const todos = (state = [], action: IAction) => {
     }   
 };
 
-const visibilityFilter = (state = consts.SHOW_ALL, action: IAction) => {
+const visibilityFilter = (state = filters.SHOW_ALL, action: IAction) => {
     switch (action.type) {
         
-        case consts.SET_VISIBITY_FILTER:
+        case actions.SET_VISIBITY_FILTER:
             return action.payload.filter;
                 
         default:
