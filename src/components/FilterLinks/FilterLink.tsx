@@ -1,12 +1,11 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/tsd.d.ts" />
 
 // vendor
 const React: IReact = vendor.React;
 
 // data
-const store: IStore = require('./../store.ts');
-const actions: Actions = require('./../consts.ts').Actions;
-const filters: Filters = require('./../consts.ts').Filters;
+const store: IStore = require('./../../store.ts');
+const actions: Actions = require('./../../consts.ts').Actions;
 
 export class FilterLink extends React.Component {
     private _filter: Filters;
