@@ -15,34 +15,14 @@ const filterLinkNames = [`All`, `Active`, `Completed`];
 
 // let nextTodo = 0;
 
-const getVisibleTodos = (todos: ITodo [], filter) => {
-    switch (filter) {
-        
-        case filters.SHOW_ALL:
-            return todos;
-            
-        case filters.SHOW_COMPLETED:
-            return todos.filter(t=>t.completed);
-            
-        case filters.SHOW_ACTIVE:
-            return todos.filter(t=>!t.completed);
-    
-        default:
-            return todos;
-    }
-}
-
 export class TodoApp extends React.Component {    
     constructor () {
         super();        
     }
     
     render () {
-        const _todos = getVisibleTodos(
-            store.getState().todos,
-            store.getState().visibilityFilter
-        );
         
+        const q = store.getState().todos;
         return (
             <div>
                 <input ref={node => {
@@ -60,33 +40,22 @@ export class TodoApp extends React.Component {
                 }}>
                     Add Todo
                 </button>
-                <ul>
-                    {_todos.map(todo => 
-                        <li key={todo.id}
-                            onClick={() => {
-                                store.dispatch({
-                                    type: actions.TOGGLE_TODO,
-                                    payload: {
-                                        id: todo.id
-                                    }
-                                });
-                            }}
-                            style={{
-                                textDecoration: todo.completed ? 'line-through' : 'none'
-                            }}>
-                            {todo.text}
-                        </li>
-                    )}
-                </ul>
+                <TodoList todos={q}/>
                 <p>
                     Show:
-                    {filterLinkNames.map((mode, index) => 
-                        <FilterLink
-                            key={index}
-                            filter={index}
-                            children={mode}
-                        />
-                    )}   
+                    {filterLinkNames.map((mode, index) => {
+                        if (store.getState().visibilityFilter !== index) { return (
+                            <FilterLink
+                                key={index}
+                                filter={index}
+                                children={mode}
+                            />
+                        )} else { return (
+                            <span>
+                                {` ${mode}`}
+                            </span>
+                        )}
+                    })}   
                 </p>                    
             </div>
         );
