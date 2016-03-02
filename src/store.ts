@@ -3,9 +3,10 @@
 const Redux: IRedux = vendor.Redux;
 
 const polyfils = require('./utils/polyfils.ts');
-import {consts} from './consts.ts';
+const consts = require('./consts.ts');
 
 import {TodoApp} from './components/TodoApp.tsx';
+// const TodoApp = require('./components/TodoApp.tsx');
 
 // reducers
 const todo = (state, action: IAction) => {
