@@ -26,9 +26,7 @@ const getVisibleTodos = (todos: ITodo [], filter) => {
 }
 
 export class TodoList extends React.Component {
-    constructor () {
-        super();    
-    }
+    constructor () { super(); }
     
     render () {
         const _todos = getVisibleTodos(

@@ -8,20 +8,12 @@ const store: IStore = require('./../../store.ts');
 const actions: Actions = require('./../../consts.ts').Actions;
 
 export class FilterLink extends React.Component {
-    private _filter: Filters;
-    private _children: string;
-    
-    constructor ({
-        filter,
-        children
-    }) {
-        super();
-        this._filter = filter;
-        this._children = children;        
-    }
+    constructor () { super(); }
     
     render () {
-        var self = this;
+        const filter = this.props.filter;
+        const children = this.props.children;
+        
         return (
             <span>
                 {' '}
@@ -31,12 +23,12 @@ export class FilterLink extends React.Component {
                         store.dispatch({
                             type: actions.SET_VISIBITY_FILTER,
                             payload: {
-                                filter: self._filter
+                                filter: filter
                             }
                         });
                     }}
                 >
-                    {self._children}
+                    {children}
                 </a>
             </span>
         );

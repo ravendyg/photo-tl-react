@@ -8,10 +8,7 @@ const store: IStore = require('./../../store.ts');
 const actions: Actions = require('./../../consts.ts').Actions;
 
 export class NewTodo extends React.Component {
-    
-    constructor () {
-        super();       
-    }
+    constructor () { super(); }
     
     render () {
         return (

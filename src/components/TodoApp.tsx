@@ -13,9 +13,7 @@ import {TodoList} from './Todos/TodoList.tsx';
 import {FilterLinks} from './FilterLinks/FilterLinks.tsx';
 
 export class TodoApp extends React.Component {    
-    constructor () {
-        super();        
-    }
+    constructor () { super(); }
     
     render () {
         

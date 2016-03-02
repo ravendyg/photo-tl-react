@@ -11,9 +11,7 @@ import {FilterLink} from './FilterLink.tsx';
 const filterLinkNames = [`All`, `Active`, `Completed`];
 
 export class FilterLinks extends React.Component {
-    constructor () {
-        super();        
-    }
+    constructor () { super(); }
     
     render () {
         return (
@@ -27,7 +25,7 @@ export class FilterLinks extends React.Component {
                             children={mode}
                         />
                     )} else { return (
-                        <span>
+                        <span key={index}>
                             {` ${mode}`}
                         </span>
                     )}
