@@ -10,7 +10,7 @@ import {TodoApp} from './components/TodoApp.tsx';
 // const TodoApp = require('./components/TodoApp.tsx');
 
 // reducers
-const nextTodo = (state = 0, action: IAction) => {
+const nextTodo = (state = 0, action: ActionType) => {
     switch (action.type) {
         
         case actions.ADD_TODO:
@@ -21,7 +21,7 @@ const nextTodo = (state = 0, action: IAction) => {
     }
 };
 
-const todo = (state, action: IAction) => {
+const todo = (state, action: ActionType) => {
     switch (action.type) {
         
         case actions.ADD_TODO:
@@ -43,7 +43,7 @@ const todo = (state, action: IAction) => {
     }
 };
 
-const todos = (state = [], action: IAction) => {
+const todos = (state = [], action: ActionType) => {
     switch (action.type) {
         
         case actions.ADD_TODO:
@@ -60,7 +60,7 @@ const todos = (state = [], action: IAction) => {
     }   
 };
 
-const visibilityFilter = (state = filters.SHOW_ALL, action: IAction) => {
+const visibilityFilter = (state = filters.SHOW_ALL, action: ActionType) => {
     switch (action.type) {
         
         case actions.SET_VISIBITY_FILTER:
@@ -71,7 +71,7 @@ const visibilityFilter = (state = filters.SHOW_ALL, action: IAction) => {
     }
 };
 
-// const todoApp = (state: ITodoApp = {}, action: IAction) => {
+// const todoApp = (state: ITodoApp = {}, action: ActionType) => {
 //     return {
 //         todos: todos (
 //             state.todos,
@@ -85,7 +85,7 @@ const visibilityFilter = (state = filters.SHOW_ALL, action: IAction) => {
 // };
 
 // const combineReducers = (reducers) => {
-//     return (state = {}, action: IAction) => {
+//     return (state = {}, action: ActionType) => {
 //         return Object.keys(reducers).reduce(
 //             (nextState, key) => {
 //                 nextState[key] = reducers[key](

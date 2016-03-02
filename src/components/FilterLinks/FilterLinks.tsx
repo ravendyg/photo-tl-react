@@ -2,6 +2,7 @@
 
 // vendor
 const React: IReact = vendor.React;
+const actions: Actions = require('./../../consts.ts').Actions;
 
 // data
 const store: IStore = require('./../../store.ts');
@@ -10,22 +11,43 @@ import {FilterLink} from './FilterLink.tsx';
 
 const filterLinkNames = [`All`, `Active`, `Completed`];
 
-export class FilterLinks extends React.Component {
+const onSelectClick = (e, filter) => {
+    e.preventDefault();
+    store.dispatch({
+        type: actions.SET_VISIBITY_FILTER,
+        payload: {
+            filter
+        }
+    });
+}
+
+export class FilterLinks extends React.Component implements IReactComponent {
     constructor () { super(); }
+    
+    componentDidMount () {
+        this.unsubscribe = store.subscribe(() => {
+            this.forceUpdate();
+        });
+    }
+    
+    componentWillUnmount () {
+        this.unsubscribe();
+    }
     
     render () {
         return (
             <p>
                 Show:
-                {filterLinkNames.map((mode, index) => {
-                    if (store.getState().visibilityFilter !== index) { return (
+                {filterLinkNames.map((mode, filter) => {
+                    if (store.getState().visibilityFilter !== filter) { return (
                         <FilterLink
-                            key={index}
-                            filter={index}
+                            key={filter}
+                            filter={filter}
                             children={mode}
+                            onSelectClick={onSelectClick}
                         />
                     )} else { return (
-                        <span key={index}>
+                        <span key={filter}>
                             {` ${mode}`}
                         </span>
                     )}

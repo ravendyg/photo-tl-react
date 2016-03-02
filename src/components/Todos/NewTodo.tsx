@@ -7,28 +7,34 @@ const React: IReact = vendor.React;
 const store: IStore = require('./../../store.ts');
 const actions: Actions = require('./../../consts.ts').Actions;
 
+const onAddClick = (input: HTMLInputElement) => {
+    store.dispatch({
+        type: actions.ADD_TODO,
+        payload: {
+            text: input.value,
+            id: store.getState().nextTodo
+        }
+    })
+    input.value = '';
+};
+
 export class NewTodo extends React.Component {
     constructor () { super(); }
     
     render () {
+        let input: HTMLInputElement = this.input;
+        
         return (
-            <span>
+            <div>
                 <input ref={node => {
-                    this.input = node;
+                    input = node;
                 }} />
                 <button onClick={() => {
-                    store.dispatch({
-                        type: actions.ADD_TODO,
-                        payload: {
-                            text: this.input.value,
-                            id: store.getState().nextTodo
-                        }
-                    });
-                    this.input.value = '';
+                    onAddClick(input)
                 }}>
                     Add Todo
                 </button>
-            </span>
+            </div>
         );
     }
 }

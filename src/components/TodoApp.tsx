@@ -16,8 +16,6 @@ export class TodoApp extends React.Component {
     constructor () { super(); }
     
     render () {
-        
-        const q = store.getState().todos;
         return (
             <div>
                 <NewTodo />

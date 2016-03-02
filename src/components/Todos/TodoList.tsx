@@ -8,7 +8,7 @@ const store: IStore = require('./../../store.ts');
 const actions: Actions = require('./../../consts.ts').Actions;
 const filters: Filters = require('./../../consts.ts').Filters;
 
-const getVisibleTodos = (todos: ITodo [], filter) => {
+const getVisibleTodos = (todos: TodoType [], filter) => {
     switch (filter) {
         
         case filters.SHOW_ALL:
@@ -26,7 +26,18 @@ const getVisibleTodos = (todos: ITodo [], filter) => {
 }
 
 export class TodoList extends React.Component {
+    private _unsubscribe: any;
     constructor () { super(); }
+    
+    componentDidMount () {
+        this._unsubscribe = store.subscribe(() => {
+            this.forceUpdate();
+        });
+    }
+    
+    componentWillUnmount () {
+        this._unsubscribe();
+    }
     
     render () {
         const _todos = getVisibleTodos(
