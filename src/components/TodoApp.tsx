@@ -1,8 +1,11 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
-import {store} from './../store.ts';
-
+// vendor
 const React: IReact = vendor.React;
+
+// data
+const store: IStore = require('./../store.ts');
+
 
 let nextTodo = 0;
 
@@ -25,7 +28,7 @@ export class TodoApp extends React.Component {
                 }}>
                     Add Todo
                 </button>
-                {this.props.todos.map(todo => 
+                {store.getState().todos.map(todo => 
                     <li key={todo.id}>
                         {todo.text}
                     </li>

@@ -2,10 +2,8 @@
 
 const Redux: IRedux = vendor.Redux;
 
-import polyfils from './utils/polyfils.ts';
-import consts from './consts.ts';
-
-
+const polyfils = require('./utils/polyfils.ts');
+import {consts} from './consts.ts';
 
 import {TodoApp} from './components/TodoApp.tsx';
 
@@ -93,4 +91,4 @@ const todoApp = Redux.combineReducers({
     visibilityFilter
 });
 
-export const store = Redux.createStore(todoApp);
+export = Redux.createStore(todoApp);
