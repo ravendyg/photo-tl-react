@@ -2,6 +2,7 @@
 
 // vendor
 const React: IReact = vendor.React;
+import {ListeningComponent} from './../listening-component.ts';
 
 const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
 
@@ -26,42 +27,22 @@ const getVisibleTodos = (todos: TodoType [], filter) => {
     }
 }
 
-export class TodoList extends React.Component {
-    private _unsubscribe: any;
-    private needToReRender: any;
+export class TodoList extends ListeningComponent {
+    protected needToReRender: any;
     
-    constructor () { super(); }
+    constructor () { super(store); }
     
-    componentDidMount () {
-        // track change of only a part of the store that is of interest
+    protected trackRenderDependecies () {
         this.needToReRender = {
             todos: store.getState().todos,
             visibilityFilter: store.getState().visibilityFilter
         };
-        
-        this._unsubscribe = store.subscribe(() => {    
-            for (var key in this.needToReRender) {
-                if (this.needToReRender[key] !== store.getState()[key]) {
-                    this.forceUpdate();
-                    break;
-                }
-            } 
-            
-            if (this.needToReRender !== store.getState().todos) {
-                this.forceUpdate();    
-            }
-        });
     }
+
     
-    componentWillUnmount () {
-        this._unsubscribe();
-    }
-    
-    render () {
-        this.needToReRender = {
-            todos: store.getState().todos,
-            visibilityFilter: store.getState().visibilityFilter
-        };
+    public render () {
+console.log(`render todo`);
+        // super.render();
         
         const _todos = getVisibleTodos(
             store.getState().todos,

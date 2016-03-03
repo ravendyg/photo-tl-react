@@ -10,7 +10,7 @@ interface IRedux {
 }
 
 interface IReactComponent {
-    new (args?: any []): IReactComponent;   
+    new (): IReactComponent;   
     props: any; 
     input: HTMLInputElement;
     unsubscribe (): void;
@@ -19,6 +19,11 @@ interface IReactComponent {
     render (): void;
     forceUpdate: () => void;
     contexct: any;
+}
+
+interface IListeningComponent extends IReactComponent {
+    new (store: IStore): IListeningComponent;
+    _store: IStore;
 }
 
 interface IReact {

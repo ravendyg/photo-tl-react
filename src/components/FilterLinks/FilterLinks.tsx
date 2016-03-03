@@ -3,6 +3,7 @@
 // vendor
 const React: IReact = vendor.React;
 
+import {ListeningComponent} from './../listening-component.ts';
 const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
 
 // data
@@ -17,29 +18,21 @@ const onSelectClick = (e, filter) => {
     store.dispatch(actionCreators.setVisibilityFilter(filter));
 }
 
-export class FilterLinks extends React.Component implements IReactComponent {
-    private _unsubscribe: any;
-    private needToReRender: any;
+export class FilterLinks extends ListeningComponent {
+    protected needToReRender: any;
     
-    constructor () { super(); }
+    constructor () { super(store); }
     
-    componentDidMount () {
-        // track change of only a part of the store that is of interest
-        this.needToReRender = store.getState().visibilityFilter;
-        
-        this._unsubscribe = store.subscribe(() => {
-            if (this.needToReRender !== store.getState().visibilityFilter) {
-                this.forceUpdate();    
-            }
-        });
+    protected trackRenderDependecies () {
+        this.needToReRender = {
+            todos: store.getState().todos,
+            visibilityFilter: store.getState().visibilityFilter
+        };
     }
     
-    componentWillUnmount () {
-        this._unsubscribe();
-    }
-    
-    render () {
-        this.needToReRender = store.getState().visibilityFilter;
+    public render () {
+console.log(`render filter`);
+        // super.render();
 
         return (
             <p>
