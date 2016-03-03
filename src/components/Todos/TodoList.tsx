@@ -12,7 +12,6 @@ const DoneIcon = require('./../../svg/svg.tsx').DoneIcon;
 
 const Colors = vendor.mUi.Colors;
 
-console.log(Colors);
 
 // const 
 const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;

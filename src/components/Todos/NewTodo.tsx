@@ -18,7 +18,7 @@ const onAddClick = (input: HTMLInputElement) => {
 
 
 export class NewTodo extends React.Component {
-    private _input: HTMLInputElement;
+    private _input: any;
     
     constructor () { super(); }
     
@@ -31,23 +31,16 @@ export class NewTodo extends React.Component {
                     hintText="New Todo"
                     multiline={false}
                     ref={node => {
-                        input = node.input;
+                        input = node;
                     }}
                 />
                 <RaisedButton 
                     label="Add Todo"
                     onClick={() => {
-                        onAddClick(input)
+                        onAddClick(input.input)
                     }}
                 />
             </div>
         );
     }
 }
-
-// <input ref={node => {
-//                     input = node;
-//                 }} />
-                // <button onClick={() => {
-                //     onAddClick(input)
-                // }}>
