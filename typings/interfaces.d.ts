@@ -18,10 +18,12 @@ interface IReactComponent {
     componentWillUnmount (): void;
     render (): void;
     forceUpdate: () => void;
+    contexct: any;
 }
 
 interface IReact {
     Component: IReactComponent;
+    PropTypes: any;
 }
 
 interface IReactDom {

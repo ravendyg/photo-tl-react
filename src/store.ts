@@ -6,9 +6,6 @@ const polyfils = require('./utils/polyfils.ts');
 const actions: Actions = require('./consts.ts').Actions;
 const filters: Filters = require('./consts.ts').Filters;
 
-import {TodoApp} from './components/TodoApp.tsx';
-// const TodoApp = require('./components/TodoApp.tsx');
-
 // reducers
 const nextTodo = (state = 0, action: ActionType) => {
     switch (action.type) {

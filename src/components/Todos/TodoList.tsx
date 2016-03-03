@@ -27,6 +27,7 @@ const getVisibleTodos = (todos: TodoType [], filter) => {
 
 export class TodoList extends React.Component {
     private _unsubscribe: any;
+    private context: any;
     constructor () { super(); }
     
     componentDidMount () {
@@ -40,6 +41,8 @@ export class TodoList extends React.Component {
     }
     
     render () {
+        console.log(this);
+        
         const _todos = getVisibleTodos(
             store.getState().todos,
             store.getState().visibilityFilter
@@ -67,3 +70,7 @@ export class TodoList extends React.Component {
         );
     }
 }
+
+TodoList.contextTypes = {
+    store: React.PropTypes.object
+};
