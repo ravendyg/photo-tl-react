@@ -3,6 +3,9 @@
 // vendor
 const React: IReact = vendor.React;
 
+const RaisedButton = vendor.mUi.RaisedButton;
+const TextField = vendor.mUi.TextField;
+
 const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
 
 // data
@@ -13,23 +16,38 @@ const onAddClick = (input: HTMLInputElement) => {
     input.value = '';
 };
 
+
 export class NewTodo extends React.Component {
+    private _input: HTMLInputElement;
+    
     constructor () { super(); }
     
     render () {
-        let input: HTMLInputElement = this.input;
+        let input = this._input;
         
         return (
             <div>
-                <input ref={node => {
-                    input = node;
-                }} />
-                <button onClick={() => {
-                    onAddClick(input)
-                }}>
-                    Add Todo
-                </button>
+                <TextField
+                    hintText="New Todo"
+                    multiline={false}
+                    ref={node => {
+                        input = node.input;
+                    }}
+                />
+                <RaisedButton 
+                    label="Add Todo"
+                    onClick={() => {
+                        onAddClick(input)
+                    }}
+                />
             </div>
         );
     }
 }
+
+// <input ref={node => {
+//                     input = node;
+//                 }} />
+                // <button onClick={() => {
+                //     onAddClick(input)
+                // }}>

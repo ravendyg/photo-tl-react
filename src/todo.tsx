@@ -60,6 +60,7 @@ class Inbox extends React.Component {
     constructor(){ super();}
     
     render() {
+console.log(this.props.location);
         return (
         <div>
             Inbox

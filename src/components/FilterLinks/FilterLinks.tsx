@@ -30,6 +30,7 @@ export class FilterLinks extends ListeningComponent {
     }
     
     public render () {
+console.log(`render links`);
         super.render();
 
         return (

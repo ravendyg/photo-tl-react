@@ -4,6 +4,17 @@
 const React: IReact = vendor.React;
 import {ListeningComponent} from './../listening-component.ts';
 
+const List = vendor.mUi.List;
+const ListItem = vendor.mUi.ListItem;
+
+const AlarmIcon = require('./../../svg/svg.tsx').AlarmIcon;
+const DoneIcon = require('./../../svg/svg.tsx').DoneIcon;
+
+const Colors = vendor.mUi.Colors;
+
+console.log(Colors);
+
+// const 
 const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
 
 // data
@@ -27,6 +38,7 @@ const getVisibleTodos = (todos: TodoType [], filter) => {
     }
 }
 
+
 export class TodoList extends ListeningComponent {
     protected needToReRender: any;
     
@@ -41,6 +53,7 @@ export class TodoList extends ListeningComponent {
 
     
     public render () {
+console.log(`render todo`);
         super.render();
         
         const _todos = getVisibleTodos(
@@ -49,9 +62,13 @@ export class TodoList extends ListeningComponent {
         );
         
         return (
-            <ul>
+            <List>
                 {_todos.map(todo => 
-                    <li key={todo.id}
+                    <ListItem
+                        leftIcon={
+                            todo.completed ? <DoneIcon color={Colors.green500}/> : <AlarmIcon /> 
+                        }
+                        key={todo.id}
                         onClick={() => {
                             store.dispatch(actionCreators.toggleTodo(todo.id));
                         }}
@@ -59,9 +76,9 @@ export class TodoList extends ListeningComponent {
                             textDecoration: todo.completed ? 'line-through' : 'none'
                         }}>
                         {todo.text}
-                    </li>
+                    </ListItem>
                 )}
-            </ul>
+            </List>
         );
     }
 }
