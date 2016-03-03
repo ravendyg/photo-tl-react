@@ -41,8 +41,7 @@ export class TodoList extends ListeningComponent {
 
     
     public render () {
-console.log(`render todo`);
-        // super.render();
+        super.render();
         
         const _todos = getVisibleTodos(
             store.getState().todos,

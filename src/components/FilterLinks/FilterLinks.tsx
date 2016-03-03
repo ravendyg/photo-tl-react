@@ -25,14 +25,12 @@ export class FilterLinks extends ListeningComponent {
     
     protected trackRenderDependecies () {
         this.needToReRender = {
-            todos: store.getState().todos,
             visibilityFilter: store.getState().visibilityFilter
         };
     }
     
     public render () {
-console.log(`render filter`);
-        // super.render();
+        super.render();
 
         return (
             <p>

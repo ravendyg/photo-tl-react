@@ -38,7 +38,9 @@ export class ListeningComponent extends React.Component {
     }
     
     public render () {
-console.log(`track`);
+        // important to call super in subclass render method
+        // otherwise after relevant change in the state
+        // it will render on any! state change even if this particular one is irrelevant
         this.trackRenderDependecies();
     }
 }
