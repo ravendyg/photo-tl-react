@@ -16,6 +16,7 @@
     "jasmine-webpack-plugin": "^0.1.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
+    "react-router": "^2.0.0",
     "redux": "^3.3.1",
     "ts-loader": "^0.8.1",
     "tsd": "^0.6.5",
