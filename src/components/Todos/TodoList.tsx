@@ -28,10 +28,14 @@ const getVisibleTodos = (todos: TodoType [], filter) => {
 export class TodoList extends React.Component {
     private _unsubscribe: any;
     private context: any;
+    
+    static contextTypes = {
+        store: React.PropTypes.object
+    };
     constructor () { super(); }
     
     componentDidMount () {
-        this._unsubscribe = store.subscribe(() => {
+        this._unsubscribe = this.context.store.subscribe(() => {
             this.forceUpdate();
         });
     }
@@ -41,11 +45,9 @@ export class TodoList extends React.Component {
     }
     
     render () {
-        console.log(this);
-        
         const _todos = getVisibleTodos(
-            store.getState().todos,
-            store.getState().visibilityFilter
+            this.context.store.getState().todos,
+            this.context.store.getState().visibilityFilter
         );
         
         return (
@@ -53,7 +55,7 @@ export class TodoList extends React.Component {
                 {_todos.map(todo => 
                     <li key={todo.id}
                         onClick={() => {
-                            store.dispatch({
+                            this.context.store.dispatch({
                                 type: actions.TOGGLE_TODO,
                                 payload: {
                                     id: todo.id
@@ -70,7 +72,3 @@ export class TodoList extends React.Component {
         );
     }
 }
-
-TodoList.contextTypes = {
-    store: React.PropTypes.object
-};
