@@ -27,16 +27,28 @@ const getVisibleTodos = (todos: TodoType [], filter) => {
 
 export class TodoList extends React.Component {
     private _unsubscribe: any;
-    private context: any;
+    private needToReRender: any;
     
-    static contextTypes = {
-        store: React.PropTypes.object
-    };
     constructor () { super(); }
     
     componentDidMount () {
-        this._unsubscribe = this.context.store.subscribe(() => {
-            this.forceUpdate();
+        // track change of only a part of the store that is of interest
+        this.needToReRender = {
+            todos: store.getState().todos,
+            visibilityFilter: store.getState().visibilityFilter
+        };
+        
+        this._unsubscribe = store.subscribe(() => {    
+            for (var key in this.needToReRender) {
+                if (this.needToReRender[key] !== store.getState()[key]) {
+                    this.forceUpdate();
+                    break;
+                }
+            } 
+            
+            if (this.needToReRender !== store.getState().todos) {
+                this.forceUpdate();    
+            }
         });
     }
     
@@ -45,9 +57,14 @@ export class TodoList extends React.Component {
     }
     
     render () {
+        this.needToReRender = {
+            todos: store.getState().todos,
+            visibilityFilter: store.getState().visibilityFilter
+        };
+        
         const _todos = getVisibleTodos(
-            this.context.store.getState().todos,
-            this.context.store.getState().visibilityFilter
+            store.getState().todos,
+            store.getState().visibilityFilter
         );
         
         return (
@@ -55,7 +72,7 @@ export class TodoList extends React.Component {
                 {_todos.map(todo => 
                     <li key={todo.id}
                         onClick={() => {
-                            this.context.store.dispatch({
+                            store.dispatch({
                                 type: actions.TOGGLE_TODO,
                                 payload: {
                                     id: todo.id

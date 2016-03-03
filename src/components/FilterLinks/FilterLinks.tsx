@@ -22,19 +22,29 @@ const onSelectClick = (e, filter) => {
 }
 
 export class FilterLinks extends React.Component implements IReactComponent {
+    private _unsubscribe: any;
+    private needToReRender: any;
+    
     constructor () { super(); }
     
     componentDidMount () {
-        this.unsubscribe = store.subscribe(() => {
-            this.forceUpdate();
+        // track change of only a part of the store that is of interest
+        this.needToReRender = store.getState().visibilityFilter;
+        
+        this._unsubscribe = store.subscribe(() => {
+            if (this.needToReRender !== store.getState().visibilityFilter) {
+                this.forceUpdate();    
+            }
         });
     }
     
     componentWillUnmount () {
-        this.unsubscribe();
+        this._unsubscribe();
     }
     
     render () {
+        this.needToReRender = store.getState().visibilityFilter;
+
         return (
             <p>
                 Show:

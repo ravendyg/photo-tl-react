@@ -7,14 +7,11 @@ const ReactDom: IReactDom = vendor.ReactDom;
 const store: IStore = require('./store.ts');
 
 // view components
-import {Provider} from './components/Provider.tsx';
 import {TodoApp} from './components/TodoApp.tsx';
 
 // initialization
 ReactDom.render(
-    <Provider store={store}>
-        <TodoApp />
-    </Provider>,
+    <TodoApp />,
     document.getElementById(`root`)
 );
 
