@@ -2,7 +2,7 @@ declare type TodoType = {
     id: number,
     text: string,
     completed: boolean
-}
+};
 
 declare type StateType = {
     nextTodo: TodoType,
@@ -13,9 +13,9 @@ declare type StateType = {
 declare type ActionType = {
     type: number;
     payload?: any;
-}
+};
 
 declare type TodoAppType = {
     todos?: any [],
     visibilityFilter?: string
-}
+};

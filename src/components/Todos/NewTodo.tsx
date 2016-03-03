@@ -3,18 +3,13 @@
 // vendor
 const React: IReact = vendor.React;
 
+const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
+
 // data
 const store: IStore = require('./../../store.ts');
-const actions: Actions = require('./../../consts.ts').Actions;
 
 const onAddClick = (input: HTMLInputElement) => {
-    store.dispatch({
-        type: actions.ADD_TODO,
-        payload: {
-            text: input.value,
-            id: store.getState().nextTodo
-        }
-    })
+    store.dispatch(actionCreators.addTodo(input.value));
     input.value = '';
 };
 

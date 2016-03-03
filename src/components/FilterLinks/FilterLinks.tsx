@@ -2,23 +2,19 @@
 
 // vendor
 const React: IReact = vendor.React;
-const actions: Actions = require('./../../consts.ts').Actions;
+
+const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
 
 // data
 const store: IStore = require('./../../store.ts');
-
-import {FilterLink} from './FilterLink.tsx';
-
 const filterLinkNames = [`All`, `Active`, `Completed`];
+
+// components
+import {FilterLink} from './FilterLink.tsx';
 
 const onSelectClick = (e, filter) => {
     e.preventDefault();
-    store.dispatch({
-        type: actions.SET_VISIBITY_FILTER,
-        payload: {
-            filter
-        }
-    });
+    store.dispatch(actionCreators.setVisibilityFilter(filter));
 }
 
 export class FilterLinks extends React.Component implements IReactComponent {

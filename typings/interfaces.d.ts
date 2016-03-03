@@ -29,3 +29,9 @@ interface IReact {
 interface IReactDom {
     render: any;
 }
+
+interface IActionCreators {
+    setVisibilityFilter (filter: number): ActionType;
+    toggleTodo (id: number): ActionType;
+    addTodo (text: string): ActionType;
+}

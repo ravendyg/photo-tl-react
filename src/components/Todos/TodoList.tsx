@@ -3,9 +3,10 @@
 // vendor
 const React: IReact = vendor.React;
 
+const actionCreators: IActionCreators = require('./../../action-creators.ts').actionCreators;
+
 // data
 const store: IStore = require('./../../store.ts');
-const actions: Actions = require('./../../consts.ts').Actions;
 const filters: Filters = require('./../../consts.ts').Filters;
 
 const getVisibleTodos = (todos: TodoType [], filter) => {
@@ -72,12 +73,7 @@ export class TodoList extends React.Component {
                 {_todos.map(todo => 
                     <li key={todo.id}
                         onClick={() => {
-                            store.dispatch({
-                                type: actions.TOGGLE_TODO,
-                                payload: {
-                                    id: todo.id
-                                }
-                            });
+                            store.dispatch(actionCreators.toggleTodo(todo.id));
                         }}
                         style={{
                             textDecoration: todo.completed ? 'line-through' : 'none'

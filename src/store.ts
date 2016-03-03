@@ -3,21 +3,10 @@
 const Redux: IRedux = vendor.Redux;
 
 const polyfils = require('./utils/polyfils.ts');
-const actions: Actions = require('./consts.ts').Actions;
+const actions: Actions = require('./action-creators.ts').Actions;
 const filters: Filters = require('./consts.ts').Filters;
 
 // reducers
-const nextTodo = (state = 0, action: ActionType) => {
-    switch (action.type) {
-        
-        case actions.ADD_TODO:
-            return state+1;
-            
-        default:
-            return state
-    }
-};
-
 const todo = (state, action: ActionType) => {
     switch (action.type) {
         
@@ -97,7 +86,6 @@ const visibilityFilter = (state = filters.SHOW_ALL, action: ActionType) => {
 // }
 
 const todoApp = Redux.combineReducers({
-    nextTodo,
     todos,
     visibilityFilter
 });
