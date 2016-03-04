@@ -10,7 +10,7 @@ interface IRedux {
 }
 
 interface IReactComponent {
-    new (): IReactComponent;   
+    new (...args: any []): IReactComponent;   
     props: any; 
     input: HTMLInputElement;
     unsubscribe (): void;
@@ -19,6 +19,8 @@ interface IReactComponent {
     render (): void;
     forceUpdate: () => void;
     contexct: any;
+    getState (): any;
+    setState (state: any): void; 
 }
 
 interface IListeningComponent extends IReactComponent {
@@ -36,7 +38,24 @@ interface IReactDom {
 }
 
 interface IActionCreators {
+    signInUser (user: UserType): ActionType;
+    setInDialog (mode: boolean): ActionType;
+    setUpDialog (mode: boolean): ActionType;
+    
     setVisibilityFilter (filter: number): ActionType;
     toggleTodo (id: number): ActionType;
     addTodo (text: string): ActionType;
+}
+
+interface IUserActions {
+    displaySignup: () => void;
+    displaySignin: () => void;
+    hideSignup: () => void;
+    hideSignin: () => void;
+    // hideSignup: () => void;
+    signin: (name: string, pas: string, rem: boolean) => void;
+}
+
+interface IUserService {
+    signin (user: UserType): void;
 }

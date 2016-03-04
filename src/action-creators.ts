@@ -6,12 +6,45 @@ const actions: Actions = require('./consts.ts').Actions;
 export enum Actions {
     ADD_TODO = 0,
     TOGGLE_TODO = 1,
-    SET_VISIBITY_FILTER = 2
+    SET_VISIBITY_FILTER = 2,
+    
+    SIGNIN_USER = 3,
+    SET_IN_DIALOG = 4,
+    SET_UP_DIALOG = 5,
+    
 }
 
 var nextTodo = 0;
 
 export const actionCreators: IActionCreators = {
+    signInUser: (user: UserType) => {
+      return {
+          type: Actions.SIGNIN_USER,
+          payload: {
+              user
+          }
+      }  
+    },
+    setInDialog: (mode: boolean) => {
+        return {
+            type: Actions.SET_IN_DIALOG,
+            payload: {
+                mode
+            }
+        };
+    },
+    setUpDialog: (mode: boolean) => {
+        return {
+            type: Actions.SET_UP_DIALOG,
+            payload: {
+                mode
+            }
+        };
+    },
+    
+    
+    
+    
     setVisibilityFilter: (filter: number) => {
         return {
             type: Actions.SET_VISIBITY_FILTER,

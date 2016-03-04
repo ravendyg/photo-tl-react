@@ -2,6 +2,10 @@ declare type Actions = {
     ADD_TODO?: number,
     TOGGLE_TODO?: number,
     SET_VISIBITY_FILTER?: number
+    
+    SIGNIN_USER?: number;
+    SET_IN_DIALOG?: number;
+    SET_UP_DIALOG?: number;
 };
 
 declare type Filters = {

@@ -7,6 +7,41 @@ const actions: Actions = require('./action-creators.ts').Actions;
 const filters: Filters = require('./consts.ts').Filters;
 
 // reducers
+const user = (state: UserType = { name: `` }, action: ActionType) => {
+    switch (action.type) {
+        case actions.SIGNIN_USER:
+            return {
+                name: action.payload.name,
+            };
+    
+        default:
+            return state;
+    }
+};
+
+const dialogs = (state: dialogsType = {
+    in: false,
+    up: false
+}, action: ActionType) => {
+    switch (action.type) {
+        
+        case actions.SET_IN_DIALOG:
+            return {
+                in: action.payload.mode,
+                up: state.up
+            };
+            
+        case actions.SET_UP_DIALOG:
+            return {
+                in: state.in,
+                up: action.payload.mode
+            };
+    
+        default:
+            return state;
+    }  
+};
+
 const todo = (state, action: ActionType) => {
     switch (action.type) {
         
@@ -86,8 +121,10 @@ const visibilityFilter = (state = filters.SHOW_ALL, action: ActionType) => {
 // }
 
 const todoApp = Redux.combineReducers({
+    user,
     todos,
-    visibilityFilter
+    visibilityFilter,
+    dialogs
 });
 
 export = Redux.createStore(todoApp);

@@ -1,3 +1,18 @@
+declare type UserType = {
+    name: string,
+    pas?: string,
+    pas2?: string,
+    rem?: boolean,
+    error?: string,
+    then?: any
+}
+
+declare type dialogsType = {
+    in: boolean,
+    up: boolean
+}
+
+
 declare type TodoType = {
     id: number,
     text: string,
@@ -5,6 +20,9 @@ declare type TodoType = {
 };
 
 declare type StateType = {
+    user: UserType,
+    dialogs: dialogsType;
+    
     nextTodo: TodoType,
     todos: TodoType [],
     visibilityFilter
@@ -12,7 +30,13 @@ declare type StateType = {
 
 declare type ActionType = {
     type: number;
-    payload?: any;
+    payload?: {
+        id?: number,
+        mode?: boolean,
+        filter?: number,
+        name?: string,
+        text?: string
+    };
 };
 
 declare type TodoAppType = {
