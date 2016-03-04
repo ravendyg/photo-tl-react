@@ -4,7 +4,6 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
-var debug = process.env.NODE_ENV !== "production";
 var webpack = require('webpack');
 var path = require('path')
 
@@ -32,9 +31,9 @@ module.exports = {
         ]
     },
     // plugins: [new JasmineWebpackPlugin()]
-    // plugins: debug ? [] : [
-    //     new webpack.optimize.DedupePlugin(),
-    //     new webpack.optimize.OccurenceOrderPlugin(),
-    //     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: true }),
-    // ]
+    plugins: NODE_ENV === 'development' ? [] : [
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    ]
 }
