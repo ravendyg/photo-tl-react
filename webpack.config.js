@@ -2,8 +2,6 @@
 /* global __dirname */
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
-
 var webpack = require('webpack');
 var path = require('path')
 
@@ -30,7 +28,6 @@ module.exports = {
             { test: /\.html$/, loader: "text-loader" }
         ]
     },
-    // plugins: [new JasmineWebpackPlugin()]
     plugins: NODE_ENV === 'development' ? [] : [
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
