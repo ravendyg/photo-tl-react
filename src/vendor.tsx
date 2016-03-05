@@ -5,6 +5,8 @@ const React = require('react');
 const ReactDom = require('react-dom');
 const ReactRouter = require('react-router');
 
+const aja = require('aja');
+
 // material ui
 const TextField = require('material-ui/lib/text-field');
 const FlatButton = require('material-ui/lib/flat-button');
@@ -43,5 +45,6 @@ export {
     React,
     ReactDom,
     ReactRouter,
-    mUi
+    mUi,
+    aja
 };

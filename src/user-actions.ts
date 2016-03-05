@@ -5,8 +5,6 @@ const store: IStore = require('./store.ts');
 
 const UserService: IUserService = require('./server-apis/user-service.ts').UserService;
 
-console.log(UserService);
-
 class UserActionsClass implements IUserActions {
     constructor () {
         

@@ -1,6 +1,8 @@
 /// <reference path="./../../typings/tsd.d.ts" />
 
 // import {config} from './../config.ts';
+const aja: AjaType = vendor.aja;
+const config: (query: any) => string = require('./../config.ts');
 
 class UserServiceClass implements IUserService{
 //     private _http: any;
@@ -38,8 +40,26 @@ class UserServiceClass implements IUserService{
 //         }
 //     }
     
-//     // generic sign up or in operation
-//     private _signUpIn (user: IUser, options) {
+    // generic sign up or in operation
+    private _signUpIn (user: UserType, options) {
+console.log(user);
+
+        aja()
+            .method(options.method)
+            .url(options.url)
+            .data(user)
+            .on(`200`, resp => {
+                console.log(resp);
+            })
+            .on(`40*`, resp => {
+                console.log(resp);
+            })
+            .on(`50*`, resp => {
+                console.log(resp);
+            })
+            .go();
+        
+        
 //         var deferred = this._q.defer();
 //         var loggedInUser =  {
 //                     name: '',
@@ -71,15 +91,13 @@ class UserServiceClass implements IUserService{
 //         });
                 
 //         return deferred.promise;
-//     }
+    }
     
-    public signin (user: UserType) {
-console.log(`server <- ${user.name}`);
-//         return this._signUpIn(user, {
-//                     method: 'GET',
-//                     url: config('url') + config('port') + config('userDriver') + '/sign-in',
-//                     params: user
-//                 });
+    public signin (user: UserType) {       
+        this._signUpIn(user, {
+                    method: 'GET',
+                    url: config('url') + config('port') + config('userDriver') + '/sign-in'
+                });
     }
     
 //     public signup (user: IUser) {

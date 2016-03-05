@@ -43,3 +43,5 @@ declare type TodoAppType = {
     todos?: any [],
     visibilityFilter?: string
 };
+
+declare type AjaType = () => IAja;
