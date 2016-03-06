@@ -46,67 +46,40 @@ class UserServiceClass implements IUserService{
     
     // generic sign up or in operation
     private _signUpIn (user: UserType, options) {
+        var promise: IPromise = new Promise ( (resolve, reject) => {
+            aja()
+                .method(options.method)
+                .url(options.url)
+                .data(user)
+                .on(`200`, resp => {
+                    console.log(resp);
+                    store.dispatch(actionCreators.signInUser(user));
+                    this._socketService.connect(config('url') + config('port'));
+                    resolve();
+                })
+                .on('40x', err => {
+                    reject(JSON.parse(err).error);
+                })
+                .on(`50x`, err => {
+                    reject(JSON.parse(err).error);
+                })
+                .go();    
+        });
         
-        aja()
-            .method(options.method)
-            .url(options.url)
-            .data(user)
-            .on(`200`, resp => {
-                console.log(resp);
-                store.dispatch(actionCreators.signInUser(user));
-                this._socketService.connect(config('url') + config('port'));
-            })
-            .on('40x', resp => {
-                console.log(resp);
-            })
-            .on(`50x`, resp => {
-                console.log(resp);
-            })
-            .go();
-        
-        
-//         var deferred = this._q.defer();
-//         var loggedInUser =  {
-//                     name: '',
-//                     pas: '',
-//                     pas2: '',
-//                     rem: false,
-//                     error: ''
-//                 };
-//         this._http(options).then( (resp) => {
-//             loggedInUser.name = resp.data.name;
-//             deferred.resolve(loggedInUser);
-//             this._socketService.connect(config('url') + config('port'));
-//         },
-//         (resp) => {
-//             console.log(resp);
-//             if (resp.data) {
-//                 switch (resp.data.error) {
-//                     case 'wrong password':
-//                         loggedInUser.error = 'Неверный пароль';
-//                     break;
-//                     case 'wrong username':
-//                         loggedInUser.error = 'Неверное имя пользователя';
-//                     break;
-//                 }
-//             } else {
-//                 loggedInUser.error = 'Неизвестная ошибка';
-//             }
-//             deferred.resolve(loggedInUser);
-//         });
-                
-//         return deferred.promise;
+        return promise;
     }
     
     public signin (user: UserType) {       
-        this._signUpIn(user, {
+        var q= this._signUpIn(user, {
                     method: 'GET',
                     url: config('url') + config('port') + config('userDriver') + '/sign-in'
                 });
+                console.log(q);
+                return q;
     }
     
     public signup (user: UserType) {       
-        this._signUpIn(user, {
+        return this._signUpIn(user, {
                     method: 'POST',
                     url: config('url') + config('port') + config('userDriver') + '/new-user'
                 });

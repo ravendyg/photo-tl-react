@@ -37,6 +37,13 @@ interface IReactDom {
     render: any;
 }
 
+interface IPromise {
+    then: (
+        resolve?: (...args: any []) => void,
+        reject?: (...args: any []) => void
+    ) => void;
+}
+
 interface IActionCreators {
     signInUser (user: UserType): ActionType;
     signOutUser (): ActionType;
@@ -56,14 +63,14 @@ interface IUserActions {
     hideDialogs: () => void;
     // hideSignin: () => void;
     // hideSignup: () => void;
-    signin: (name: string, pas: string, rem: boolean) => void;
-    signup: (name: string, pas: string, pas2: string, rem: boolean) => void;
+    signin: (name: string, pas: string, rem: boolean) => IPromise;
+    signup: (name: string, pas: string, pas2: string, rem: boolean) => IPromise;
     signout: (name: string) => void;
 }
 
 interface IUserService {
-    signin (user: UserType): void;
-    signup (user: UserType): void;
+    signin (user: UserType): IPromise;
+    signup (user: UserType): IPromise;
     signout (user: UserType): void;
 }
 

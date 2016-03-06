@@ -3,15 +3,17 @@
 // vendor
 const React: IReact = vendor.React;
 
-var Link = vendor.ReactRouter.Link
+import {UserToolbar} from './../toolbar/user-toolbar.tsx';
+import {LoginDialog} from './../dialogs/login.tsx';
 
 export class MyPhotos extends React.Component {
     constructor(){ super();}
+    
     render() {
         return (
         <div>
-            My photos
-            <Link to="/">Logout</Link>
+            <UserToolbar mode={`my-photos`}/>
+            <div>My photos</div>
         </div>
         )
     }

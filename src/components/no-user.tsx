@@ -3,7 +3,8 @@
 // vendor
 const React: IReact = vendor.React;
 
-const Link = vendor.ReactRouter.Link
+import {NoUserToolbar} from './toolbar/no-user-toolbar.tsx';
+import {LoginDialog} from './dialogs/login.tsx';
 
 export class NoUser extends React.Component {
     constructor(){ super();}
@@ -11,14 +12,9 @@ export class NoUser extends React.Component {
     render() {
         return (
         <div>
-            No user
-            <ul>
-                <li><Link to={`/loggedin/all-photos`}>All</Link></li>
-                <li><Link to={`/loggedin/my-photos`}>My</Link></li>
-                <li><Link to={`/loggedin/user-data`}>Data</Link></li>
-                <li><Link to={`/loggedin/werew`}>Somewhere loggedin</Link></li>
-                <li><Link to={`/werew`}>Somewhere loggedout</Link></li>
-            </ul>
+            <NoUserToolbar />
+            <div>No user</div>
+            <LoginDialog name={'login'}/>
         </div>
         )
     }

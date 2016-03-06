@@ -9,11 +9,12 @@ export enum Actions {
     SET_VISIBITY_FILTER = 2,
     
     SIGNIN_USER = 3,
-    SET_IN_DIALOG = 4,
-    SET_UP_DIALOG = 5,
-    HIDE_DIALOGS = 6,
+    SIGNOUT_USER = 4,
     
-    SIGNOUT_USER = 7
+    SET_IN_DIALOG = 5,
+    SET_UP_DIALOG = 6,
+    HIDE_DIALOGS = 7,   
+    
 }
 
 var nextTodo = 0;
@@ -27,6 +28,13 @@ export const actionCreators: IActionCreators = {
           }
       }  
     },
+    signOutUser: () => {
+        return {
+            type: Actions.SIGNOUT_USER,
+            payload: {}
+        }
+    },
+    
     setInDialog: (mode: boolean) => {
         return {
             type: Actions.SET_IN_DIALOG,
@@ -49,12 +57,7 @@ export const actionCreators: IActionCreators = {
             payload: {}
         };
     },
-    signOutUser: () => {
-        return {
-            type: Actions.SIGNOUT_USER,
-            payload: {}
-        }
-    },
+   
     
     
     

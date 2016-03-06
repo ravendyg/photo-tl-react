@@ -3,15 +3,17 @@
 // vendor
 const React: IReact = vendor.React;
 
-var Link = vendor.ReactRouter.Link
+import {UserToolbar} from './../toolbar/user-toolbar.tsx';
+import {LoginDialog} from './../dialogs/login.tsx';
 
 export class UserData extends React.Component {
     constructor(){ super();}
+    
     render() {
         return (
         <div>
-            User data
-            <Link to="/">Logout</Link>
+            <UserToolbar mode={`data`} />
+            <div>User data</div>
         </div>
         )
     }

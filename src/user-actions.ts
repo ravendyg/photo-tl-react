@@ -23,13 +23,13 @@ class UserActionsClass implements IUserActions {
     }
     
     public signin (name: string, pas: string, rem: boolean) {
-        UserService.signin({
+        return UserService.signin({
             name, pas, rem
         });
     }
     
     public signup (name: string, pas: string, pas2: string, rem: boolean) {
-        UserService.signup({
+        return UserService.signup({
             name, pas, pas2, rem
         });
     }

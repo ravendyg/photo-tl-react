@@ -3,19 +3,18 @@
 // vendor
 const React: IReact = vendor.React;
 
-var Link = vendor.ReactRouter.Link
-
-const store: IStore = require('./../../store.ts');
+import {UserToolbar} from './../toolbar/user-toolbar.tsx';
+import {LoginDialog} from './../dialogs/login.tsx';
 
 export class AllPhotos extends React.Component {
     constructor(){ super();}
+    
     render() {
-        console.log(store.getState().user);
         return (
-            <div>
-                All photos
-                <Link to="/">Logout</Link>
-            </div>
+        <div>
+            <UserToolbar mode={`all-photos`}/>
+            <div>All photos</div>
+        </div>
         )
     }
 }

@@ -14,8 +14,10 @@ const store: IStore = require('./store.ts');
 const actionCreators: IActionCreators = require('./action-creators.ts').actionCreators;
 
 // view components
-import {AppToolbar} from './components/toolbar/toolbar.tsx';
 import {NoUser} from './components/no-user.tsx';
+
+
+import {AppToolbar} from './components/toolbar/toolbar.tsx';
 import {AllPhotos} from './components/loggedin/all-photos.tsx';
 import {MyPhotos} from './components/loggedin/my-photos.tsx';
 import {UserData} from './components/loggedin/user-data.tsx';
@@ -24,48 +26,77 @@ import {LoginDialog} from './components/dialogs/login.tsx';
 
 var username = ``;
 
+// class App extends React.Component {
+//     constructor(){ super();}
+    
+//     render() {
+// console.log(this.props.children);
+//         // don't display no-user if user is signedin
+//         if (store.getState().user.name) {
+//             if (location.hash.match(/#\/?/)) {
+//                 return (
+//                 <div>
+//                     <AppToolbar />
+//                     <AllPhotos />
+//                     <LoginDialog name={'login'}/>
+//                 </div>
+//                 )    
+//             }
+//         } else {
+//             return (
+//             <div>
+//                 <AppToolbar />
+//                 {this.props.children}
+//                 <LoginDialog name={'login'}/>
+//             </div>
+//             )
+//         }
+//     }
+// }
+
 class App extends React.Component {
     constructor(){ super();}
     
     render() {
-        // don't display no-user if user is signedin
-        if (store.getState().user.name) {
-            if (location.hash.match(/#\/?/)) {
-                return (
-                <div>
-                    <AppToolbar />
-                    <AllPhotos />
-                    <LoginDialog name={'login'}/>
-                </div>
-                )    
-            }
-        } else {
-            return (
-            <div>
-                <AppToolbar />
-                {this.props.children}
-                <LoginDialog name={'login'}/>
-            </div>
-            )
-        }
+        return (
+        <div>
+            {this.props.children}
+        </div>
+        )    
     }
 }
 
+const redir = (nextState, replace) => {
+    console.log(store.getState().user.name);
+    if (!store.getState().user.name) {
+        // logged out
+        replace('/no-user');
+    } else if (nextState.location.pathname === `/no-user`) {
+        // logged in
+        replace('loggedin/all-photos');
+    } else if (nextState.location.pathname === `/`) {
+        // no index
+        replace('loggedin/all-photos');
+    }
+    // else do nothing 
+};
 
 const routes = {
-    path: '/', component: App, indexRoute: {component: NoUser}, 
+    path: '/', component: App, 
+    indexRoute: {onEnter: redir }, 
     childRoutes: [
-        { path: 'loggedin/all-photos', component: AllPhotos },
-        { path: 'loggedin/my-photos', component: MyPhotos },
-        { path: 'loggedin/user-data', component: UserData },
+        { path: 'no-user', component: NoUser },
+        { path: 'loggedin/all-photos', component: AllPhotos, onEnter: redir },
+        { path: 'loggedin/my-photos', component: MyPhotos, onEnter: redir },
+        { path: 'loggedin/user-data', component: UserData, onEnter: redir },
         { path: '*', onEnter: (nextState, replace) => {
-                replace('loggedin/all-photos');
+                    replace('/');
                 }
         },
     ]
 }
 
-
+// render
 ReactDom.render(
     <Router history={hashHistory} routes={routes} />,
     document.getElementById(`root`)
@@ -74,10 +105,11 @@ ReactDom.render(
 // if user changed rerender
 store.subscribe(() => {
     if (store.getState().user.name && store.getState().user.name !== username) {
-        ReactDom.render(
-            <Router history={hashHistory} routes={routes} />,
-            document.getElementById(`root`)
-        );
+        // logged in
+        location.hash = `loggedin/all-photos`
+    } else if (!store.getState().user.name && username) {
+        // logged out
+        location.hash = `no-user`
     }
     username = store.getState().user.name;
 })

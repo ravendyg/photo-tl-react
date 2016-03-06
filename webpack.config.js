@@ -25,7 +25,10 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.tsx?$/, loader: 'babel!ts-loader' },
-            { test: /\.html$/, loader: "text-loader" }
+            { test: /\.html$/, loader: "text-loader", query: {
+                                                            presets: [`react`],
+                                                            plugins: [`react-html-attrs`]
+            }}
         ]
     },
     plugins: NODE_ENV === 'development' ? [] : [

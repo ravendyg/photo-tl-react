@@ -73,6 +73,7 @@ export class LoginDialog extends ListeningComponent {
             in: boolean,
             up: boolean
         },
+        user: UserType,
         error: string 
     };
     
@@ -80,7 +81,8 @@ export class LoginDialog extends ListeningComponent {
         dialogs: {
             in: boolean,
             up: boolean
-        }
+        },
+        user: UserType
     };
     
     protected _store: IStore;
@@ -94,10 +96,12 @@ export class LoginDialog extends ListeningComponent {
         
         this.state = {
             dialogs: this._store.getState().dialogs,
+            user: this._store.getState().user,
             error: ``
         };
         this.oldState = {
-            dialogs: this._store.getState().dialogs
+            dialogs: this._store.getState().dialogs,
+            user: this._store.getState().user
         };
                
         this._user = {
@@ -124,8 +128,10 @@ export class LoginDialog extends ListeningComponent {
         if (this.state.dialogs.up && this._user.pas !== this._user.pas2) {
             return `Password doesn't match`;
         }
+        console.log(1);
         return ``;
     }
+    
     
     private _signin () {
         var error = this._verifyInput(); 
@@ -136,6 +142,11 @@ export class LoginDialog extends ListeningComponent {
                     this._user.name,
                     this._user.pas,
                     this._user.rem
+                ).then(
+                    () => { this.closeModal(); },
+                    (error) => {
+                        this.setState({error});
+                    }
                 );
             } else if (this.state.dialogs.up) {
                 // send signup request
@@ -144,15 +155,19 @@ export class LoginDialog extends ListeningComponent {
                     this._user.pas,
                     this._user.pas2,
                     this._user.rem
+                ).then(
+                    () => { this.closeModal(); },
+                    (error) => {
+                        this.setState({error});
+                    }
                 );
             }
-            this.closeModal();
         } else {
             this.setState({error});
         }
     }
 
-    closeModal () {
+    private closeModal () {
         this._user = {
             name: ``,
             pas: ``,
@@ -161,6 +176,12 @@ export class LoginDialog extends ListeningComponent {
         };
         this.setState({error: ``});
         UserActions.hideDialogs();
+    }
+    
+    private hideError () {
+        if (this.state.error) {
+            this.setState({error: ``});
+        }
     }
 
     render () {
@@ -171,6 +192,9 @@ export class LoginDialog extends ListeningComponent {
         if (this.state.dialogs.in) label = `SignIn`;
         else if (this.state.dialogs.up) label = `SignUp`;
         else label = `Error`;
+        
+        // 
+        let error = this.state.error || this.state.user.error;
               
         // need confirmation only for signup
         let confirmPassword;
@@ -205,6 +229,7 @@ export class LoginDialog extends ListeningComponent {
                     ref={node => {
                         name = node;
                     }}
+                    onChange={() => { this.hideError() }}
                 /><br />
                 <TextField
                     hintText="Password"
@@ -213,6 +238,7 @@ export class LoginDialog extends ListeningComponent {
                     ref={node => {
                         pas = node;
                     }}
+                    onChange={() => { this.hideError() }}
                 /><br />
                 {confirmPassword}
                 <Toggle
@@ -221,6 +247,7 @@ export class LoginDialog extends ListeningComponent {
                     ref={node => {
                         rem = node;
                     }}
+                    onChange={() => { this.hideError() }}
                 /><br />
                 <FlatButton 
                     style={{float: 'left', marginLeft: '15px'}}
@@ -243,8 +270,8 @@ export class LoginDialog extends ListeningComponent {
                 <div style={{
                     marginTop: `40px`,
                     textAlign: `center`,
-                    display: this.state.error ? `block` : `none`
-                }}>{this.state.error}</div>
+                    display: error ? `block` : `none`
+                }}>{error}</div>
             </Modal>
         );
     }
