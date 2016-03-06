@@ -66,18 +66,24 @@ const customStyles = {
   }
 };
 
-export class LoginDialog extends ListeningComponent {
-    private _in: any;
-    private _up: any;
+export class LoginDialog  extends React.Component { //extends ListeningComponent {
+    private _unsubscribe: () => any;
     protected needToReRender: any;
+    
+    public state: {
+        in: boolean,
+        up: boolean
+    };
     
     private _user: UserType;
     
     constructor () {
         super(store);
         
-        this._in = store.getState().dialogs.in;
-        this._up = store.getState().dialogs.up;
+        this.state = {
+            in: false,
+            up: false
+        };
                
         this._user = {
             name: ``,
@@ -88,10 +94,30 @@ export class LoginDialog extends ListeningComponent {
         };
     }
     
+        
     protected trackRenderDependecies () {
-        this.needToReRender = {
-            dialogs: store.getState().dialogs,
+        // to be implemented by subclass
+         this.needToReRender = {
+            visibilityFilter: store.getState().visibilityFilter
         };
+    }
+    
+    protected componentDidMount () {
+        // track change of only a part of the store that is of interest
+        this.trackRenderDependecies();
+        
+        this._unsubscribe = this._store.subscribe(() => {    
+            for (var key in this.needToReRender) {
+                if (this.needToReRender[key] !== this._store.getState()[key]) {
+                    this.forceUpdate();
+                    break;
+                }
+            } 
+        });
+    }
+    
+    protected componentWillUnmount () {
+        this._unsubscribe();
     }
     
     private _verifyInput (): boolean {
@@ -108,7 +134,7 @@ export class LoginDialog extends ListeningComponent {
             this._user.error = `Password can't be empty`;
             return false;
         }
-        if (this._up && this._user.pas !== this._user.pas2) {
+        if (this.state.up && this._user.pas !== this._user.pas2) {
             this._user.error = `Password doesn't match`;
             return false;
         }
@@ -117,14 +143,14 @@ export class LoginDialog extends ListeningComponent {
     
     private _signin () {
         if (this._verifyInput()) {
-            if (this._in) {
+            if (this.state.in) {
                 // send signin request
                 UserActions.signin(
                     this._user.name,
                     this._user.pas,
                     this._user.rem
                 );
-            } else if (this._up) {
+            } else if (this.state.up) {
                 // send signup request
                 UserActions.signup(
                     this._user.name,
@@ -151,19 +177,17 @@ export class LoginDialog extends ListeningComponent {
     }
 
     render () {
-        this._in = store.getState().dialogs.in;
-        this._up = store.getState().dialogs.up;
         
         let name, pas, pas2, rem;
         
         let label: string;
-        if (this._in) label = `SignIn`;
-        else if (this._up) label = `SignUp`;
+        if (this.state.in) label = `SignIn`;
+        else if (this.state.up) label = `SignUp`;
         else label = `Error`;
         
         // need confirmation only for signup
         let confirmPassword;
-        if (this._up) {
+        if (this.state.up) {
             confirmPassword =
                 <span> 
                     <TextField
@@ -181,7 +205,7 @@ export class LoginDialog extends ListeningComponent {
         
         return (
             <Modal
-                isOpen={this._in || this._up}
+                isOpen={this.state.in || this.state.up}
                 onRequestClose={() => this.closeModal()}
                 style={customStyles}
             >
@@ -224,7 +248,7 @@ export class LoginDialog extends ListeningComponent {
                     onClick={() => {
                         this._user.name = name.input.value;
                         this._user.pas = pas.input.value;
-                        this._user.pas2 = this._up ? pas2.input.value : ``;
+                        this._user.pas2 = this.state.up ? pas2.input.value : ``;
                         this._user.rem = rem.isToggled();
                         this._signin();
                     }}
