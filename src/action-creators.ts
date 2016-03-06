@@ -11,7 +11,9 @@ export enum Actions {
     SIGNIN_USER = 3,
     SET_IN_DIALOG = 4,
     SET_UP_DIALOG = 5,
+    HIDE_DIALOGS = 6,
     
+    SIGNOUT_USER = 7
 }
 
 var nextTodo = 0;
@@ -40,6 +42,18 @@ export const actionCreators: IActionCreators = {
                 mode
             }
         };
+    },
+    hideDialogs: () => {
+        return {
+            type: Actions.HIDE_DIALOGS,
+            payload: {}
+        };
+    },
+    signOutUser: () => {
+        return {
+            type: Actions.SIGNOUT_USER,
+            payload: {}
+        }
     },
     
     

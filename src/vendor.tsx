@@ -19,9 +19,14 @@ const SvgIcon = require('material-ui/lib/svg-icon');
 const Toolbar = require('material-ui/lib/toolbar/toolbar');
 const ToolbarGroup = require('material-ui/lib/toolbar/toolbar-group');
 const ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
+const DropDownMenu = require('material-ui/lib/drop-down-menu');
+const MenuItem = require('material-ui/lib/menus/menu-item');
+
+const Popover = require('material-ui/lib/popover/popover');
 
 const Toggle = require('material-ui/lib/toggle');
 
+var io = require('./../node_modules/socket.io-client');
 
 const Modal = require('react-modal');
 
@@ -37,7 +42,10 @@ var mUi = {
     ToolbarGroup,
     ToolbarTitle,
     Modal,
-    Toggle
+    Toggle,
+    DropDownMenu,
+    MenuItem,
+    Popover
 };
 
 export {
@@ -46,5 +54,6 @@ export {
     ReactDom,
     ReactRouter,
     mUi,
-    aja
+    aja,
+    io
 };

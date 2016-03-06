@@ -5,8 +5,6 @@ const React: IReact = vendor.React;
 
 const Link = vendor.ReactRouter.Link
 
-const LoginDialog = require('./dialogs/login.tsx');
-
 export class NoUser extends React.Component {
     constructor(){ super();}
     
@@ -21,7 +19,6 @@ export class NoUser extends React.Component {
                 <li><Link to={`/loggedin/werew`}>Somewhere loggedin</Link></li>
                 <li><Link to={`/werew`}>Somewhere loggedout</Link></li>
             </ul>
-            <LoginDialog name={'login'}/>
         </div>
         )
     }

@@ -18,17 +18,25 @@ class UserActionsClass implements IUserActions {
         store.dispatch(actionCreators.setUpDialog(true));
     }
     
-    public hideSignin () {
-        store.dispatch(actionCreators.setInDialog(false));
-    }
-    
-    public hideSignup () {
-        store.dispatch(actionCreators.setUpDialog(false));
+    public hideDialogs () {
+        store.dispatch(actionCreators.hideDialogs());
     }
     
     public signin (name: string, pas: string, rem: boolean) {
         UserService.signin({
             name, pas, rem
+        });
+    }
+    
+    public signup (name: string, pas: string, pas2: string, rem: boolean) {
+        UserService.signup({
+            name, pas, pas2, rem
+        });
+    }
+    
+    public signout (name: string) {
+        UserService.signout({
+            name
         });
     }
 }

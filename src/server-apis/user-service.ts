@@ -3,20 +3,24 @@
 // import {config} from './../config.ts';
 const aja: AjaType = vendor.aja;
 const config: (query: any) => string = require('./../config.ts');
+const socket = require('./socket-service.ts').SocketService;
+
+const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
+const store: IStore = require('./../store.ts');
 
 class UserServiceClass implements IUserService{
 //     private _http: any;
 //     private _q: any;
-//     private _socketService: ISocketService;
+    private _socketService: ISocketService;
 //     private _userActions: IUserActions;
 //     private _loggedInUser: any;
     
-    constructor (
+    constructor (socketService
         // $http, $q, socketService, userActions: IUserActions
         ) {
 //         this._http = $http;
 //         this._q = $q;
-//         this._socketService = socketService;
+        this._socketService = socketService;
 //         this._userActions = userActions;
 // window.socketService = socketService;
     }
@@ -42,19 +46,20 @@ class UserServiceClass implements IUserService{
     
     // generic sign up or in operation
     private _signUpIn (user: UserType, options) {
-console.log(user);
-
+        
         aja()
             .method(options.method)
             .url(options.url)
             .data(user)
             .on(`200`, resp => {
                 console.log(resp);
+                store.dispatch(actionCreators.signInUser(user));
+                this._socketService.connect(config('url') + config('port'));
             })
-            .on(`40*`, resp => {
+            .on('40x', resp => {
                 console.log(resp);
             })
-            .on(`50*`, resp => {
+            .on(`50x`, resp => {
                 console.log(resp);
             })
             .go();
@@ -100,22 +105,32 @@ console.log(user);
                 });
     }
     
-//     public signup (user: IUser) {
-//         return this._signUpIn(user, {
-//                     method: 'POST',
-//                     url: config('url') + config('port') + config('userDriver') + '/new-user',
-//                     data: user
-//                 });         
-//     }
+    public signup (user: UserType) {       
+        this._signUpIn(user, {
+                    method: 'POST',
+                    url: config('url') + config('port') + config('userDriver') + '/new-user'
+                });
+    }
     
-//     // remove cookie
-//     public signout (user: IUser): void {
-//         this._http({
-//             method: 'DELETE',
-//             url: config('url') + config('port') + config('userDriver') + '/sign-out?name=' + user.name
-//         });
-//         this._socketService.disconnect();;
-//     }
+    // remove cookie
+    public signout (user: UserType): void {
+        aja()
+            .method(`DELETE`)
+            .url(config('url') + config('port') + config('userDriver') + '/sign-out?name=' + user.name)
+            .on(`200`, resp => {
+                console.log(resp);
+            })
+            .on('40x', resp => {
+                console.log(resp);
+            })
+            .on(`50x`, resp => {
+                console.log(resp);
+            })
+            .go();
+            
+        store.dispatch(actionCreators.signOutUser());
+        this._socketService.disconnect();
+    }
 }
 
-export const UserService = new UserServiceClass();
+export const UserService = new UserServiceClass(socket);

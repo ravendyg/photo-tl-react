@@ -35,7 +35,8 @@ declare type ActionType = {
         mode?: boolean,
         filter?: number,
         name?: string,
-        text?: string
+        text?: string,
+        user?: UserType
     };
 };
 

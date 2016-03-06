@@ -12,9 +12,7 @@ export = class Title extends React.Component {
     
     render() {
         return (
-            <ToolbarGroup>
                 <ToolbarTitle text={this.props.title}/>
-            </ToolbarGroup>
         )        
     }
 }

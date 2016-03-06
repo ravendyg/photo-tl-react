@@ -21,6 +21,7 @@ interface IReactComponent {
     contexct: any;
     getState (): any;
     setState (state: any): void; 
+    state: any;
 }
 
 interface IListeningComponent extends IReactComponent {
@@ -39,8 +40,11 @@ interface IReactDom {
 
 interface IActionCreators {
     signInUser (user: UserType): ActionType;
+    signOutUser (): ActionType;
+    
     setInDialog (mode: boolean): ActionType;
     setUpDialog (mode: boolean): ActionType;
+    hideDialogs (): ActionType;
     
     setVisibilityFilter (filter: number): ActionType;
     toggleTodo (id: number): ActionType;
@@ -50,14 +54,18 @@ interface IActionCreators {
 interface IUserActions {
     displaySignup: () => void;
     displaySignin: () => void;
-    hideSignup: () => void;
-    hideSignin: () => void;
+    hideDialogs: () => void;
+    // hideSignin: () => void;
     // hideSignup: () => void;
     signin: (name: string, pas: string, rem: boolean) => void;
+    signup: (name: string, pas: string, pas2: string, rem: boolean) => void;
+    signout: (name: string) => void;
 }
 
 interface IUserService {
     signin (user: UserType): void;
+    signup (user: UserType): void;
+    signout (user: UserType): void;
 }
 
 interface IAja {
@@ -68,4 +76,16 @@ interface IAja {
     body: (data: any) => IAja;
     on: (code: string, callback: (resp: any) => void) => IAja;
     go: () => void; 
+}
+
+interface ISocketService {
+    connect (url: string): void;
+    disconnect (): void;
+    getConnection (): any;
+    removePhoto (_id: string): void;
+    uploadPhoto (filename: string, title: string, text: string): void;
+    editPhoto (id: string, title: string, text: string): void;
+    vote (newVote: number, _id: string): void;
+    comment (id: string, text: string): void;
+    deleteComment (id: string, date: string): void;
 }

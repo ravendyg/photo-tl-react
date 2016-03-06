@@ -11,7 +11,12 @@ const user = (state: UserType = { name: `` }, action: ActionType) => {
     switch (action.type) {
         case actions.SIGNIN_USER:
             return {
-                name: action.payload.name,
+                name: action.payload.user.name,
+            };
+            
+        case actions.SIGNOUT_USER:
+            return {
+                name: ``,
             };
     
         default:
@@ -35,6 +40,12 @@ const dialogs = (state: dialogsType = {
             return {
                 in: state.in,
                 up: action.payload.mode
+            };
+            
+        case actions.HIDE_DIALOGS:
+            return {
+                in: false,
+                up: false
             };
     
         default:

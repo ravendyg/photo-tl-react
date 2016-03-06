@@ -34,6 +34,7 @@ export class ListeningComponent extends React.Component {
     }
     
     componentWillUnmount () {
+console.log(this);
         this._unsubscribe();
     }
     

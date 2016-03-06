@@ -4,8 +4,11 @@ declare type Actions = {
     SET_VISIBITY_FILTER?: number
     
     SIGNIN_USER?: number;
+    SIGNOUT_USER?: number;
+    
     SET_IN_DIALOG?: number;
     SET_UP_DIALOG?: number;
+    HIDE_DIALOGS?: number;
 };
 
 declare type Filters = {
