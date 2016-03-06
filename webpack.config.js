@@ -10,7 +10,7 @@ console.log(NODE_ENV);
 module.exports = {  
     entry: {
       app: './src/app.tsx',
-      vendor: './src/vendor.tsx'  
+      vendor: './src/vendor.tsx'
     },
     output: {
         path: __dirname + "/build/",

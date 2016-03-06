@@ -3,45 +3,40 @@
 // vendor
 const React: IReact = vendor.React;
 
+const store: IStore = require('./../store.ts');
+
 export class ListeningComponent extends React.Component {
-    private _unsubscribe: any;
-    protected needToReRender: any;
+    protected _unsubscribe: () => void;
+    protected setState: (state: any) => void;
+    
+    protected state: any;
+    protected oldState: any;
     
     protected _store: IStore;
-    
-    constructor (store) {
+        
+    constructor () {
         super();
         
         this._store = store;
     }
     
-    protected trackRenderDependecies () {
-        // to be implemented by subclass
-    }
-    
-    componentDidMount () {
-        // track change of only a part of the store that is of interest
-        this.trackRenderDependecies();
-        
-        this._unsubscribe = this._store.subscribe(() => {    
-            for (var key in this.needToReRender) {
-                if (this.needToReRender[key] !== this._store.getState()[key]) {
-                    this.forceUpdate();
-                    break;
+    private componentDidMount () {
+        this._unsubscribe = this._store.subscribe(() => {
+            let mutated = false;    
+            for (var key in this.oldState) {
+                // check given property exists on the global state, if then check whether it changed
+                if (this._store.getState()[key] && this.oldState[key] !== this._store.getState()[key]) {
+                    this.oldState[key] = this._store.getState()[key];
+                    mutated = true;
                 }
             } 
+            if (mutated) {
+                this.setState(this.oldState);
+            }
         });
     }
     
-    componentWillUnmount () {
-console.log(this);
+    private componentWillUnmount () {
         this._unsubscribe();
-    }
-    
-    public render () {
-        // important to call super in subclass render method
-        // otherwise after relevant change in the state
-        // it will render on any! state change even if this particular one is irrelevant
-        this.trackRenderDependecies();
     }
 }

@@ -66,91 +66,78 @@ const customStyles = {
   }
 };
 
-export class LoginDialog  extends React.Component { //extends ListeningComponent {
-    private _unsubscribe: () => any;
-    protected needToReRender: any;
-    
-    public state: {
-        in: boolean,
-        up: boolean
+export class LoginDialog extends ListeningComponent {  
+    protected setState: (state: any) => void;
+    protected state: {
+        dialogs: {
+            in: boolean,
+            up: boolean
+        },
+        error: string 
     };
+    
+    protected oldState: {
+        dialogs: {
+            in: boolean,
+            up: boolean
+        }
+    };
+    
+    protected _store: IStore;
     
     private _user: UserType;
     
     constructor () {
-        super(store);
+        super();
+        
+        console.log(this._store);
         
         this.state = {
-            in: false,
-            up: false
+            dialogs: this._store.getState().dialogs,
+            error: ``
+        };
+        this.oldState = {
+            dialogs: this._store.getState().dialogs
         };
                
         this._user = {
             name: ``,
             pas: ``,
             pas2: ``,
-            rem: false,
-            error: ``
+            rem: false
         };
     }
     
-        
-    protected trackRenderDependecies () {
-        // to be implemented by subclass
-         this.needToReRender = {
-            visibilityFilter: store.getState().visibilityFilter
-        };
-    }
+
     
-    protected componentDidMount () {
-        // track change of only a part of the store that is of interest
-        this.trackRenderDependecies();
-        
-        this._unsubscribe = this._store.subscribe(() => {    
-            for (var key in this.needToReRender) {
-                if (this.needToReRender[key] !== this._store.getState()[key]) {
-                    this.forceUpdate();
-                    break;
-                }
-            } 
-        });
-    }
-    
-    protected componentWillUnmount () {
-        this._unsubscribe();
-    }
-    
-    private _verifyInput (): boolean {
+    private _verifyInput (): string {
         // check input for correctness
         if (this._user.name.match(/[^0-1a-zA-Z\s]/)) {
-            this._user.error = 'Only letters or numbers!';
-            return false;
+            return 'Only letters or numbers!';
         }
         if (this._user.name.match(/^\s*$/)) {
-            this._user.error = `Login can't be empty`;
-            return false;
+            return `Login can't be empty`;
         }
         if (this._user.pas.match(/^\s*$/)) {
-            this._user.error = `Password can't be empty`;
-            return false;
+            return `Password can't be empty`;
         }
-        if (this.state.up && this._user.pas !== this._user.pas2) {
-            this._user.error = `Password doesn't match`;
-            return false;
+        if (this.state.dialogs.up && this._user.pas !== this._user.pas2) {
+            return `Password doesn't match`;
         }
-        return true;
+        return ``;
     }
     
     private _signin () {
-        if (this._verifyInput()) {
-            if (this.state.in) {
+        var error = this._verifyInput(); 
+        if (!error) {
+            if (this.state.dialogs.in) {
                 // send signin request
                 UserActions.signin(
                     this._user.name,
                     this._user.pas,
                     this._user.rem
                 );
-            } else if (this.state.up) {
+            } else if (this.state.dialogs.up) {
                 // send signup request
                 UserActions.signup(
                     this._user.name,
@@ -161,7 +148,7 @@ export class LoginDialog  extends React.Component { //extends ListeningComponent
             }
             this.closeModal();
         } else {
-            this.forceUpdate();
+            this.setState({error});
         }
     }
 
@@ -170,9 +157,9 @@ export class LoginDialog  extends React.Component { //extends ListeningComponent
             name: ``,
             pas: ``,
             pas2: ``,
-            rem: false,
-            error: ``
+            rem: false
         };
+        this.setState({error: ``});
         UserActions.hideDialogs();
     }
 
@@ -181,13 +168,13 @@ export class LoginDialog  extends React.Component { //extends ListeningComponent
         let name, pas, pas2, rem;
         
         let label: string;
-        if (this.state.in) label = `SignIn`;
-        else if (this.state.up) label = `SignUp`;
+        if (this.state.dialogs.in) label = `SignIn`;
+        else if (this.state.dialogs.up) label = `SignUp`;
         else label = `Error`;
-        
+              
         // need confirmation only for signup
         let confirmPassword;
-        if (this.state.up) {
+        if (this.state.dialogs.up) {
             confirmPassword =
                 <span> 
                     <TextField
@@ -205,7 +192,7 @@ export class LoginDialog  extends React.Component { //extends ListeningComponent
         
         return (
             <Modal
-                isOpen={this.state.in || this.state.up}
+                isOpen={this.state.dialogs.in || this.state.dialogs.up}
                 onRequestClose={() => this.closeModal()}
                 style={customStyles}
             >
@@ -248,12 +235,16 @@ export class LoginDialog  extends React.Component { //extends ListeningComponent
                     onClick={() => {
                         this._user.name = name.input.value;
                         this._user.pas = pas.input.value;
-                        this._user.pas2 = this.state.up ? pas2.input.value : ``;
+                        this._user.pas2 = this.state.dialogs.up ? pas2.input.value : ``;
                         this._user.rem = rem.isToggled();
                         this._signin();
                     }}
                 /><br />
-                <div style={{marginTop: `40px`, textAlign: `center`}}>{this._user.error}</div>
+                <div style={{
+                    marginTop: `40px`,
+                    textAlign: `center`,
+                    display: this.state.error ? `block` : `none`
+                }}>{this.state.error}</div>
             </Modal>
         );
     }

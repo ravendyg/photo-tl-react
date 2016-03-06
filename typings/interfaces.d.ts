@@ -13,15 +13,14 @@ interface IReactComponent {
     new (...args: any []): IReactComponent;   
     props: any; 
     input: HTMLInputElement;
-    unsubscribe (): void;
-    componentDidMount (): void;
-    componentWillUnmount (): void;
+    // unsubscribe (): void;
+    // componentDidMount (): void;
+    // componentWillUnmount (): void;
     render (): void;
     forceUpdate: () => void;
-    contexct: any;
-    getState (): any;
-    setState (state: any): void; 
-    state: any;
+    context: any;
+    // setState: (state: any) => void; 
+    // state: any;
 }
 
 interface IListeningComponent extends IReactComponent {

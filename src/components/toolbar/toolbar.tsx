@@ -22,25 +22,54 @@ const UserActions: IUserActions = require('./../../user-actions.ts').UserActions
 // data
 const store: IStore = require('./../../store.ts');
 
-export class AppToolbar extends React.Component {
+import {ListeningComponent} from './../listening-component.ts';
+
+export class AppToolbar extends ListeningComponent {
+    protected setState: (state: any) => void;
+    protected state: {
+        user: UserType;
+        userMenu: {
+            open: boolean,
+            anchorEl: any    
+        }
+    }
+    protected oldState: {
+        user: UserType;
+    }
+    
+    protected _store: IStore;
+    
     constructor(){
         super();
         
         this.state = {
-            open: false,
-        };
+            user: this._store.getState().user,
+            
+            userMenu: {
+                open: false,
+                anchorEl: null
+            }
+        }
+        this.oldState = {
+            user: this._store.getState().user
+            // userMenu doesn exist in old state because it's not a part of the global state
+        }
     }
     
     private _openUserMenu (event) {
         this.setState({
-            open: true,
-            anchorEl: event.currentTarget,
-        });    
+            userMenu: {
+                open: true,
+                anchorEl: event.currentTarget
+            }
+        });
     }
     
     private _closeUserMenu () {
         this.setState({
-            open: false
+            userMenu: {
+                open: false
+            }
         });    
     }
     
@@ -50,8 +79,7 @@ export class AppToolbar extends React.Component {
     }
     
     render() {
-        let username = store.getState().user.name; 
-        if (!username) {
+        if (!this.state.user.name) {
             // no user
             return (
                 <Toolbar>
@@ -93,12 +121,12 @@ export class AppToolbar extends React.Component {
                     <ToolbarTitle text={'Photoalbum'}/>
                     <ToolbarGroup float="right">
                         <RaisedButton
-                        onClick={event => this._openUserMenu(event)}
-                        label={username}
+                            onClick={event => this._openUserMenu(event)}
+                            label={this.state.user.name}
                         />
                         <Popover
-                            open={this.state.open}
-                            anchorEl={this.state.anchorEl}
+                            open={this.state.userMenu.open}
+                            anchorEl={this.state.userMenu.anchorEl}
                             anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                             targetOrigin={{horizontal: 'left', vertical: 'top'}}
                             onRequestClose={event => this._closeUserMenu()}
@@ -107,7 +135,10 @@ export class AppToolbar extends React.Component {
                                 <MenuItem primaryText="User data"/>
                                 <MenuItem
                                     primaryText="SignOut"
-                                    onClick={ () => this._signout(username)}
+                                    onClick={ () => {
+                                        this._closeUserMenu();
+                                        this._signout(this.state.user.name);
+                                    }}
                                 />
                             </div>
                         </Popover>

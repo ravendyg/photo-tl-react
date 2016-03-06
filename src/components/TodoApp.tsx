@@ -1,23 +1,23 @@
-/// <reference path="../../typings/tsd.d.ts" />
+// /// <reference path="../../typings/tsd.d.ts" />
 
-// vendor
-const React: IReact = vendor.React;
+// // vendor
+// const React: IReact = vendor.React;
 
-// components
-import {NewTodo} from './Todos/NewTodo.tsx';
-import {TodoList} from './Todos/TodoList.tsx';
-import {FilterLinks} from './FilterLinks/FilterLinks.tsx';
+// // components
+// import {NewTodo} from './Todos/NewTodo.tsx';
+// import {TodoList} from './Todos/TodoList.tsx';
+// import {FilterLinks} from './FilterLinks/FilterLinks.tsx';
 
-export class TodoApp extends React.Component {    
-    constructor () { super(); }
+// export class TodoApp extends React.Component {    
+//     constructor () { super(); }
     
-    render () {
-        return (
-            <div>
-                <NewTodo />
-                <TodoList />
-                <FilterLinks />                   
-            </div>
-        );
-    }
-}
+//     render () {
+//         return (
+//             <div>
+//                 <NewTodo />
+//                 <TodoList />
+//                 <FilterLinks />                   
+//             </div>
+//         );
+//     }
+// }
