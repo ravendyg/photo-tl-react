@@ -4,7 +4,6 @@
 const React: IReact = vendor.React;
 
 // ui
-const ToolbarGroup = vendor.mUi.ToolbarGroup;
 const ToolbarTitle = vendor.mUi.ToolbarTitle;
 
 export = class Title extends React.Component {

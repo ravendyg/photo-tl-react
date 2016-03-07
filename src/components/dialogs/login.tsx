@@ -92,8 +92,6 @@ export class LoginDialog extends ListeningComponent {
     constructor () {
         super();
         
-        console.log(this._store);
-        
         this.state = {
             dialogs: this._store.getState().dialogs,
             user: this._store.getState().user,
@@ -112,8 +110,6 @@ export class LoginDialog extends ListeningComponent {
         };
     }
     
-
-    
     private _verifyInput (): string {
         // check input for correctness
         if (this._user.name.match(/[^0-1a-zA-Z\s]/)) {
@@ -128,11 +124,9 @@ export class LoginDialog extends ListeningComponent {
         if (this.state.dialogs.up && this._user.pas !== this._user.pas2) {
             return `Password doesn't match`;
         }
-        console.log(1);
         return ``;
     }
-    
-    
+        
     private _signin () {
         var error = this._verifyInput(); 
         if (!error) {
@@ -188,17 +182,17 @@ export class LoginDialog extends ListeningComponent {
         
         let name, pas, pas2, rem;
         
-        let label: string;
-        if (this.state.dialogs.in) label = `SignIn`;
-        else if (this.state.dialogs.up) label = `SignUp`;
-        else label = `Error`;
+        let error = this.state.error;
+        let dialogs = this.state.dialogs;
         
-        // 
-        let error = this.state.error || this.state.user.error;
+        let label: string;
+        if (dialogs.in) label = `SignIn`;
+        else if (dialogs.up) label = `SignUp`;
+        else label = `Error`;
               
         // need confirmation only for signup
         let confirmPassword;
-        if (this.state.dialogs.up) {
+        if (dialogs.up) {
             confirmPassword =
                 <span> 
                     <TextField
@@ -216,7 +210,7 @@ export class LoginDialog extends ListeningComponent {
         
         return (
             <Modal
-                isOpen={this.state.dialogs.in || this.state.dialogs.up}
+                isOpen={dialogs.in || dialogs.up}
                 onRequestClose={() => this.closeModal()}
                 style={customStyles}
             >
@@ -262,7 +256,7 @@ export class LoginDialog extends ListeningComponent {
                     onClick={() => {
                         this._user.name = name.input.value;
                         this._user.pas = pas.input.value;
-                        this._user.pas2 = this.state.dialogs.up ? pas2.input.value : ``;
+                        this._user.pas2 = dialogs.up ? pas2.input.value : ``;
                         this._user.rem = rem.isToggled();
                         this._signin();
                     }}

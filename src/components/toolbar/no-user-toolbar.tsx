@@ -19,9 +19,6 @@ const Popover = vendor.mUi.Popover;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-// data
-const store: IStore = require('./../../store.ts');
-
 import {ListeningComponent} from './../listening-component.ts';
 
 export class NoUserToolbar extends ListeningComponent {

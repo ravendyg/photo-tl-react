@@ -17,7 +17,6 @@ const actionCreators: IActionCreators = require('./action-creators.ts').actionCr
 import {NoUser} from './components/no-user.tsx';
 
 
-import {AppToolbar} from './components/toolbar/toolbar.tsx';
 import {AllPhotos} from './components/loggedin/all-photos.tsx';
 import {MyPhotos} from './components/loggedin/my-photos.tsx';
 import {UserData} from './components/loggedin/user-data.tsx';
@@ -26,33 +25,13 @@ import {LoginDialog} from './components/dialogs/login.tsx';
 
 var username = ``;
 
-// class App extends React.Component {
-//     constructor(){ super();}
-    
-//     render() {
-// console.log(this.props.children);
-//         // don't display no-user if user is signedin
-//         if (store.getState().user.name) {
-//             if (location.hash.match(/#\/?/)) {
-//                 return (
-//                 <div>
-//                     <AppToolbar />
-//                     <AllPhotos />
-//                     <LoginDialog name={'login'}/>
-//                 </div>
-//                 )    
-//             }
-//         } else {
-//             return (
-//             <div>
-//                 <AppToolbar />
-//                 {this.props.children}
-//                 <LoginDialog name={'login'}/>
-//             </div>
-//             )
-//         }
-//     }
-// }
+// check for username in body
+// if -> dispatch
+var dataset: {user?: string} = document.body.dataset;
+if (dataset.user) {
+    store.dispatch(actionCreators.signInUser({name: dataset.user}));
+    username = store.getState().user.name;
+}
 
 class App extends React.Component {
     constructor(){ super();}
@@ -67,7 +46,6 @@ class App extends React.Component {
 }
 
 const redir = (nextState, replace) => {
-    console.log(store.getState().user.name);
     if (!store.getState().user.name) {
         // logged out
         replace('/no-user');
@@ -114,9 +92,3 @@ store.subscribe(() => {
     username = store.getState().user.name;
 })
 
-// check for username in body
-// if -> dispatch
-var dataset: {user?: string} = document.body.dataset;
-if (dataset.user) {
-    store.dispatch(actionCreators.signInUser({name: dataset.user}));
-}

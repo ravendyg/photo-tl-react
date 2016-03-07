@@ -3,7 +3,6 @@ declare type UserType = {
     pas?: string,
     pas2?: string,
     rem?: boolean,
-    error?: string,
     then?: any
 }
 

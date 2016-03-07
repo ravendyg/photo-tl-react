@@ -14,25 +14,14 @@ const MenuItem = vendor.mUi.MenuItem;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-// data
-const store: IStore = require('./../../store.ts');
-
-import {ListeningComponent} from './../listening-component.ts';
-
-export class UserToolbar extends ListeningComponent {
+export class UserToolbar extends React.Component {
     protected setState: (state: any) => void;
     protected state: {
-        user: UserType;
         userMenu: {
             open: boolean,
             anchorEl: any    
         }
     }
-    protected oldState: {
-        user: UserType;
-    }
-    
-    protected _store: IStore;
     
     private displayedButton: any;
     props: any;
@@ -41,21 +30,16 @@ export class UserToolbar extends ListeningComponent {
     
     constructor(){
         super();
-        
+
         this.state = {
-            user: this._store.getState().user,
-            
             userMenu: {
                 open: false,
                 anchorEl: null
             }
-        }
-        this.oldState = {
-            user: this._store.getState().user
-            // userMenu doesn exist in old state because it's not a part of the global state
-        }      
+        }    
         
         this.menuItems = [{
+            key: 1,
             text: `User data`,
             disp: -1,
             click: () => {
@@ -63,6 +47,7 @@ export class UserToolbar extends ListeningComponent {
                 location.hash = `/loggedin/user-data`;
             }
         },{
+            key: 2,
             text: `All photos`,
             disp: 1,
             click: () => {
@@ -70,6 +55,7 @@ export class UserToolbar extends ListeningComponent {
                 location.hash = `/loggedin/all-photos`;
             }
         },{
+            key: 3,
             text: `My photos`,
             disp: 1,
             click: () => {
@@ -77,11 +63,12 @@ export class UserToolbar extends ListeningComponent {
                 location.hash = `/loggedin/my-photos`;
             }
         },{
+            key: 4,
             text: `SignOut`,
             disp: 0,
             click: () => {
                 this._closeUserMenu();
-                this._signout(this.state.user.name);
+                this._signout(this.props.userName);
             }
         }]  
     }
@@ -105,36 +92,26 @@ export class UserToolbar extends ListeningComponent {
     
     private _signout (username: string) {
         UserActions.signout(username);
-        this._closeUserMenu();
     }
     
     render() {
-        let title: string;
-        let filter: number = 1;
-        if (this.props.mode === `data`) {
-            this.displayedButton = null;
-            title = `Data`;   
-            filter = -1; 
-        } else if (this.props.mode === `my-photos`) {
-            this.displayedButton =
-                <ToolbarGroup>
-                    <RaisedButton
-                        label="All photos"
-                        onClick={ () => {location.hash = `/loggedin/all-photos`} }
-                    />
-                </ToolbarGroup>
-            title = `My photos`;
-        } else {
-            this.displayedButton =
-                <ToolbarGroup>
-                    <RaisedButton
-                        label="My photos"
-                        onClick={ () => {location.hash = `/loggedin/my-photos`} }
-                    />
-                </ToolbarGroup>
-            title = `All photos`;
-        }
+        let title = this.props.title;
+        let filter: number;
         
+        if (title === `Data`) {
+            filter = -1;
+            this.displayedButton = null;   
+        } else {
+            filter = 1;
+            this.displayedButton =
+                <ToolbarGroup>
+                    <RaisedButton
+                        label={this.props.label}
+                        onClick={ () => {location.hash = this.props.hash} }
+                    />
+                </ToolbarGroup>
+        }
+
         return (
             <Toolbar>
                     {this.displayedButton}
@@ -142,7 +119,7 @@ export class UserToolbar extends ListeningComponent {
                 <ToolbarGroup float="right">
                     <RaisedButton
                         onClick={event => this._openUserMenu(event)}
-                        label={this.state.user.name}
+                        label={this.props.userName}
                     />
                     <Popover
                         open={this.state.userMenu.open}
@@ -152,10 +129,11 @@ export class UserToolbar extends ListeningComponent {
                         onRequestClose={event => this._closeUserMenu()}
                     >
                         <div style={{padding: `20px`}}>
-                            {this.menuItems.filter(e => filter * e.disp <= 0).map(e => 
+                            {this.menuItems.filter(e => filter * e.disp <= 0).map( e => 
                                 <MenuItem
-                                 primaryText={e.text}
-                                 onClick={e.click}
+                                    key={e.key}
+                                    primaryText={e.text}
+                                    onClick={e.click}
                              />
                             )}
                         </div>
@@ -165,15 +143,3 @@ export class UserToolbar extends ListeningComponent {
         )
     } 
 }
-
-// <MenuItem
-//                                 primaryText="User data"
-//                                 onClick={ () => {location.hash = `/loggedin/user-data`} }
-//                             />
-//                             <MenuItem
-//                                 primaryText="SignOut"
-//                                 onClick={ () => {
-//                                     this._closeUserMenu();
-//                                     this._signout(this.state.user.name);
-//                                 }}
-//                             />
