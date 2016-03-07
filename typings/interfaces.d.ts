@@ -48,13 +48,13 @@ interface IActionCreators {
     signInUser (user: UserType): ActionType;
     signOutUser (): ActionType;
     
-    setInDialog (mode: boolean): ActionType;
-    setUpDialog (mode: boolean): ActionType;
+    setInDialog (): ActionType;
+    setUpDialog (): ActionType;
     hideDialogs (): ActionType;
     
-    setVisibilityFilter (filter: number): ActionType;
-    toggleTodo (id: number): ActionType;
-    addTodo (text: string): ActionType;
+    addPhoto (photo: ImageType): ActionType;
+    addPhotos (photos: ImageType []): ActionType;
+    deletePhoto (id: string): ActionType;
 }
 
 interface IUserActions {
@@ -67,6 +67,7 @@ interface IUserActions {
     signup: (name: string, pas: string, pas2: string, rem: boolean) => IPromise;
     signout: (name: string) => void;
 }
+
 
 interface IUserService {
     signin (user: UserType): IPromise;
@@ -85,7 +86,7 @@ interface IAja {
 }
 
 interface ISocketService {
-    connect (url: string): void;
+    connect (): void;
     disconnect (): void;
     getConnection (): any;
     removePhoto (_id: string): void;
@@ -94,4 +95,15 @@ interface ISocketService {
     vote (newVote: number, _id: string): void;
     comment (id: string, text: string): void;
     deleteComment (id: string, date: string): void;
+}
+
+interface IImageService {
+    uploadPhoto (file: any): void;
+}
+
+interface IUtils {
+    sortNumericArray (arr: number [], order: number): number [];
+    transformDate (num: number): string;
+    objectAssign (target: any, sources: any []): any;
+    mergeUnic (arrs: any [], compare: (el1: any, el2: any) => number): any [];
 }

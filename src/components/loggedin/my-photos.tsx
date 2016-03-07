@@ -8,6 +8,7 @@ const store: IStore = require('./../../store.ts');
 
 import {UserToolbar} from './../toolbar/user-toolbar.tsx';
 import {LoginDialog} from './../dialogs/login.tsx';
+import {PhotoList} from './../photo-list/photo-list.tsx';
 
 export class MyPhotos extends React.Component {
     constructor(){ super();}
@@ -21,7 +22,7 @@ export class MyPhotos extends React.Component {
                 label={`All photos`}
                 hash={`/loggedin/all-photos`}
             />
-            <div>My photos</div>
+            <PhotoList filter={`my`}/>
         </div>
         )
     }

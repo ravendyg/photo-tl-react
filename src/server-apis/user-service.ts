@@ -3,7 +3,9 @@
 // import {config} from './../config.ts';
 const aja: AjaType = vendor.aja;
 const config: (query: any) => string = require('./../config.ts');
-const socket = require('./socket-service.ts').SocketService;
+
+const socketService: ISocketService = require('./socket-service.ts').SocketService;
+const imageService: IImageService = require('./image-service.ts').ImageService;
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
 const store: IStore = require('./../store.ts');
@@ -11,15 +13,17 @@ const store: IStore = require('./../store.ts');
 class UserServiceClass implements IUserService{
 //     private _http: any;
 //     private _q: any;
+    private _aja: AjaType;
     private _socketService: ISocketService;
 //     private _userActions: IUserActions;
 //     private _loggedInUser: any;
     
-    constructor (socketService
+    constructor (aja, socketService
         // $http, $q, socketService, userActions: IUserActions
         ) {
 //         this._http = $http;
 //         this._q = $q;
+        this._aja = aja;
         this._socketService = socketService;
 //         this._userActions = userActions;
 // window.socketService = socketService;
@@ -47,14 +51,14 @@ class UserServiceClass implements IUserService{
     // generic sign up or in operation
     private _signUpIn (user: UserType, options) {
         var promise: IPromise = new Promise ( (resolve, reject) => {
-            aja()
+            this._aja()
                 .method(options.method)
                 .url(options.url)
                 .data(user)
                 .on(`200`, resp => {
                     console.log(resp);
                     store.dispatch(actionCreators.signInUser(user));
-                    this._socketService.connect(config('url') + config('port'));
+                    this._socketService.connect();
                     resolve();
                 })
                 .on('40x', err => {
@@ -87,7 +91,7 @@ class UserServiceClass implements IUserService{
     
     // remove cookie
     public signout (user: UserType): void {
-        aja()
+        this._aja()
             .method(`DELETE`)
             .url(config('url') + config('port') + config('userDriver') + '/sign-out?name=' + user.name)
             .on(`200`, resp => {
@@ -106,4 +110,4 @@ class UserServiceClass implements IUserService{
     }
 }
 
-export const UserService = new UserServiceClass(socket);
+export const UserService = new UserServiceClass(aja, socketService);

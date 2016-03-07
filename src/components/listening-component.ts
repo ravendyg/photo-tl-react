@@ -13,6 +13,8 @@ export class ListeningComponent extends React.Component {
     protected oldState: any;
     
     protected _store: IStore;
+    
+    public props: any;
         
     constructor () {
         super();
@@ -28,15 +30,21 @@ export class ListeningComponent extends React.Component {
                 if (this._store.getState()[key] && this.oldState[key] !== this._store.getState()[key]) {
                     this.oldState[key] = this._store.getState()[key];
                     mutated = true;
+                    break;
                 }
             } 
             if (mutated) {
-                this.setState(this.oldState);
+                this.transformState()
             }
         });
     }
     
     private componentWillUnmount () {
         this._unsubscribe();
+    }
+    
+    // if child component needs data to be filtered, it shoul overload transformState
+    protected transformState () {
+        this.setState(this.oldState);
     }
 }

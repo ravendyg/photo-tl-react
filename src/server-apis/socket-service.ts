@@ -2,27 +2,28 @@
 
 const io = vendor.io;
 
+const config: (query: any) => string = require('./../config.ts');
+
 const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
 
 class SocketServiceClass implements ISocketService {
     private _socket: any;
     private _io: any;
     
-    private _serverActions: IActionCreators;
+    private _actionCreators: IActionCreators;
     
-    constructor (io, serverActions) {
+    constructor (io, actionCreators) {
 
         this._io = io;
         
         // has access to server actions emmiter -> when user action on the client delivered to the server
         // there it should be confirmed and after that server broadcasts server action
         // that would be delivered to the stores
-        this._serverActions = serverActions;
+        this._actionCreators = actionCreators;
     }
     
-    public connect (url: string) {
-        this._socket = this._io(url);
-console.log(this._socket);
+    public connect () {
+        this._socket = this._io(config('url') + config('port'));
         this._listen();
     }
     

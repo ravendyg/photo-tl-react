@@ -9,8 +9,8 @@ console.log(NODE_ENV);
 
 module.exports = {  
     entry: {
-      app: './src/app.tsx',
-      vendor: './src/vendor.tsx'
+      vendor: './src/vendor.tsx',
+      app: './src/app.tsx'      
     },
     output: {
         path: __dirname + "/build/",
@@ -28,12 +28,29 @@ module.exports = {
             { test: /\.html$/, loader: "text-loader", query: {
                                                             presets: [`react`],
                                                             plugins: [`react-html-attrs`]
-            }}
+            }},
+            { test: /\.css$/, loader: "style-loader!css-loader" },
         ]
     },
     plugins: NODE_ENV === 'development' ? [] : [
+        new webpack.DefinePlugin({
+            'process.env': {
+            'NODE_ENV': JSON.stringify('production')
+            }
+        }),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+        new webpack.optimize.UglifyJsPlugin({
+            mangle: true,
+            sourcemap: false,
+            compress: {
+                warnings: false,
+                dead_code: true,
+                drop_debugger: true,
+                conditionals: true,
+                unused: true,
+                drop_console: true
+            }            
+        }),
     ]
 }

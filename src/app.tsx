@@ -13,6 +13,8 @@ var hashHistory = vendor.ReactRouter.hashHistory;
 const store: IStore = require('./store.ts');
 const actionCreators: IActionCreators = require('./action-creators.ts').actionCreators;
 
+const socketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
+
 // view components
 import {NoUser} from './components/no-user.tsx';
 
@@ -23,6 +25,8 @@ import {UserData} from './components/loggedin/user-data.tsx';
 
 import {LoginDialog} from './components/dialogs/login.tsx';
 
+var css = require("./style.css");
+
 var username = ``;
 
 // check for username in body
@@ -31,6 +35,7 @@ var dataset: {user?: string} = document.body.dataset;
 if (dataset.user) {
     store.dispatch(actionCreators.signInUser({name: dataset.user}));
     username = store.getState().user.name;
+    socketService.connect();
 }
 
 class App extends React.Component {

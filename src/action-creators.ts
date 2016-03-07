@@ -1,19 +1,18 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-const polyfils = require('./utils/polyfils.ts');
 const actions: Actions = require('./consts.ts').Actions;
 
-export enum Actions {
-    ADD_TODO = 0,
-    TOGGLE_TODO = 1,
-    SET_VISIBITY_FILTER = 2,
-    
+export enum Actions {  
     SIGNIN_USER = 3,
     SIGNOUT_USER = 4,
     
     SET_IN_DIALOG = 5,
     SET_UP_DIALOG = 6,
     HIDE_DIALOGS = 7,   
+    
+    ADD_PHOTO = 8,
+    ADD_PHOTOS = 9,
+    DELETE_PHOTO = 10,
     
 }
 
@@ -35,20 +34,16 @@ export const actionCreators: IActionCreators = {
         }
     },
     
-    setInDialog: (mode: boolean) => {
+    setInDialog: () => {
         return {
             type: Actions.SET_IN_DIALOG,
-            payload: {
-                mode
-            }
+            payload: {}
         };
     },
-    setUpDialog: (mode: boolean) => {
+    setUpDialog: () => {
         return {
             type: Actions.SET_UP_DIALOG,
-            payload: {
-                mode
-            }
+            payload: {}
         };
     },
     hideDialogs: () => {
@@ -57,34 +52,34 @@ export const actionCreators: IActionCreators = {
             payload: {}
         };
     },
-   
     
-    
-    
-    
-    setVisibilityFilter: (filter: number) => {
+    addPhoto: (photo: ImageType) => {
         return {
-            type: Actions.SET_VISIBITY_FILTER,
+            type: Actions.ADD_PHOTO,
             payload: {
-                filter
+                photo
             }
         }
     },
-    toggleTodo: (id: number) => {
+    addPhotos: (photos: ImageType []) => {
         return {
-            type: Actions.TOGGLE_TODO,
+            type: Actions.ADD_PHOTOS,
+            payload: {
+                photos
+            }
+        }
+    },
+    deletePhoto: (id: string) => {
+        return {
+            type: Actions.ADD_PHOTO,
             payload: {
                 id
             }
         }
     },
-    addTodo: (text: string) => {
-        return {
-            type: Actions.ADD_TODO,
-            payload: {
-                text,
-                id: nextTodo++
-            }
-        }
-    }
+   
+    
+    
+    
+
 }

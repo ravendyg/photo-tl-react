@@ -11,11 +11,11 @@ class UserActionsClass implements IUserActions {
     }
     
     public displaySignin () {
-        store.dispatch(actionCreators.setInDialog(true));
+        store.dispatch(actionCreators.setInDialog());
     }
     
     public displaySignup () {
-        store.dispatch(actionCreators.setUpDialog(true));
+        store.dispatch(actionCreators.setUpDialog());
     }
     
     public hideDialogs () {

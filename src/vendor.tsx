@@ -11,6 +11,7 @@ const aja = require('aja');
 const TextField = require('material-ui/lib/text-field');
 const FlatButton = require('material-ui/lib/flat-button');
 const RaisedButton = require('material-ui/lib/raised-button');
+const Badge = require('material-ui/lib/badge');
 const List = require('material-ui/lib/lists/list');
 const ListItem = require('material-ui/lib/lists/list-item');
 const Colors = require('material-ui/lib/styles/colors');
@@ -25,6 +26,13 @@ const MenuItem = require('material-ui/lib/menus/menu-item');
 const Popover = require('material-ui/lib/popover/popover');
 
 const Toggle = require('material-ui/lib/toggle');
+
+const Card = require('material-ui/lib/card/card');
+const CardActions = require('material-ui/lib/card/card-actions');
+const CardHeader = require('material-ui/lib/card/card-header');
+const CardMedia = require('material-ui/lib/card/card-media');
+const CardTitle = require('material-ui/lib/card/card-title');
+const CardText = require('material-ui/lib/card/card-text');
 
 var io = require('./../node_modules/socket.io-client');
 
@@ -45,7 +53,14 @@ var mUi = {
     Toggle,
     DropDownMenu,
     MenuItem,
-    Popover
+    Popover,
+    Card,
+    CardActions,
+    CardHeader,
+    CardMedia,
+    CardText,
+    CardTitle,
+    Badge
 };
 
 export {
