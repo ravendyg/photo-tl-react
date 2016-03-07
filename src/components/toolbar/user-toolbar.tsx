@@ -14,6 +14,7 @@ const MenuItem = vendor.mUi.MenuItem;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
+
 export class UserToolbar extends React.Component {
     protected setState: (state: any) => void;
     protected state: {
@@ -97,6 +98,7 @@ export class UserToolbar extends React.Component {
     render() {
         let title = this.props.title;
         let filter: number;
+        let userMenu = this.state.userMenu;
         
         if (title === `Data`) {
             filter = -1;
@@ -114,16 +116,18 @@ export class UserToolbar extends React.Component {
 
         return (
             <Toolbar>
-                    {this.displayedButton}
+                {this.displayedButton}
+                
                 <ToolbarTitle text={title}/>
+                
                 <ToolbarGroup float="right">
                     <RaisedButton
                         onClick={event => this._openUserMenu(event)}
                         label={this.props.userName}
                     />
                     <Popover
-                        open={this.state.userMenu.open}
-                        anchorEl={this.state.userMenu.anchorEl}
+                        open={userMenu.open}
+                        anchorEl={userMenu.anchorEl}
                         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                         targetOrigin={{horizontal: 'left', vertical: 'top'}}
                         onRequestClose={event => this._closeUserMenu()}

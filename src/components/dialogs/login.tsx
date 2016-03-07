@@ -168,8 +168,8 @@ export class LoginDialog extends ListeningComponent {
             pas2: ``,
             rem: false
         };
-        this.setState({error: ``});
         UserActions.hideDialogs();
+        this.setState({error: ``});
     }
     
     private hideError () {
@@ -186,6 +186,7 @@ export class LoginDialog extends ListeningComponent {
         let dialogs = this.state.dialogs;
         
         let label: string;
+        
         if (dialogs.in) label = `SignIn`;
         else if (dialogs.up) label = `SignUp`;
         else label = `Error`;
@@ -254,10 +255,12 @@ export class LoginDialog extends ListeningComponent {
                     style={{float: 'right', marginRight: '15px'}}
                     label={label}
                     onClick={() => {
-                        this._user.name = name.input.value;
-                        this._user.pas = pas.input.value;
-                        this._user.pas2 = dialogs.up ? pas2.input.value : ``;
-                        this._user.rem = rem.isToggled();
+                        this._user = {
+                            name: name.input.value,
+                            pas: pas.input.value,
+                            pas2: dialogs.up ? pas2.input.value : ``,
+                            rem: rem.isToggled()
+                        };
                         this._signin();
                     }}
                 /><br />
