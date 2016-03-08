@@ -54,6 +54,14 @@ class UserActionsClass implements IUserActions {
         SocketService.removePhoto(_id);
     }
     
+    public postComment (_id: string, text: string): void {
+        SocketService.postComment(_id, text);
+    }
+    
+    public deleteComment (_id: string, text: string): void {
+        SocketService.deleteComment(_id, text);
+    }
+    
     public uploadPhoto (photo: any, title: string, text: string): void {
         ImageService.uploadPhoto(photo)
             .then(

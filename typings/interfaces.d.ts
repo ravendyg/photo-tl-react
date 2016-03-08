@@ -56,8 +56,10 @@ interface IActionCreators {
     addPhoto (photo: ImageType): ActionType;
     addPhotos (photos: ImageType []): ActionType;
     deletePhoto (id: string): ActionType;
+    deleteComment (_id: string, date: string): ActionType;
     
     votePhoto (newRating: NewRatingType): ActionType;
+    postComment (newComment: {comment: CommentType, id: string}): ActionType;
 }
 
 interface IUserActions {
@@ -73,6 +75,8 @@ interface IUserActions {
     
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
+    postComment: (_id: string, text: string) => void;
+    deleteComment: (_id: string, date: string) => void;
     
     uploadPhoto: (photo: any, title: string, text: string) => void;
 }
@@ -102,7 +106,7 @@ interface ISocketService {
     uploadPhoto (filename: string, title: string, text: string): void;
     editPhoto (id: string, title: string, text: string): void;
     vote (newVote: number, _id: string): void;
-    comment (id: string, text: string): void;
+    postComment (_id: string, text: string): void;
     deleteComment (id: string, date: string): void;
 }
 

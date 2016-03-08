@@ -58,7 +58,7 @@ class SocketServiceClass implements ISocketService {
     }
     
     // comment
-    public comment (id: string, text: string) {
+    public postComment (id: string, text: string) {
         this._socket.emit('comment-photo', {
             id,
             text
@@ -96,13 +96,13 @@ class SocketServiceClass implements ISocketService {
         //     this._serverActions.downloadPhotos(data);
         // });
         // // new comment
-        // this._socket.on(`comment-photo`, (data) => {
-        //     this._serverActions.commentPhoto(data);
-        // });
-        // // delete comment
-        // this._socket.on(`uncomment-photo`, (data) => {
-        //     this._serverActions.deleteComment(data);
-        // });
+        this._socket.on(`comment-photo`, (newComment) => {
+            store.dispatch(actionCreators.postComment(newComment));
+        });
+        // delete comment
+        this._socket.on(`uncomment-photo`, (data) => {
+            store.dispatch(actionCreators.deleteComment(data.id, data.date));
+        });
     }
     // stop listen
     private _stopListen () {
@@ -112,8 +112,8 @@ class SocketServiceClass implements ISocketService {
         // this._socket._callbacks['$edit-photo'] = [];
         this._socket._callbacks['$vote-photo'] = [];
         // this._socket._callbacks['$photo-list'] = [];
-        // this._socket._callbacks['$comment-photo'] = [];
-        // this._socket._callbacks['$uncomment-photo'] = [];
+        this._socket._callbacks['$comment-photo'] = [];
+        this._socket._callbacks['$uncomment-photo'] = [];
     }
 }
 

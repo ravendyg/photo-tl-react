@@ -52,6 +52,8 @@ const dialogs = (state: dialogsType, action: ActionType) => {
 };
 
 const photo = (state, action: ActionType) => {
+    let tmp: ImageType
+    
     switch (action.type) {
         case actions.ADD_PHOTO:
             return action.payload.photo;
@@ -61,7 +63,7 @@ const photo = (state, action: ActionType) => {
             else return false;
             
         case actions.VOTE:
-            let tmp: ImageType = Utils.objectAssign({}, [state]);
+            tmp = Utils.objectAssign({}, [state]);
             tmp.averageRating = action.payload.newRating.averageRating;
             tmp.rating = [
                 // select all other user's votes
@@ -69,6 +71,19 @@ const photo = (state, action: ActionType) => {
                 // add from this one
                 action.payload.newRating.ratingElem
             ]           
+            return tmp;
+            
+        case actions.POST_COMMENT:
+            tmp = Utils.objectAssign({}, [state]);
+            tmp.comments = [
+                ...tmp.comments,
+                action.payload.newComment.comment
+            ]
+            return tmp;
+            
+        case actions.DELETE_COMMENT:
+            tmp = Utils.objectAssign({}, [state]);
+            tmp.comments = tmp.comments.filter(e => e.date !== action.payload.date);
             return tmp;
     
         default:
@@ -97,13 +112,33 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             
         case actions.VOTE:
             for (let i=state.length-1; i>=0; i--) {
-                if (state[i]._id === action.payload.newRating._id) {
-                    // console.log([
-                    //     ...state.slice(0,i),
-                    //     photo(state[i], action),
-                    //     ...state.slice(i+1)
-                    // ]);
-                    
+                if (state[i]._id === action.payload.newRating._id) {                    
+                    return [
+                        ...state.slice(0,i),
+                        photo(state[i], action),
+                        ...state.slice(i+1)
+                    ]
+                }
+            }
+            // not found?!
+            return state;
+            
+        case actions.POST_COMMENT:
+            for (let i=state.length-1; i>=0; i--) {
+                if (state[i]._id === action.payload.newComment.id) {                    
+                    return [
+                        ...state.slice(0,i),
+                        photo(state[i], action),
+                        ...state.slice(i+1)
+                    ]
+                }
+            }
+            // not found?!
+            return state;
+            
+        case actions.DELETE_COMMENT:
+            for (let i=state.length-1; i>=0; i--) {
+                if (state[i]._id === action.payload._id) {                    
                     return [
                         ...state.slice(0,i),
                         photo(state[i], action),

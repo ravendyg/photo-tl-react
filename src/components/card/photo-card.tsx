@@ -9,6 +9,8 @@ import {Preloader} from './../preloader.tsx';
 
 import {Rating} from './../rating/rating.tsx';
 
+import {Comments} from './../comments/comments.tsx';
+
 const Card = vendor.mUi.Card;
 const CardActions = vendor.mUi.CardActions;
 const CardHeader = vendor.mUi.CardHeader;
@@ -25,18 +27,22 @@ export class PhotoCard extends React.Component {
     protected state: {
         displayCard: string,
         displayPreloader: string,
+        displayComments: string
     };
         
     protected oldState: {
         displayCard: string,
         displayPreloader: string,
+        displayComments: string
     };
     
     public props: {
         photo: ImageType,
         user: string,
-        vote: (vote: number, _id: string) => void;
-        delete: (_id: string) => void;
+        vote: (vote: number, _id: string) => void,
+        delete: (_id: string) => void,
+        showComs: string,
+        toggleComments: (_id: string) => void
     }
     
     constructor(){
@@ -45,10 +51,12 @@ export class PhotoCard extends React.Component {
         this.state = {
             displayCard: `none`,
             displayPreloader: `block`,
+            displayComments: `none`
         };
         this.oldState = {
             displayCard: `none`,
             displayPreloader: `block`,
+            displayComments: `none`
         };
     }
 
@@ -67,11 +75,18 @@ export class PhotoCard extends React.Component {
         this.props.delete(_id);
     }
     
+    private _toggleComments () {
+        this.setState({displayComments: ``});
+    }
+    
     render() {
         let cardStyle = (window.innerWidth>600)
                 ? {marginTop: `1%`, marginLeft: `5%`, marginRight: `5%`}
                 : {};
         let e = this.props.photo;
+        
+        // showComs={this.state.commentsDisplayed}
+        //                 toggleComments={(_id: string) => this._toggleComments(_id)}
         
         return (
             <div style={cardStyle}>
@@ -105,12 +120,21 @@ export class PhotoCard extends React.Component {
                             badgeContent={e.comments.length}
                             secondary={true}
                             badgeStyle={{top: 12, right: 12}} >
-                            <FlatButton><i className="material-icons">comment</i></FlatButton>
+                            <FlatButton
+                                onClick={() => this.props.toggleComments(e._id)}>
+                                <i className="material-icons">comment</i>
+                            </FlatButton>
                         </Badge>
                         <FlatButton onClick={() => { this._deletePhoto(e._id);}}>
                             <i className="material-icons">delete_forever</i>
                         </FlatButton>
                     </CardActions>
+                    
+                    <Comments
+                        comments={e.comments}
+                        display={this.props.showComs===e._id}
+                        user={this.props.user}
+                        id={e._id}/>
                     
                     <div>Added: <strong>{e.uploadedBy}</strong> - {Utils.formatDate(e.uploaded)}</div>
                     

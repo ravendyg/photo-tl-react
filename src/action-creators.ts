@@ -16,7 +16,8 @@ export enum Actions {
     DELETE_PHOTO = 10,
     
     VOTE = 11,
-    
+    POST_COMMENT = 13,
+    DELETE_COMMENT = 14,
 }
 
 var nextTodo = 0;
@@ -94,6 +95,25 @@ export const actionCreators: IActionCreators = {
                 newRating
             }
         };
+    },
+    
+    postComment: (newComment: {comment: CommentType, id: string}) => {
+        return {
+            type: Actions.POST_COMMENT,
+            payload: {
+                newComment
+            }
+        }
+    },
+    
+    deleteComment: (_id: string, date: string) => {
+        return {
+            type: Actions.DELETE_COMMENT,
+            payload: {
+                _id,
+                date
+            }
+        }
     }
     
     

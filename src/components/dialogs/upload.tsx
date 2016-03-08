@@ -228,7 +228,7 @@ export class UploadDialog extends ListeningComponent {
                     label={`Upload`}
                     disabled={this.state.disabled}
                     onClick={() => {
-                        this._upload(title.input.value, text.input.value);
+                        this._upload(title.input.value, text.input.getInputNode().value);
                     }}
                 /><br />
                 <div style={{

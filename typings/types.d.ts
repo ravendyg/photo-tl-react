@@ -29,6 +29,11 @@ declare type ActionType = {
         photo?: ImageType,
         photos?: ImageType [],
         newRating?: NewRatingType,
+        newComment?: {
+            comment: CommentType,
+            id: string
+        },
+        date?: string,
     };
 };
 
@@ -51,7 +56,7 @@ declare type NewRatingType = {
 }
 
 declare type CommentType = {
-    userName: string,
+    user: string,
     text: string,
     date: string
 }
