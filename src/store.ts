@@ -92,6 +92,21 @@ const photo = (state, action: ActionType) => {
 }
 
 const photos = (state: ImageType [] = [], action: ActionType) => {
+    // creates new array of photos requesting change of selected one from photo reducer
+    function transferHelper (state, comparator, action) {
+        for (let i=state.length-1; i>=0; i--) {
+            if (state[i]._id === comparator) {                    
+                return [
+                    ...state.slice(0,i),
+                    photo(state[i], action),
+                    ...state.slice(i+1)
+                ]
+            }
+        }
+        // not found?!
+        return state;
+    } 
+    
     switch (action.type) {
         case actions.ADD_PHOTO:
             return [
@@ -111,43 +126,46 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             );
             
         case actions.VOTE:
-            for (let i=state.length-1; i>=0; i--) {
-                if (state[i]._id === action.payload.newRating._id) {                    
-                    return [
-                        ...state.slice(0,i),
-                        photo(state[i], action),
-                        ...state.slice(i+1)
-                    ]
-                }
-            }
-            // not found?!
-            return state;
+            return transferHelper(state, action.payload.newRating._id, action);
+            // for (let i=state.length-1; i>=0; i--) {
+            //     if (state[i]._id === action.payload.newRating._id) {                    
+            //         return [
+            //             ...state.slice(0,i),
+            //             photo(state[i], action),
+            //             ...state.slice(i+1)
+            //         ]
+            //     }
+            // }
+            // // not found?!
+            // return state;
             
         case actions.POST_COMMENT:
-            for (let i=state.length-1; i>=0; i--) {
-                if (state[i]._id === action.payload.newComment.id) {                    
-                    return [
-                        ...state.slice(0,i),
-                        photo(state[i], action),
-                        ...state.slice(i+1)
-                    ]
-                }
-            }
-            // not found?!
-            return state;
+            return transferHelper(state, action.payload.newComment.id, action);
+            // for (let i=state.length-1; i>=0; i--) {
+            //     if (state[i]._id === action.payload.newComment.id) {                    
+            //         return [
+            //             ...state.slice(0,i),
+            //             photo(state[i], action),
+            //             ...state.slice(i+1)
+            //         ]
+            //     }
+            // }
+            // // not found?!
+            // return state;
             
         case actions.DELETE_COMMENT:
-            for (let i=state.length-1; i>=0; i--) {
-                if (state[i]._id === action.payload._id) {                    
-                    return [
-                        ...state.slice(0,i),
-                        photo(state[i], action),
-                        ...state.slice(i+1)
-                    ]
-                }
-            }
-            // not found?!
-            return state;
+            return transferHelper(state, action.payload._id, action);
+            // for (let i=state.length-1; i>=0; i--) {
+            //     if (state[i]._id === action.payload._id) {                    
+            //         return [
+            //             ...state.slice(0,i),
+            //             photo(state[i], action),
+            //             ...state.slice(i+1)
+            //         ]
+            //     }
+            // }
+            // // not found?!
+            // return state;
             
         default:
             return state;
