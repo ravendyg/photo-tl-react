@@ -9,33 +9,26 @@ const store: IStore = require('./../store.ts');
 
 class ImageServiceClass implements IImageService {
     // private _http: any;
-    private _aja: AjaType;
+
     // private _q: any;
     // private _timeout: any;
     private _loggedInUser: any;
-    
-    private _store: IStore;
-    
+
     private _images: ImageType [];
     // flag to prevent repetitive photos loading
     private _loadedImages: boolean;
     
-    constructor (aja, store, actionCreators) {
-        // this._http = $http;
-        this._aja = aja;
-        // this._q = $q;
-        // this._timeout = $timeout;
+    constructor () {      
         
-        this._store = store;
-        this._images = this._store.getState().photos;
+        this._images = store.getState().photos;
         this._loadedImages = false;
         // download photos if signedin
-        if (this._store.getState().user.name) {
+        if (store.getState().user.name) {
             this._getImageData();
         }
         
-        this._store.subscribe(() => {
-            if (this._store.getState().user.name && !this._loadedImages) {
+        store.subscribe(() => {
+            if (store.getState().user.name && !this._loadedImages) {
                 // if just logged in
                 this._getImageData();
             }
@@ -46,24 +39,18 @@ class ImageServiceClass implements IImageService {
     
     private _getImageData (): void {
         // real call to the server
-        this._aja()
+        aja()
                 .method(`GET`)
                 .url(config('url') + config('port') + config('imageDriver') + '/all-images')
                 .on(`200`, resp => {
-                    console.log(resp);
                     this._loadedImages = true;
-                    this._store.dispatch(actionCreators.addPhotos(resp));
-                    // store.dispatch(actionCreators.signInUser(user));
-                    // this._socketService.connect(config('url') + config('port'));
-                    // resolve();
+                    store.dispatch(actionCreators.addPhotos(resp));
                 })
                 .on('40x', err => {
                     console.log(err);
-                    // reject(JSON.parse(err).error);
                 })
                 .on(`50x`, err => {
                     console.log(err);
-                    // reject(JSON.parse(err).error);
                 })
                 .go();   
     }
@@ -101,4 +88,4 @@ class ImageServiceClass implements IImageService {
 
 }
 
-export const ImageService = new ImageServiceClass(aja, store, actionCreators);
+export const ImageService = new ImageServiceClass();

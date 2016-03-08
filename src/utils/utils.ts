@@ -12,6 +12,18 @@ class Utils implements IUtils {
         return ''+num;
     }
     
+    public formatDate (date: string): string {
+        let tmp = new Date(date);
+        return `${this.indentDate(tmp.getDate())}-${this.indentDate(tmp.getMonth())
+                }-${tmp.getFullYear()} ${this.indentDate(tmp.getHours())
+                }:${this.indentDate(tmp.getMinutes())}`;
+    }
+    
+    private indentDate (num: number): string {
+        if (num < 10) return `0${num}`;
+        else return `${num}`;
+    }
+    
     /*** creates new array from arr
      * order == 1 ascending, == -1 descending
      */

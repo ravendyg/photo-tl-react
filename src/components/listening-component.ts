@@ -12,23 +12,19 @@ export class ListeningComponent extends React.Component {
     protected state: any;
     protected oldState: any;
     
-    protected _store: IStore;
-    
     public props: any;
         
     constructor () {
         super();
-        
-        this._store = store;
     }
     
     private componentDidMount () {
-        this._unsubscribe = this._store.subscribe(() => {
+        this._unsubscribe = store.subscribe(() => {
             let mutated = false;    
             for (var key in this.oldState) {
                 // check given property exists on the global state, if then check whether it changed
-                if (this._store.getState()[key] && this.oldState[key] !== this._store.getState()[key]) {
-                    this.oldState[key] = this._store.getState()[key];
+                if (store.getState()[key] && this.oldState[key] !== store.getState()[key]) {
+                    this.oldState[key] = store.getState()[key];
                     mutated = true;
                     break;
                 }

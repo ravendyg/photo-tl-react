@@ -13,7 +13,7 @@ var hashHistory = vendor.ReactRouter.hashHistory;
 const store: IStore = require('./store.ts');
 const actionCreators: IActionCreators = require('./action-creators.ts').actionCreators;
 
-const socketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
+const SocketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
 
 // view components
 import {NoUser} from './components/no-user.tsx';
@@ -35,7 +35,7 @@ var dataset: {user?: string} = document.body.dataset;
 if (dataset.user) {
     store.dispatch(actionCreators.signInUser({name: dataset.user}));
     username = store.getState().user.name;
-    socketService.connect();
+    SocketService.connect();
 }
 
 class App extends React.Component {

@@ -3,7 +3,7 @@
 const Redux: IRedux = vendor.Redux;
 
 const Utils: IUtils = require('./utils/utils.ts');
-console.log(Utils);
+
 const actions: Actions = require('./action-creators.ts').Actions;
 const filters: Filters = require('./consts.ts').Filters;
 
@@ -60,8 +60,19 @@ const photo = (state, action: ActionType) => {
             return action.payload.photo;
             
         case actions.DELETE_PHOTO:
-            if (action.payload.id !== state._id) return true;
+            if (action.payload._id !== state._id) return true;
             else return false;
+            
+        case actions.VOTE:
+            let tmp: ImageType = Utils.objectAssign({}, [state]);
+            tmp.averageRating = action.payload.newRating.averageRating;
+            tmp.rating = [
+                // select all other user's votes
+                ...tmp.rating.filter(e => e.user !== action.payload.newRating.ratingElem.user),
+                // add from this one
+                action.payload.newRating.ratingElem
+            ]           
+            return tmp;
     
         default:
             return state;
@@ -80,12 +91,31 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             return state.filter( p => photo(p, action));
             
         case actions.ADD_PHOTOS:
-        return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => {
+            return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => {
                                                                     if (el1._id > el2._id) return 1;
                                                                     if (el1._id < el2._id) return -1;
                                                                     return 0;      
                                                                 }
-        );
+            );
+            
+        case actions.VOTE:
+            for (let i=state.length-1; i>=0; i--) {
+                if (state[i]._id === action.payload.newRating._id) {
+                    // console.log([
+                    //     ...state.slice(0,i),
+                    //     photo(state[i], action),
+                    //     ...state.slice(i+1)
+                    // ]);
+                    
+                    return [
+                        ...state.slice(0,i),
+                        photo(state[i], action),
+                        ...state.slice(i+1)
+                    ]
+                }
+            }
+            // not found?!
+            return state;
             
         default:
             return state;

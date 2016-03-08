@@ -14,6 +14,8 @@ export enum Actions {
     ADD_PHOTOS = 9,
     DELETE_PHOTO = 10,
     
+    VOTE = 11,
+    
 }
 
 var nextTodo = 0;
@@ -69,16 +71,23 @@ export const actionCreators: IActionCreators = {
             }
         }
     },
-    deletePhoto: (id: string) => {
+    deletePhoto: (_id: string) => {
         return {
-            type: Actions.ADD_PHOTO,
+            type: Actions.DELETE_PHOTO,
             payload: {
-                id
+                _id
             }
         }
     },
    
-    
+    votePhoto: (newRating: NewRatingType) => {
+        return {
+            type: Actions.VOTE,
+            payload: {
+                newRating
+            }
+        };
+    }
     
     
 

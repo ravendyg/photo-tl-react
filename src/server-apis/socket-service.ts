@@ -5,25 +5,19 @@ const io = vendor.io;
 const config: (query: any) => string = require('./../config.ts');
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
+const store: IStore = require('./../store.ts');
 
 class SocketServiceClass implements ISocketService {
     private _socket: any;
-    private _io: any;
     
-    private _actionCreators: IActionCreators;
-    
-    constructor (io, actionCreators) {
-
-        this._io = io;
-        
+    constructor () {
         // has access to server actions emmiter -> when user action on the client delivered to the server
         // there it should be confirmed and after that server broadcasts server action
         // that would be delivered to the stores
-        this._actionCreators = actionCreators;
     }
     
     public connect () {
-        this._socket = this._io(config('url') + config('port'));
+        this._socket = io(config('url') + config('port'));
         this._listen();
     }
     
@@ -82,21 +76,21 @@ class SocketServiceClass implements ISocketService {
     // start listen
     private _listen () {
         // photo deleted
-        // this._socket.on('remove-photo', (data) => {
-        //     this._serverActions.deletePhoto(data._id);
-        // });
-        // // new photo uploaded
-        // this._socket.on('upload-photo', (data) => {
-        //     this._serverActions.uploadPhoto(data);
-        // });
+        this._socket.on('remove-photo', (data: any) => {
+            store.dispatch(actionCreators.deletePhoto(data._id));
+        });
+        // new photo uploaded
+        this._socket.on('upload-photo', (newPhoto: ImageType) => {
+            store.dispatch(actionCreators.addPhoto(newPhoto));
+        });
         // // photo edited
         // this._socket.on('edit-photo', (dataChange: IDataChange) => {
         //     this._serverActions.editPhoto(dataChange);
         // });
-        // // new vote accepted
-        // this._socket.on('vote-photo', (data) => {
-        //    this._serverActions.votePhoto(data); 
-        // });
+        // new vote accepted
+        this._socket.on('vote-photo', (newRating: NewRatingType) => {
+            store.dispatch(actionCreators.votePhoto(newRating)); 
+        });
         // // all photos
         // this._socket.on(`photo-list`, (data) => {
         //     this._serverActions.downloadPhotos(data);
@@ -113,14 +107,14 @@ class SocketServiceClass implements ISocketService {
     // stop listen
     private _stopListen () {
         // walk around this issues
-        // this._socket._callbacks['$remove-photo'] = [];
-        // this._socket._callbacks['$upload-photo'] = [];
+        this._socket._callbacks['$remove-photo'] = [];
+        this._socket._callbacks['$upload-photo'] = [];
         // this._socket._callbacks['$edit-photo'] = [];
-        // this._socket._callbacks['$vote-photo'] = [];
+        this._socket._callbacks['$vote-photo'] = [];
         // this._socket._callbacks['$photo-list'] = [];
         // this._socket._callbacks['$comment-photo'] = [];
         // this._socket._callbacks['$uncomment-photo'] = [];
     }
 }
 
-export const SocketService = new SocketServiceClass(io, actionCreators);
+export const SocketService = new SocketServiceClass();

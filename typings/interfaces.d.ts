@@ -55,6 +55,8 @@ interface IActionCreators {
     addPhoto (photo: ImageType): ActionType;
     addPhotos (photos: ImageType []): ActionType;
     deletePhoto (id: string): ActionType;
+    
+    votePhoto (newRating: NewRatingType): ActionType;
 }
 
 interface IUserActions {
@@ -66,6 +68,9 @@ interface IUserActions {
     signin: (name: string, pas: string, rem: boolean) => IPromise;
     signup: (name: string, pas: string, pas2: string, rem: boolean) => IPromise;
     signout: (name: string) => void;
+    
+    vote: (vote: number, _id: string) => void;
+    deletePhoto: (_id: string) => void;
 }
 
 
@@ -106,4 +111,5 @@ interface IUtils {
     transformDate (num: number): string;
     objectAssign (target: any, sources: any []): any;
     mergeUnic (arrs: any [], compare: (el1: any, el2: any) => number): any [];
+    formatDate (date: string): string;
 }

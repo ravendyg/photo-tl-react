@@ -4,10 +4,11 @@ const actionCreators: IActionCreators = require('./action-creators.ts').actionCr
 const store: IStore = require('./store.ts');
 
 const UserService: IUserService = require('./server-apis/user-service.ts').UserService;
+const SocketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
 
 class UserActionsClass implements IUserActions {
-    constructor () {
-        
+    
+    constructor () { 
     }
     
     public displaySignin () {
@@ -38,6 +39,14 @@ class UserActionsClass implements IUserActions {
         UserService.signout({
             name
         });
+    }
+    
+    public vote (rating: number, _id: string): void {
+        SocketService.vote(rating, _id);
+    }
+    
+    public deletePhoto (_id: string): void {
+        SocketService.removePhoto(_id);
     }
 }
 

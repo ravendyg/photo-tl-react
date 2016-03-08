@@ -20,13 +20,14 @@ declare type StateType = {
 declare type ActionType = {
     type: number;
     payload?: {
-        id?: string,
+        _id?: string,
         filter?: number,
         name?: string,
         text?: string,
         user?: UserType,
         photo?: ImageType,
         photos?: ImageType [],
+        newRating?: NewRatingType,
     };
 };
 
@@ -36,10 +37,18 @@ declare type RatingType = {
     user: string,
     val: number
 }
+
 declare type AverageRatingType = {
     count: number,
     val: number
 }
+
+declare type NewRatingType = {
+    _id: string,
+    averageRating: AverageRatingType,
+    ratingElem: RatingType
+}
+
 declare type CommentType = {
     userName: string,
     text: string,

@@ -9,6 +9,8 @@ declare type Actions = {
     ADD_PHOTO?: number;
     ADD_PHOTOS?: number;
     DELETE_PHOTO?: number;
+    
+    VOTE?: number;
 };
 
 declare type Filters = {
