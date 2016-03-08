@@ -59,11 +59,11 @@ class UserActionsClass implements IUserActions {
             .then(
                 filename => {
                     SocketService.uploadPhoto(filename, title, text);
-                    store.dispatch(actionCreators.hideDialogs());
+                    // store.dispatch(actionCreators.hideDialogs());
                 },
                 err => {
                     console.log(err);
-                    store.dispatch(actionCreators.hideDialogs());
+                    // store.dispatch(actionCreators.hideDialogs());
                 }
             );
     }

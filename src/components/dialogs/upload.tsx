@@ -110,8 +110,7 @@ export class UploadDialog extends ListeningComponent {
         this.oldState = {
             dialogs: store.getState().dialogs,
             user: store.getState().user
-        };
-               
+        };          
     }
     
     private _verifyInput (e: any) {
@@ -148,11 +147,16 @@ export class UploadDialog extends ListeningComponent {
     private _upload (title: string, text: string) {
         console.log(`sent to server`);
         UserActions.uploadPhoto(this.state.blob, title, text);
+        this.closeModal()
     }
 
     private closeModal () {
         UserActions.hideDialogs();
-        this.setState({error: ``});
+        this.setState({
+            img: `react/assets/noimage.png`,
+            error: ``,
+            blob: null
+        });
     }
     
     private hideError () {

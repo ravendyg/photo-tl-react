@@ -6,7 +6,7 @@ const React: IReact = vendor.React;
 const store: IStore = require('./../store.ts');
 
 export class ListeningComponent extends React.Component {
-    protected _unsubscribe: () => void;
+    private _unsubscribe: () => void;
     protected setState: (state: any) => void;
     
     protected state: any;
