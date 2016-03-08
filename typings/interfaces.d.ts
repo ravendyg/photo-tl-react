@@ -50,6 +50,7 @@ interface IActionCreators {
     
     setInDialog (): ActionType;
     setUpDialog (): ActionType;
+    setUploadDialog (): ActionType;
     hideDialogs (): ActionType;
     
     addPhoto (photo: ImageType): ActionType;
@@ -62,6 +63,7 @@ interface IActionCreators {
 interface IUserActions {
     displaySignup: () => void;
     displaySignin: () => void;
+    displayPhotoUpload: () => void;
     hideDialogs: () => void;
     // hideSignin: () => void;
     // hideSignup: () => void;
@@ -71,6 +73,8 @@ interface IUserActions {
     
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
+    
+    uploadPhoto: (photo: any, title: string, text: string) => void;
 }
 
 
@@ -103,7 +107,7 @@ interface ISocketService {
 }
 
 interface IImageService {
-    uploadPhoto (file: any): void;
+    uploadPhoto (photo: any): IPromise;
 }
 
 interface IUtils {

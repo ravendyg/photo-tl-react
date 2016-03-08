@@ -55,35 +55,32 @@ class ImageServiceClass implements IImageService {
                 .go();   
     }
     
-    public uploadPhoto (file: HTMLInputElement): void {
-    //     // promise for controller
-    //     var deferred = this._q.defer();
-        
-    //     // ajax
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', config('url') + config('port') + config('imageDriver') + '/upload-image');
-        
-    //     xhr.onload = function () {
-    //         deferred.resolve(JSON.parse(xhr.responseText).filename);
-    //     };
-        
-    //     xhr.onreadystatechange = function() {
-    //         console.log(xhr.status);
-    //     };
-        
-    //     xhr.onerror = function (err) {
-    //         console.error(err);
-    //         deferred.reject();
-    //     };
-        
-    //     xhr.upload.onprogress = function (e) {
-    //         console.log(e.total);
-    //         console.log(e.loaded / e.total);
-    //     };
-        
-    //     xhr.send(file);
-        
-    //     return deferred.promise;
+    public uploadPhoto (photo: any): IPromise {
+        var promise = new Promise ( (resolve, reject) => {
+            // ajax
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', config('url') + config('port') + config('imageDriver') + '/upload-image');
+            
+            xhr.onload = function (resp) {
+                resolve(JSON.parse(xhr.responseText).filename);
+            };
+            
+            xhr.onreadystatechange = function() {
+                console.log(xhr.status);
+            };
+            
+            xhr.onerror = function (err) {
+                reject(err);
+            };
+            
+            xhr.upload.onprogress = function (e) {
+                console.log(e.total);
+                console.log(e.loaded / e.total);
+            };
+            
+            xhr.send(photo);    
+        });
+        return promise;
     }
 
 }

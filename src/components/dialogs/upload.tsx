@@ -3,6 +3,8 @@
 // vendor
 const React: IReact = vendor.React;
 
+const fixOrientation = vendor.fixOrientation;
+
 import {ListeningComponent} from './../listening-component.ts';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
@@ -66,21 +68,27 @@ const customStyles = {
   }
 };
 
-export class LoginDialog extends ListeningComponent {  
+export class UploadDialog extends ListeningComponent {  
     protected setState: (state: any) => void;
     protected state: {
         dialogs: {
             in: boolean,
-            up: boolean
+            up: boolean,
+            upload: boolean
         },
         user: UserType,
-        error: string 
+        error: string,
+        img: string,
+        blob: any,
+        inKey: number, // to force input update
+        disabled: boolean
     };
     
     protected oldState: {
         dialogs: {
             in: boolean,
-            up: boolean
+            up: boolean,
+            upload: boolean
         },
         user: UserType
     };
@@ -93,79 +101,56 @@ export class LoginDialog extends ListeningComponent {
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
-            error: ``
+            error: ``,
+            img: `react/assets/noimage.png`,
+            blob: null,
+            inKey: Date.now(),
+            disabled: true
         };
         this.oldState = {
             dialogs: store.getState().dialogs,
             user: store.getState().user
         };
                
-        this._user = {
-            name: ``,
-            pas: ``,
-            pas2: ``,
-            rem: false
-        };
     }
     
-    private _verifyInput (): string {
+    private _verifyInput (e: any) {
         // check input for correctness
-        if (this._user.name.match(/[^0-1a-zA-Z\s]/)) {
-            return 'Only letters or numbers!';
+        var reader = new FileReader();
+        try {
+            if (e.input.files[0] && e.input.files[0].type.match(/image/)) {
+                reader.readAsDataURL(e.input.files[0]);
+                reader.onload = () => {
+                    // display preview
+                    fixOrientation(reader.result, { image: true }, (fixed: string, image) => {
+                        this.setState({
+                            img: fixed,
+                            blob: e.input.files[0],
+                            disabled: false
+                        });
+                    });
+                };
+            } else {
+                throw new Error("Wrong file");
+            }
+        } catch (e) {
+            this.setState({
+                error: e.message,
+                inKey: Date.now(),
+                img: `react/assets/noimage.png`,
+                blob: null,
+                disabled: true
+            });
         }
-        if (this._user.name.match(/^\s*$/)) {
-            return `Login can't be empty`;
-        }
-        if (this._user.pas.match(/^\s*$/)) {
-            return `Password can't be empty`;
-        }
-        if (this.state.dialogs.up && this._user.pas !== this._user.pas2) {
-            return `Password doesn't match`;
-        }
-        return ``;
+        
     }
         
-    private _signin () {
-        var error = this._verifyInput(); 
-        if (!error) {
-            if (this.state.dialogs.in) {
-                // send signin request
-                UserActions.signin(
-                    this._user.name,
-                    this._user.pas,
-                    this._user.rem
-                ).then(
-                    () => { this.closeModal(); },
-                    (error) => {
-                        this.setState({error});
-                    }
-                );
-            } else if (this.state.dialogs.up) {
-                // send signup request
-                UserActions.signup(
-                    this._user.name,
-                    this._user.pas,
-                    this._user.pas2,
-                    this._user.rem
-                ).then(
-                    () => { this.closeModal(); },
-                    (error) => {
-                        this.setState({error});
-                    }
-                );
-            }
-        } else {
-            this.setState({error});
-        }
+    private _upload (title: string, text: string) {
+        console.log(`sent to server`);
+        UserActions.uploadPhoto(this.state.blob, title, text);
     }
 
     private closeModal () {
-        this._user = {
-            name: ``,
-            pas: ``,
-            pas2: ``,
-            rem: false
-        };
         UserActions.hideDialogs();
         this.setState({error: ``});
     }
@@ -177,36 +162,12 @@ export class LoginDialog extends ListeningComponent {
     }
 
     render () {
-        
-        let name, pas, pas2, rem;
-        
+        // preloader is useless when rotating an image, because it blocks everything
         let error = this.state.error;
         let dialogs = this.state.dialogs;
-        
-        let label: string;
-        
-        if (dialogs.in) label = `SignIn`;
-        else if (dialogs.up) label = `SignUp`;
-        else label = `Error`;
-              
-        // need confirmation only for signup
-        let confirmPassword;
-        if (dialogs.up) {
-            confirmPassword =
-                <span> 
-                    <TextField
-                        hintText="Confirm password"
-                        multiline={false}
-                        type="password"
-                        ref={node => {
-                            pas2 = node;
-                        }}
-                    /><br />
-                </span>;
-        } else {
-            confirmPassword = null;
-        }
-        
+        let img: any;
+        let title: any, text: any;
+               
         return (
             <Modal
                 isOpen={dialogs.in || dialogs.up}
@@ -214,34 +175,43 @@ export class LoginDialog extends ListeningComponent {
                 style={customStyles}
             >
                 <Toolbar>
-                    <Title title={label} />
+                    <Title title={`New Photo`} />
                 </Toolbar>
+                <div style={{textAlign: `center`}}>
+                    <img style={{margin: `auto`, maxWidth: `265px`, maxHeight: `256px`}}
+                        alt={`no image`}
+                        src={this.state.img} /><br />
+                </div>
                 <TextField
-                    hintText="User name"
-                    multiline={false}
+                    key={this.state.inKey}
+                    type={`file`}
+                    multiLine={false}
                     ref={node => {
-                        name = node;
+                        img = node;
+                    }}
+                    onChange={() => { this._verifyInput(img); }}
+                    onClick={() => { this.hideError(); }}
+                /><br />
+                
+                <TextField
+                    hintText="Title"
+                    multiLine={false}
+                    ref={node => {
+                        title = node;
                     }}
                     onChange={() => { this.hideError() }}
                 /><br />
                 <TextField
-                    hintText="Password"
-                    multiline={false}
-                    type="password"
+                    hintText="Description"
+                    multiLine={true}
+                    rows={1}
+                    rowsMax={6}
                     ref={node => {
-                        pas = node;
+                        text = node;
                     }}
                     onChange={() => { this.hideError() }}
                 /><br />
-                {confirmPassword}
-                <Toggle
-                    label="Remember"
-                    defaultToggled={this._user.rem}
-                    ref={node => {
-                        rem = node;
-                    }}
-                    onChange={() => { this.hideError() }}
-                /><br />
+ 
                 <FlatButton 
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
@@ -251,15 +221,10 @@ export class LoginDialog extends ListeningComponent {
                 />
                 <RaisedButton 
                     style={{float: 'right', marginRight: '15px'}}
-                    label={label}
+                    label={`Upload`}
+                    disabled={this.state.disabled}
                     onClick={() => {
-                        this._user = {
-                            name: name.input.value,
-                            pas: pas.input.value,
-                            pas2: dialogs.up ? pas2.input.value : ``,
-                            rem: rem.isToggled()
-                        };
-                        this._signin();
+                        this._upload(title.input.value, text.input.value);
                     }}
                 /><br />
                 <div style={{

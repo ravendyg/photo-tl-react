@@ -8,6 +8,7 @@ export enum Actions {
     
     SET_IN_DIALOG = 5,
     SET_UP_DIALOG = 6,
+    SET_UPLOAD_DIALOG = 12,
     HIDE_DIALOGS = 7,   
     
     ADD_PHOTO = 8,
@@ -45,6 +46,12 @@ export const actionCreators: IActionCreators = {
     setUpDialog: () => {
         return {
             type: Actions.SET_UP_DIALOG,
+            payload: {}
+        };
+    },
+    setUploadDialog: () => {
+        return {
+            type: Actions.SET_UPLOAD_DIALOG,
             payload: {}
         };
     },

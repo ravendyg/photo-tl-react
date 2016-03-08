@@ -8,7 +8,8 @@ declare type UserType = {
 
 declare type dialogsType = {
     in: boolean,
-    up: boolean
+    up: boolean,
+    upload: boolean
 }
 
 declare type StateType = {

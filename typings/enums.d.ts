@@ -4,6 +4,7 @@ declare type Actions = {
     
     SET_IN_DIALOG?: number;
     SET_UP_DIALOG?: number;
+    SET_UPLOAD_DIALOG?: number;
     HIDE_DIALOGS?: number;
     
     ADD_PHOTO?: number;

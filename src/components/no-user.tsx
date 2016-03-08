@@ -13,8 +13,10 @@ export class NoUser extends React.Component {
         return (
         <div>
             <NoUserToolbar />
-            <div>No user</div>
-            <LoginDialog name={'login'}/>
+            <h4>Please signin</h4>
+            <p>Client: react, redux, material-ui, typescript</p>
+            <p>Server: nodejs, mongodb, express, socket.io (try to run it in different tabs or browsers simultaneously)</p> 
+            <LoginDialog />
         </div>
         )
     }

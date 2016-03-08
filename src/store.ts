@@ -25,32 +25,29 @@ const user = (state: UserType = { name: `` }, action: ActionType) => {
     }
 };
 
-const dialogs = (state: dialogsType = {
-    in: false,
-    up: false
-}, action: ActionType) => {
+const dialogs = (state: dialogsType, action: ActionType) => {
+    // new state doesn't depend on the previous one
+    let def: dialogsType = { in: false, up: false, upload: false};
+    
     switch (action.type) {
         
         case actions.SET_IN_DIALOG:
-            return {
-                in: true,
-                up: false
-            };
+            def.in = true
+            return def;
             
         case actions.SET_UP_DIALOG:
-            return {
-                in: false,
-                up: true
-            };
+            def.up = true
+            return def;
+            
+        case actions.SET_UPLOAD_DIALOG:
+            def.upload = true
+            return def;
             
         case actions.HIDE_DIALOGS:
-            return {
-                in: false,
-                up: false
-            };
+            return def;
     
         default:
-            return state;
+            return def;
     }  
 };
 

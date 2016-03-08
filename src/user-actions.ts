@@ -4,6 +4,7 @@ const actionCreators: IActionCreators = require('./action-creators.ts').actionCr
 const store: IStore = require('./store.ts');
 
 const UserService: IUserService = require('./server-apis/user-service.ts').UserService;
+const ImageService: IImageService = require('./server-apis/image-service.ts').ImageService;
 const SocketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
 
 class UserActionsClass implements IUserActions {
@@ -17,6 +18,10 @@ class UserActionsClass implements IUserActions {
     
     public displaySignup () {
         store.dispatch(actionCreators.setUpDialog());
+    }
+    
+    public displayPhotoUpload () {
+        store.dispatch(actionCreators.setUploadDialog());
     }
     
     public hideDialogs () {
@@ -47,6 +52,20 @@ class UserActionsClass implements IUserActions {
     
     public deletePhoto (_id: string): void {
         SocketService.removePhoto(_id);
+    }
+    
+    public uploadPhoto (photo: any, title: string, text: string): void {
+        ImageService.uploadPhoto(photo)
+            .then(
+                filename => {
+                    SocketService.uploadPhoto(filename, title, text);
+                    store.dispatch(actionCreators.hideDialogs());
+                },
+                err => {
+                    console.log(err);
+                    store.dispatch(actionCreators.hideDialogs());
+                }
+            );
     }
 }
 

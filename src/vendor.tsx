@@ -7,6 +7,8 @@ const ReactRouter = require('react-router');
 
 const aja = require('aja');
 
+const fixOrientation = require('fix-orientation');
+
 // material ui
 const TextField = require('material-ui/lib/text-field');
 const FlatButton = require('material-ui/lib/flat-button');
@@ -70,5 +72,6 @@ export {
     ReactRouter,
     mUi,
     aja,
-    io
+    io,
+    fixOrientation
 };
