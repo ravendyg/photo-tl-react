@@ -145,6 +145,7 @@ export class EditPhotoDialog extends ListeningComponent {
                 <TextField
                     hintText="Title"
                     multiLine={false}
+                    fullWidth={true}
                     ref={node => {
                         title = node;
                     }}
@@ -155,6 +156,7 @@ export class EditPhotoDialog extends ListeningComponent {
                     multiLine={true}
                     rows={1}
                     rowsMax={6}
+                    fullWidth={true}
                     ref={node => {
                         text = node;
                     }}

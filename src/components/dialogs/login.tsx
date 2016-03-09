@@ -154,6 +154,7 @@ export class LoginDialog extends ListeningComponent {
                         hintText="Confirm password"
                         multiline={false}
                         type="password"
+                        fullWidth={true}
                         ref={node => {
                             pas2 = node;
                         }}
@@ -175,6 +176,7 @@ export class LoginDialog extends ListeningComponent {
                 <TextField
                     hintText="User name"
                     multiline={false}
+                    fullWidth={true}
                     ref={node => {
                         name = node;
                     }}
@@ -184,6 +186,7 @@ export class LoginDialog extends ListeningComponent {
                     hintText="Password"
                     multiline={false}
                     type="password"
+                    fullWidth={true}
                     ref={node => {
                         pas = node;
                     }}
