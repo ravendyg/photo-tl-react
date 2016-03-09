@@ -24,6 +24,10 @@ class UserActionsClass implements IUserActions {
         store.dispatch(actionCreators.setUploadDialog());
     }
     
+    public displayPhotoEdit (_id: string) {
+        store.dispatch(actionCreators.setEditDialog(_id));
+    }
+    
     public hideDialogs () {
         store.dispatch(actionCreators.hideDialogs());
     }
@@ -74,6 +78,10 @@ class UserActionsClass implements IUserActions {
                     // store.dispatch(actionCreators.hideDialogs());
                 }
             );
+    }
+    
+    public editPhoto (_id: string, title: string, text: string): void {
+        SocketService.editPhoto(_id, title, text);
     }
 }
 

@@ -83,10 +83,10 @@ class SocketServiceClass implements ISocketService {
         this._socket.on('upload-photo', (newPhoto: ImageType) => {
             store.dispatch(actionCreators.addPhoto(newPhoto));
         });
-        // // photo edited
-        // this._socket.on('edit-photo', (dataChange: IDataChange) => {
-        //     this._serverActions.editPhoto(dataChange);
-        // });
+        // photo edited
+        this._socket.on('edit-photo', (dataChange: DataChangeType) => {
+            store.dispatch(actionCreators.editPhoto(dataChange));
+        });
         // new vote accepted
         this._socket.on('vote-photo', (newRating: NewRatingType) => {
             store.dispatch(actionCreators.votePhoto(newRating)); 
@@ -109,7 +109,7 @@ class SocketServiceClass implements ISocketService {
         // walk around this issues
         this._socket._callbacks['$remove-photo'] = [];
         this._socket._callbacks['$upload-photo'] = [];
-        // this._socket._callbacks['$edit-photo'] = [];
+        this._socket._callbacks['$edit-photo'] = [];
         this._socket._callbacks['$vote-photo'] = [];
         // this._socket._callbacks['$photo-list'] = [];
         this._socket._callbacks['$comment-photo'] = [];

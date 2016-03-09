@@ -27,7 +27,7 @@ const user = (state: UserType = { name: `` }, action: ActionType) => {
 
 const dialogs = (state: dialogsType, action: ActionType) => {
     // new state doesn't depend on the previous one
-    let def: dialogsType = { in: false, up: false, upload: false};
+    let def: dialogsType = { in: false, up: false, upload: false, editPhoto: ``};
     
     switch (action.type) {
         
@@ -42,6 +42,10 @@ const dialogs = (state: dialogsType, action: ActionType) => {
         case actions.SET_UPLOAD_DIALOG:
             def.upload = true
             return def;
+           
+        case actions.SET_EDIT_DIALOG:
+            def.editPhoto = action.payload._id;
+            return def;
             
         case actions.HIDE_DIALOGS:
             return def;
@@ -52,7 +56,7 @@ const dialogs = (state: dialogsType, action: ActionType) => {
 };
 
 const photo = (state, action: ActionType) => {
-    let tmp: ImageType
+    let tmp: ImageType = Utils.objectAssign({}, [state]);
     
     switch (action.type) {
         case actions.ADD_PHOTO:
@@ -63,7 +67,6 @@ const photo = (state, action: ActionType) => {
             else return false;
             
         case actions.VOTE:
-            tmp = Utils.objectAssign({}, [state]);
             tmp.averageRating = action.payload.newRating.averageRating;
             tmp.rating = [
                 // select all other user's votes
@@ -74,7 +77,6 @@ const photo = (state, action: ActionType) => {
             return tmp;
             
         case actions.POST_COMMENT:
-            tmp = Utils.objectAssign({}, [state]);
             tmp.comments = [
                 ...tmp.comments,
                 action.payload.newComment.comment
@@ -82,9 +84,16 @@ const photo = (state, action: ActionType) => {
             return tmp;
             
         case actions.DELETE_COMMENT:
-            tmp = Utils.objectAssign({}, [state]);
             tmp.comments = tmp.comments.filter(e => e.date !== action.payload.date);
             return tmp;
+            
+        case actions.EDIT_PHOTO:
+            tmp.description = action.payload.dataChange.text;
+            tmp.title = action.payload.dataChange.title;
+            tmp.changed = action.payload.dataChange.time;
+            tmp.changedBy = action.payload.dataChange.user
+            return tmp;
+            
     
         default:
             return state;
@@ -127,45 +136,15 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             
         case actions.VOTE:
             return transferHelper(state, action.payload.newRating._id, action);
-            // for (let i=state.length-1; i>=0; i--) {
-            //     if (state[i]._id === action.payload.newRating._id) {                    
-            //         return [
-            //             ...state.slice(0,i),
-            //             photo(state[i], action),
-            //             ...state.slice(i+1)
-            //         ]
-            //     }
-            // }
-            // // not found?!
-            // return state;
             
         case actions.POST_COMMENT:
             return transferHelper(state, action.payload.newComment.id, action);
-            // for (let i=state.length-1; i>=0; i--) {
-            //     if (state[i]._id === action.payload.newComment.id) {                    
-            //         return [
-            //             ...state.slice(0,i),
-            //             photo(state[i], action),
-            //             ...state.slice(i+1)
-            //         ]
-            //     }
-            // }
-            // // not found?!
-            // return state;
             
         case actions.DELETE_COMMENT:
             return transferHelper(state, action.payload._id, action);
-            // for (let i=state.length-1; i>=0; i--) {
-            //     if (state[i]._id === action.payload._id) {                    
-            //         return [
-            //             ...state.slice(0,i),
-            //             photo(state[i], action),
-            //             ...state.slice(i+1)
-            //         ]
-            //     }
-            // }
-            // // not found?!
-            // return state;
+            
+        case actions.EDIT_PHOTO:
+            return transferHelper(state, action.payload.dataChange._id, action);
             
         default:
             return state;

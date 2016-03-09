@@ -51,11 +51,13 @@ interface IActionCreators {
     setInDialog (): ActionType;
     setUpDialog (): ActionType;
     setUploadDialog (): ActionType;
+    setEditDialog (_id: string): ActionType;
     hideDialogs (): ActionType;
     
     addPhoto (photo: ImageType): ActionType;
     addPhotos (photos: ImageType []): ActionType;
     deletePhoto (id: string): ActionType;
+    editPhoto (dataChange: DataChangeType): ActionType;
     deleteComment (_id: string, date: string): ActionType;
     
     votePhoto (newRating: NewRatingType): ActionType;
@@ -66,6 +68,7 @@ interface IUserActions {
     displaySignup: () => void;
     displaySignin: () => void;
     displayPhotoUpload: () => void;
+    displayPhotoEdit: (_id: string) => void;
     hideDialogs: () => void;
     // hideSignin: () => void;
     // hideSignup: () => void;
@@ -79,6 +82,7 @@ interface IUserActions {
     deleteComment: (_id: string, date: string) => void;
     
     uploadPhoto: (photo: any, title: string, text: string) => void;
+    editPhoto: (_id: string, title: string, text: string) => void;    
 }
 
 

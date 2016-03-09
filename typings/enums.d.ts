@@ -5,11 +5,13 @@ declare type Actions = {
     SET_IN_DIALOG?: number;
     SET_UP_DIALOG?: number;
     SET_UPLOAD_DIALOG?: number;
+    SET_EDIT_DIALOG?: number;
     HIDE_DIALOGS?: number;
     
     ADD_PHOTO?: number;
     ADD_PHOTOS?: number;
     DELETE_PHOTO?: number;
+    EDIT_PHOTO?: number;
     
     VOTE?: number;
     POST_COMMENT?: number;

@@ -9,7 +9,8 @@ declare type UserType = {
 declare type dialogsType = {
     in: boolean,
     up: boolean,
-    upload: boolean
+    upload: boolean,
+    editPhoto: string,
 }
 
 declare type StateType = {
@@ -34,6 +35,7 @@ declare type ActionType = {
             id: string
         },
         date?: string,
+        dataChange?: DataChangeType,
     };
 };
 
@@ -74,4 +76,12 @@ declare type ImageType = {
     rating: RatingType [],
     views: number,
     comments: CommentType []
+}
+
+declare type DataChangeType = {
+    _id: string,
+    title: string,
+    text: string,
+    time: string,
+    user: string
 }

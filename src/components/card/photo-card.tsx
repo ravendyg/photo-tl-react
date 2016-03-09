@@ -42,7 +42,8 @@ export class PhotoCard extends React.Component {
         vote: (vote: number, _id: string) => void,
         delete: (_id: string) => void,
         showComs: string,
-        toggleComments: (_id: string) => void
+        toggleComments: (_id: string) => void,
+        editPhoto: () => void;
     }
     
     constructor(){
@@ -77,6 +78,10 @@ export class PhotoCard extends React.Component {
     
     private _toggleComments () {
         this.setState({displayComments: ``});
+    }
+    
+    private _editPhotoInfo () {
+        this.props.editPhoto();        
     }
     
     render() {
@@ -115,7 +120,10 @@ export class PhotoCard extends React.Component {
                         flexDirection: `row`,
                         flexWrap: `wrap`,
                         justifyContent: `space-around` }}>
-                        <FlatButton><i className="material-icons">mode_edit</i></FlatButton>
+                        <FlatButton
+                            onClick={() => {this._editPhotoInfo()}}>
+                            <i className="material-icons">mode_edit</i>
+                        </FlatButton>
                         <Badge
                             badgeContent={e.comments.length}
                             secondary={true}

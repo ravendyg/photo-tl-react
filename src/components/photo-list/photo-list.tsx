@@ -11,6 +11,8 @@ import {ListeningComponent} from './../listening-component.ts';
 
 import {PhotoCard} from './../card/photo-card.tsx';
 
+import {EditPhotoDialog} from './../dialogs/edit-photo.tsx';
+
 // data
 const store: IStore = require('./../../store.ts');
 
@@ -71,6 +73,10 @@ export class PhotoList extends ListeningComponent {
         }
     }
     
+    private _editPhoto (_id: string) {
+        UserActions.displayPhotoEdit(_id);
+    }
+    
     render() {
         return (
         <div>        
@@ -79,11 +85,13 @@ export class PhotoList extends ListeningComponent {
                         key={e._id}
                         photo={e}
                         user={store.getState().user.name}
+                        editPhoto={() => { this._editPhoto(e._id)} }
                         showComs={this.state.commentsDisplayed}
                         toggleComments={(_id: string) => this._toggleComments(_id)}
                         vote={(vote, _id) => UserActions.vote(vote, _id)}
                         delete={(_id) => UserActions.deletePhoto(_id)}/>
             )}
+            <EditPhotoDialog />
         </div>
         )
     }

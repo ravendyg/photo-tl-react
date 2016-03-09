@@ -68,23 +68,29 @@ const customStyles = {
   }
 };
 
-export class UploadDialog extends ListeningComponent {  
+export class EditPhotoDialog extends ListeningComponent {  
     protected setState: (state: any) => void;
     protected state: {
         dialogs: {
-            upload: boolean
+            in: boolean,
+            up: boolean,
+            upload: boolean,
+            editPhoto: string
         },
         user: UserType,
         error: string,
-        img: string,
-        blob: any,
-        inKey: number, // to force input update
+        // img: string,
+        // blob: any,
+        // inKey: number, // to force input update
         disabled: boolean
     };
     
     protected oldState: {
         dialogs: {
-            upload: boolean
+            in: boolean,
+            up: boolean,
+            upload: boolean,
+            editPhoto: string
         },
         user: UserType
     };
@@ -98,9 +104,9 @@ export class UploadDialog extends ListeningComponent {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
             error: ``,
-            img: `react/assets/noimage.png`,
-            blob: null,
-            inKey: Date.now(),
+            // img: `react/assets/noimage.png`,
+            // blob: null,
+            // inKey: Date.now(),
             disabled: true
         };
         this.oldState = {
@@ -139,59 +145,46 @@ export class UploadDialog extends ListeningComponent {
         }
         
     }
-        
-    private _upload (title: string, text: string) {
-        console.log(`sent to server`);
-        UserActions.uploadPhoto(this.state.blob, title, text);
-        this.closeModal()
-    }
 
-    private closeModal () {
+    private _closeModal () {
         UserActions.hideDialogs();
-        this.setState({
-            img: `react/assets/noimage.png`,
-            error: ``,
-            blob: null
-        });
+        // this.setState({
+        //     img: `react/assets/noimage.png`,
+        //     error: ``,
+        //     blob: null
+        // });
     }
     
-    private hideError () {
-        if (this.state.error) {
-            this.setState({error: ``});
-        }
+    private _checkInput (title: any, text: any) {
+        if (this.state.disabled && title.input.value.length > 0 && text.input.getInputNode().value.length > 0) {
+            this.setState({disabled: false});
+        } else if (!this.state.disabled && (
+                    title.input.value.length === 0 || text.input.getInputNode().value.length === 0) ) {
+            this.setState({disabled: true});
+        } 
+    }
+    
+    private _doEdit (title: string, text: string) {
+        // console.log(this.state.dialogs.editPhoto, title, text);
+        UserActions.editPhoto(this.state.dialogs.editPhoto, title, text);
     }
 
     render () {
         // preloader is useless when rotating an image, because it blocks everything
-        let error = this.state.error;
+        // let error = this.state.error;
         let dialogs = this.state.dialogs;
         let img: any;
         let title: any, text: any;
                
         return (
             <Modal
-                isOpen={dialogs.upload}
-                onRequestClose={() => this.closeModal()}
+                isOpen={dialogs.editPhoto.length>0}
+                onRequestClose={() => this._closeModal()}
                 style={customStyles}
             >
                 <Toolbar>
-                    <Title title={`New Photo`} />
+                    <Title title={`Edit Photo`} />
                 </Toolbar>
-                <div style={{textAlign: `center`}}>
-                    <img style={{margin: `auto`, maxWidth: `265px`, maxHeight: `256px`}}
-                        alt={`no image`}
-                        src={this.state.img} /><br />
-                </div>
-                <TextField
-                    key={this.state.inKey}
-                    type={`file`}
-                    multiLine={false}
-                    ref={node => {
-                        img = node;
-                    }}
-                    onChange={() => { this._verifyInput(img); }}
-                    onClick={() => { this.hideError(); }}
-                /><br />
                 
                 <TextField
                     hintText="Title"
@@ -199,7 +192,7 @@ export class UploadDialog extends ListeningComponent {
                     ref={node => {
                         title = node;
                     }}
-                    onChange={() => { this.hideError() }}
+                    onChange={() => { this._checkInput(title, text) }}
                 /><br />
                 <TextField
                     hintText="Description"
@@ -209,29 +202,29 @@ export class UploadDialog extends ListeningComponent {
                     ref={node => {
                         text = node;
                     }}
-                    onChange={() => { this.hideError() }}
+                    onChange={() => { this._checkInput(title, text) }}
                 /><br />
  
                 <FlatButton 
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
                     onClick={() => {
-                        this.closeModal();
+                        this._closeModal();
                     }}
                 />
                 <RaisedButton 
                     style={{float: 'right', marginRight: '15px'}}
-                    label={`Upload`}
+                    label={`Save`}
                     disabled={this.state.disabled}
                     onClick={() => {
-                        this._upload(title.input.value, text.input.getInputNode().value);
+                        this._doEdit(title.input.value, text.input.getInputNode().value);
                     }}
                 /><br />
                 <div style={{
                     marginTop: `40px`,
                     textAlign: `center`,
-                    display: error ? `block` : `none`
-                }}>{error}</div>
+                    display: this.state.error ? `block` : `none`
+                }}>{this.state.error}</div>
             </Modal>
         );
     }

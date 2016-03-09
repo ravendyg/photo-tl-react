@@ -9,11 +9,13 @@ export enum Actions {
     SET_IN_DIALOG = 5,
     SET_UP_DIALOG = 6,
     SET_UPLOAD_DIALOG = 12,
+    SET_EDIT_DIALOG = 15,
     HIDE_DIALOGS = 7,   
     
     ADD_PHOTO = 8,
     ADD_PHOTOS = 9,
     DELETE_PHOTO = 10,
+    EDIT_PHOTO = 16,
     
     VOTE = 11,
     POST_COMMENT = 13,
@@ -56,6 +58,14 @@ export const actionCreators: IActionCreators = {
             payload: {}
         };
     },
+    setEditDialog: (_id) => {
+        return {
+            type: Actions.SET_EDIT_DIALOG,
+            payload: {
+                _id
+            }
+        };
+    },
     hideDialogs: () => {
         return {
             type: Actions.HIDE_DIALOGS,
@@ -84,6 +94,14 @@ export const actionCreators: IActionCreators = {
             type: Actions.DELETE_PHOTO,
             payload: {
                 _id
+            }
+        }
+    },
+    editPhoto: (dataChange: DataChangeType) => {
+        return {
+            type: Actions.EDIT_PHOTO,
+            payload: {
+                dataChange
             }
         }
     },
