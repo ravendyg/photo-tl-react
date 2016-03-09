@@ -3,16 +3,22 @@
 // vendor
 const React: IReact = vendor.React;
 
-import {NoUserToolbar} from './toolbar/no-user-toolbar.tsx';
+import {NoUserToolbarDesktop} from './toolbar/no-user-toolbar-desktop.tsx';
+import {NoUserToolbarMobile} from './toolbar/no-user-toolbar-mobile.tsx';
 import {LoginDialog} from './dialogs/login.tsx';
 
 export class NoUser extends React.Component {
     constructor(){ super();}
     
     render() {
+        let toolbar = (window.outerWidth > 500)
+            ?
+            <NoUserToolbarDesktop />
+            :
+            <NoUserToolbarMobile />
         return (
         <div>
-            <NoUserToolbar />
+            {toolbar}
             <h4>Please signin</h4>
             <p>Client: react, redux, material-ui, typescript</p>
             <p>Server: nodejs, mongodb, express, socket.io (try to run it in different tabs or browsers simultaneously)</p> 

@@ -21,52 +21,8 @@ const Title = require('./../toolbar/title.tsx');
 const TextField = vendor.mUi.TextField;
 const Toggle = vendor.mUi.Toggle;
 
-// {
-//   overlay : {
-//     position          : 'fixed',
-//     top               : 0,
-//     left              : 0,
-//     right             : 0,
-//     bottom            : 0,
-//     backgroundColor   : 'rgba(255, 255, 255, 0.75)'
-//   },
-//   content : {
-//     position                   : 'absolute',
-//     top                        : '40px',
-//     left                       : '40px',
-//     right                      : '40px',
-//     bottom                     : '40px',
-//     border                     : '1px solid #ccc',
-//     background                 : '#fff',
-//     overflow                   : 'auto',
-//     WebkitOverflowScrolling    : 'touch',
-//     borderRadius               : '4px',
-//     outline                    : 'none',
-//     padding                    : '20px'
-
-//   }
-// };
-
-// toggle styles
-// const styles = {
-//   block: {
-//     maxWidth: 250,
-//   },
-//   toggle: {
-//     marginBottom: 16,
-//   },
-// };
-
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+const customStyles = require('./modal-style.ts');
+console.log(customStyles);
 
 export class UploadDialog extends ListeningComponent {  
     protected setState: (state: any) => void;
@@ -186,6 +142,7 @@ export class UploadDialog extends ListeningComponent {
                     key={this.state.inKey}
                     type={`file`}
                     multiLine={false}
+                    fullWidth={true}
                     ref={node => {
                         img = node;
                     }}
@@ -196,6 +153,7 @@ export class UploadDialog extends ListeningComponent {
                 <TextField
                     hintText="Title"
                     multiLine={false}
+                    fullWidth={true}
                     ref={node => {
                         title = node;
                     }}
@@ -206,6 +164,7 @@ export class UploadDialog extends ListeningComponent {
                     multiLine={true}
                     rows={1}
                     rowsMax={6}
+                    fullWidth={true}
                     ref={node => {
                         text = node;
                     }}

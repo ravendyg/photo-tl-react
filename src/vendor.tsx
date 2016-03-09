@@ -13,6 +13,7 @@ const fixOrientation = require('fix-orientation');
 const TextField = require('material-ui/lib/text-field');
 const FlatButton = require('material-ui/lib/flat-button');
 const RaisedButton = require('material-ui/lib/raised-button');
+const IconButton = require('material-ui/lib/icon-button');
 const Badge = require('material-ui/lib/badge');
 const List = require('material-ui/lib/lists/list');
 const ListItem = require('material-ui/lib/lists/list-item');

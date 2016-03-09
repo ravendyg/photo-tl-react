@@ -69,7 +69,7 @@ const routes = {
     indexRoute: {onEnter: redir }, 
     childRoutes: [
         { path: 'no-user', component: NoUser },
-        { path: 'loggedin/all-photos', component: AllPhotos, onEnter: redir },
+        { path: 'loggedin/all-photos', component: AllPhotos, data: 1, onEnter: redir },
         { path: 'loggedin/my-photos', component: MyPhotos, onEnter: redir },
         { path: 'loggedin/user-data', component: UserData, onEnter: redir },
         { path: '*', onEnter: (nextState, replace) => {

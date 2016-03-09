@@ -12,7 +12,7 @@ const RaisedButton = vendor.mUi.RaisedButton;
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 
-export class NoUserToolbar extends React.Component {
+export class NoUserToolbarDesktop extends React.Component {
    
     constructor(){
         super();   

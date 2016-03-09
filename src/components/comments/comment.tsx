@@ -35,16 +35,21 @@ export class Comment extends React.Component {
     }
     
     render() {     
+        let brr = (window.outerWidth > 500)
+            ? null
+            : <br />;
         let com = this.props.comment;
 
         return (
             <div>
                 <p>
                     Author: <strong>{(com.user===this.props.user) ? `You` : com.user}</strong>
+                    {brr}
                     <span>{Utils.formatDate(com.date)}</span>
                     <FlatButton
                         onClick={() => { this._deleteComment(com.date);}}
-                        style={{display: (com.user===this.props.user) ? `` : `none`}}>
+                        style={{display: (com.user===this.props.user) ? `` : `none`,
+                                float: `right`}}>
                         <i className="material-icons">delete_forever</i>
                     </FlatButton>
                 </p>

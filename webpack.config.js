@@ -3,7 +3,7 @@
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 var webpack = require('webpack');
-var path = require('path')
+var path = require('path');
 
 console.log(NODE_ENV);
 

@@ -85,13 +85,16 @@ export class PhotoCard extends React.Component {
     }
     
     render() {
-        let cardStyle = (window.innerWidth>600)
-                ? {marginTop: `1%`, marginLeft: `5%`, marginRight: `5%`}
-                : {};
-        let e = this.props.photo;
+        let cardStyle, brr;
+        if (window.outerWidth > 500) {
+            cardStyle = {marginTop: `1%`, marginLeft: `5%`, marginRight: `5%`};
+            brr = null;
+        } else {
+            cardStyle = {};
+            brr = <br />;
+        }
         
-        // showComs={this.state.commentsDisplayed}
-        //                 toggleComments={(_id: string) => this._toggleComments(_id)}
+        let e = this.props.photo;
         
         return (
             <div style={cardStyle}>
@@ -108,6 +111,7 @@ export class PhotoCard extends React.Component {
                         <Rating
                             rating={e.rating}
                             title={`Rating: `}/>
+                        {brr}
                         <Rating
                             rating={e.rating}
                             title={`My rating: `}

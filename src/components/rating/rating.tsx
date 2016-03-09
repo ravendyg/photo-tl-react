@@ -41,7 +41,14 @@ export class Rating extends React.Component {
         
     render() { 
         // cursor over 'my rating'
-        let iStyle = (this.props.user !== undefined) ? {cursor: `pointer`} : {};      
+        let iStyle = {cursor: ``, marginTop: ``, marginBottom: ``};
+        if (this.props.user !== undefined) {
+            iStyle.cursor = `pointer`;
+        }
+        if (window.outerWidth <= 500) {
+            iStyle.marginTop = `10px`;
+            iStyle.marginBottom = `10px`;
+        }
         // rating
         let rating = (this.props.user !== undefined)
                 ? this.props.rating.filter(e=>e.user===this.props.user)
@@ -49,6 +56,7 @@ export class Rating extends React.Component {
         let rt = (rating.length > 0) ? (rating.reduce( (p,c) => p+c.val, 0) / rating.length) : 0;
         rt = Math.round(rt * 10) / 10;
         let rtArr = this._calculate(rt);
+        
         return (
         <span style={{marginRight: `20px`}}>        
             <span>{`${this.props.title} `}</span>
