@@ -10,10 +10,11 @@ var Link = vendor.ReactRouter.Link
 
 var hashHistory = vendor.ReactRouter.hashHistory;
 
-const store: IStore = require('./store.ts');
-const actionCreators: IActionCreators = require('./action-creators.ts').actionCreators;
+import {Store} from './store.ts';
 
-const SocketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
+import {ActionCreators} from './action-creators.ts';
+
+import {SocketService} from './server-apis/socket-service.ts';
 
 // view components
 import {NoUser} from './components/no-user.tsx';
@@ -33,25 +34,25 @@ var username = ``;
 // if -> dispatch
 var dataset: {user?: string} = document.body.dataset;
 if (dataset.user) {
-    store.dispatch(actionCreators.signInUser({name: dataset.user}));
-    username = store.getState().user.name;
+    Store.dispatch(ActionCreators.signInUser({name: dataset.user}));
+    username = Store.getState().user.name;
     SocketService.connect();
 }
 
 class App extends React.Component {
-    constructor(){ super();}
-    
-    render() {
+    constructor () { super(); }
+
+    render () {
         return (
         <div>
             {this.props.children}
         </div>
-        )    
+        )
     }
 }
 
 const redir = (nextState, replace) => {
-    if (!store.getState().user.name) {
+    if (!Store.getState().user.name) {
         // logged out
         replace('/no-user');
     } else if (nextState.location.pathname === `/no-user`) {
@@ -61,12 +62,12 @@ const redir = (nextState, replace) => {
         // no index
         replace('loggedin/all-photos');
     }
-    // else do nothing 
+    // else do nothing
 };
 
 const routes = {
-    path: '/', component: App, 
-    indexRoute: {onEnter: redir }, 
+    path: '/', component: App,
+    indexRoute: {onEnter: redir },
     childRoutes: [
         { path: 'no-user', component: NoUser },
         { path: 'loggedin/all-photos', component: AllPhotos, data: 1, onEnter: redir },
@@ -86,14 +87,14 @@ ReactDom.render(
 );
 
 // if user changed rerender
-store.subscribe(() => {
-    if (store.getState().user.name && store.getState().user.name !== username) {
+Store.subscribe(() => {
+    if (Store.getState().user.name && Store.getState().user.name !== username) {
         // logged in
         location.hash = `loggedin/all-photos`
-    } else if (!store.getState().user.name && username) {
+    } else if (!Store.getState().user.name && username) {
         // logged out
         location.hash = `no-user`
     }
-    username = store.getState().user.name;
+    username = Store.getState().user.name;
 })
 

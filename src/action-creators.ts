@@ -1,22 +1,20 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-const actions: Actions = require('./consts.ts').Actions;
-
-export enum Actions {  
+export enum Actions {
     SIGNIN_USER = 3,
     SIGNOUT_USER = 4,
-    
+
     SET_IN_DIALOG = 5,
     SET_UP_DIALOG = 6,
     SET_UPLOAD_DIALOG = 12,
     SET_EDIT_DIALOG = 15,
-    HIDE_DIALOGS = 7,   
-    
+    HIDE_DIALOGS = 7,
+
     ADD_PHOTO = 8,
     ADD_PHOTOS = 9,
     DELETE_PHOTO = 10,
     EDIT_PHOTO = 16,
-    
+
     VOTE = 11,
     POST_COMMENT = 13,
     DELETE_COMMENT = 14,
@@ -24,14 +22,14 @@ export enum Actions {
 
 var nextTodo = 0;
 
-export const actionCreators: IActionCreators = {
+export const ActionCreators: IActionCreators = {
     signInUser: (user: UserType) => {
       return {
           type: Actions.SIGNIN_USER,
           payload: {
               user
           }
-      }  
+      }
     },
     signOutUser: () => {
         return {
@@ -39,7 +37,7 @@ export const actionCreators: IActionCreators = {
             payload: {}
         }
     },
-    
+
     setInDialog: () => {
         return {
             type: Actions.SET_IN_DIALOG,
@@ -72,7 +70,7 @@ export const actionCreators: IActionCreators = {
             payload: {}
         };
     },
-    
+
     addPhoto: (photo: ImageType) => {
         return {
             type: Actions.ADD_PHOTO,
@@ -105,7 +103,7 @@ export const actionCreators: IActionCreators = {
             }
         }
     },
-   
+
     votePhoto: (newRating: NewRatingType) => {
         return {
             type: Actions.VOTE,
@@ -114,7 +112,7 @@ export const actionCreators: IActionCreators = {
             }
         };
     },
-    
+
     postComment: (newComment: {comment: CommentType, id: string}) => {
         return {
             type: Actions.POST_COMMENT,
@@ -123,7 +121,7 @@ export const actionCreators: IActionCreators = {
             }
         }
     },
-    
+
     deleteComment: (_id: string, date: string) => {
         return {
             type: Actions.DELETE_COMMENT,
@@ -133,7 +131,7 @@ export const actionCreators: IActionCreators = {
             }
         }
     }
-    
-    
+
+
 
 }
