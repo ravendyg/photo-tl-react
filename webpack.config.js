@@ -22,8 +22,8 @@ module.exports = {
     resolve: {
         extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.tsx', '.jsx', '.html']
     },
-    watch: dev === 'development',
-    devtool: dev === 'development' ? "source-map" : null,
+    watch: dev,
+    devtool: dev ? "source-map" : null,
     module: {
         loaders: [
             { test: /\.tsx?$/, loader: 'babel!ts-loader' },
@@ -34,7 +34,7 @@ module.exports = {
             { test: /\.css$/, loader: "style-loader!css-loader" },
         ]
     },
-    plugins: dev === 'development' ? [] : [
+    plugins: dev ? [] : [
         new webpack.DefinePlugin({
             'process.env': {
             'dev': JSON.stringify('production')

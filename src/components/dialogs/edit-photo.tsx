@@ -10,7 +10,7 @@ import {ListeningComponent} from './../listening-component.ts';
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 // data
-const store: IStore = require('./../../store.ts');
+const store: IStore = require('./../../store.ts').Store;
 
 // ui
 const Modal = vendor.mUi.Modal;
@@ -24,7 +24,7 @@ const Toggle = vendor.mUi.Toggle;
 const customStyles = require('./modal-style.ts');
 console.log(customStyles);
 
-export class EditPhotoDialog extends ListeningComponent {  
+export class EditPhotoDialog extends ListeningComponent {
     protected setState: (state: any) => void;
     protected state: {
         dialogs: {
@@ -40,7 +40,7 @@ export class EditPhotoDialog extends ListeningComponent {
         // inKey: number, // to force input update
         disabled: boolean
     };
-    
+
     protected oldState: {
         dialogs: {
             in: boolean,
@@ -50,12 +50,12 @@ export class EditPhotoDialog extends ListeningComponent {
         },
         user: UserType
     };
-    
+
     private _user: UserType;
-    
+
     constructor () {
         super();
-        
+
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
@@ -68,9 +68,9 @@ export class EditPhotoDialog extends ListeningComponent {
         this.oldState = {
             dialogs: store.getState().dialogs,
             user: store.getState().user
-        };          
+        };
     }
-    
+
     private _verifyInput (e: any) {
         // check input for correctness
         var reader = new FileReader();
@@ -99,7 +99,7 @@ export class EditPhotoDialog extends ListeningComponent {
                 disabled: true
             });
         }
-        
+
     }
 
     private _closeModal () {
@@ -110,16 +110,16 @@ export class EditPhotoDialog extends ListeningComponent {
         //     blob: null
         // });
     }
-    
+
     private _checkInput (title: any, text: any) {
         if (this.state.disabled && title.input.value.length > 0 && text.input.getInputNode().value.length > 0) {
             this.setState({disabled: false});
         } else if (!this.state.disabled && (
                     title.input.value.length === 0 || text.input.getInputNode().value.length === 0) ) {
             this.setState({disabled: true});
-        } 
+        }
     }
-    
+
     private _doEdit (title: string, text: string) {
         // console.log(this.state.dialogs.editPhoto, title, text);
         UserActions.editPhoto(this.state.dialogs.editPhoto, title, text);
@@ -131,7 +131,7 @@ export class EditPhotoDialog extends ListeningComponent {
         let dialogs = this.state.dialogs;
         let img: any;
         let title: any, text: any;
-               
+
         return (
             <Modal
                 isOpen={dialogs.editPhoto.length>0}
@@ -141,7 +141,7 @@ export class EditPhotoDialog extends ListeningComponent {
                 <Toolbar>
                     <Title title={`Edit Photo`} />
                 </Toolbar>
-                
+
                 <TextField
                     hintText="Title"
                     multiLine={false}
@@ -162,15 +162,15 @@ export class EditPhotoDialog extends ListeningComponent {
                     }}
                     onChange={() => { this._checkInput(title, text) }}
                 /><br />
- 
-                <FlatButton 
+
+                <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
                     onClick={() => {
                         this._closeModal();
                     }}
                 />
-                <RaisedButton 
+                <RaisedButton
                     style={{float: 'right', marginRight: '15px'}}
                     label={`Save`}
                     disabled={this.state.disabled}

@@ -3,7 +3,7 @@
 // vendor
 const React: IReact = vendor.React;
 
-const Utils: IUtils = require('./../../utils/utils.ts');
+const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
 const FlatButton = vendor.mUi.FlatButton;
 const RaisedButton = vendor.mUi.RaisedButton;
@@ -17,40 +17,40 @@ export class Comments extends React.Component {
     protected setState: (state: any) => void;
     protected state: {
     };
-        
+
     protected oldState: {
     };
-    
+
     public props: {
         display: string,
         comments: CommentType [],
         user: string,
         id: string
     }
-    
+
     constructor(){
         super();
-        
+
         this.oldState = {
         };
     }
-    
+
     private _post (input: any) {
         UserActions.postComment(this.props.id, input.getInputNode().value);
         input.setValue(``);
     }
-    
+
     private _deleteComment (date: string) {
         UserActions.deleteComment(this.props.id, date);
     }
-    
-    render() {     
+
+    render() {
         let postInput: any;
 
         return (
             <div style={{
                 display: (this.props.display) ? `` : `none`,
-                marginLeft: `15px`                
+                marginLeft: `15px`
             }}>
                 <TextField
                     hintText="New Comment"
@@ -63,14 +63,14 @@ export class Comments extends React.Component {
                     }}
                 />
                 <div style={{textAlign: `right`}}>
-                    <FlatButton 
+                    <FlatButton
                         style={{marginRight: '15px'}}
                         label={`Clear`}
-                        onClick={() => { 
+                        onClick={() => {
                             postInput.input.setValue(``);
                         }}
                     />
-                    <RaisedButton 
+                    <RaisedButton
                         style={{marginRight: '15px'}}
                         label={`Post`}
                         onClick={() => { this._post(postInput.input)}}

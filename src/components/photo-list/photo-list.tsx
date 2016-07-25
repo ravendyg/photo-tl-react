@@ -3,7 +3,7 @@
 // vendor
 const React: IReact = vendor.React;
 
-const Utils: IUtils = require('./../../utils/utils.ts');
+const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
@@ -14,7 +14,7 @@ import {PhotoCard} from './../card/photo-card.tsx';
 import {EditPhotoDialog} from './../dialogs/edit-photo.tsx';
 
 // data
-const store: IStore = require('./../../store.ts');
+const store: IStore = require('./../../store.ts').Store;
 
 export class PhotoList extends ListeningComponent {
     protected setState: (state: any) => void;
@@ -22,31 +22,31 @@ export class PhotoList extends ListeningComponent {
         photos: ImageType [],
         commentsDisplayed: string
     };
-        
+
     protected oldState: {
         photos: ImageType [],
         commentsDisplayed: string
     };
-    
+
     public props: any;
-  
+
     private _preloader: any;
-    
+
     constructor(){
         super();
-        
+
         this.oldState = {
             photos: store.getState().photos,
             // nothing displayed by default
             commentsDisplayed: ``
         };
     }
-    
+
     componentWillMount () {
         // props are not accessible in the constructor
         this.transformState();
     }
-    
+
     // @Override
     protected transformState () {
         if (this.props.filter === `my`) {
@@ -62,7 +62,7 @@ export class PhotoList extends ListeningComponent {
             });
         }
     }
-    
+
     private _toggleComments (_id: string) {
         if (this.state.commentsDisplayed === _id) {
             // hide
@@ -72,14 +72,14 @@ export class PhotoList extends ListeningComponent {
             this.setState({commentsDisplayed: _id});
         }
     }
-    
+
     private _editPhoto (_id: string) {
         UserActions.displayPhotoEdit(_id);
     }
-    
+
     render() {
         return (
-        <div>        
+        <div>
             {this.state.photos.map( (e, i) =>
                     <PhotoCard
                         key={e._id}

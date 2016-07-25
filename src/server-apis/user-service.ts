@@ -7,25 +7,25 @@ const config: (query: any) => string = require('./../config.ts');
 const SocketService: ISocketService = require('./socket-service.ts').SocketService;
 const ImageService: IImageService = require('./image-service.ts').ImageService;
 
-const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
-const store: IStore = require('./../store.ts');
+const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
+const store: IStore = require('./../store.ts').Store;
 
 class UserServiceClass implements IUserService{
 //     private _http: any;
 //     private _q: any;
 //     private _userActions: IUserActions;
 //     private _loggedInUser: any;
-    
+
     constructor (
         // $http, $q, socketService, userActions: IUserActions
         ) {
 //         this._http = $http;
 //         this._q = $q;
-        
+
 //         this._userActions = userActions;
 // window.socketService = socketService;
     }
-    
+
 //     public getUserFromMemory () {
 //         // check session storage
 //         var cookies: string [] = document.cookie.split(';');
@@ -44,7 +44,7 @@ class UserServiceClass implements IUserService{
 //             })
 //         }
 //     }
-    
+
     // generic sign up or in operation
     private _signUpIn (user: UserType, options) {
         var promise: IPromise = new Promise ( (resolve, reject) => {
@@ -64,13 +64,13 @@ class UserServiceClass implements IUserService{
                 .on(`50x`, err => {
                     reject(JSON.parse(err).error);
                 })
-                .go();    
+                .go();
         });
-        
+
         return promise;
     }
-    
-    public signin (user: UserType) {       
+
+    public signin (user: UserType) {
         var q= this._signUpIn(user, {
                     method: 'GET',
                     url: config('url') + config('port') + config('userDriver') + '/sign-in'
@@ -78,14 +78,14 @@ class UserServiceClass implements IUserService{
                 console.log(q);
                 return q;
     }
-    
-    public signup (user: UserType) {       
+
+    public signup (user: UserType) {
         return this._signUpIn(user, {
                     method: 'POST',
                     url: config('url') + config('port') + config('userDriver') + '/new-user'
                 });
     }
-    
+
     // remove cookie
     public signout (user: UserType): void {
         aja()
@@ -101,7 +101,7 @@ class UserServiceClass implements IUserService{
                 console.log(resp);
             })
             .go();
-            
+
         store.dispatch(actionCreators.signOutUser());
         SocketService.disconnect();
     }

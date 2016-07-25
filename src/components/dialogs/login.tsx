@@ -8,7 +8,7 @@ import {ListeningComponent} from './../listening-component.ts';
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 // data
-const store: IStore = require('./../../store.ts');
+const store: IStore = require('./../../store.ts').Store;
 
 // ui
 const Modal = vendor.mUi.Modal;
@@ -22,7 +22,7 @@ const Toggle = vendor.mUi.Toggle;
 const customStyles = require('./modal-style.ts');
 console.log(customStyles);
 
-export class LoginDialog extends ListeningComponent {  
+export class LoginDialog extends ListeningComponent {
     protected setState: (state: any) => void;
     protected state: {
         dialogs: {
@@ -30,9 +30,9 @@ export class LoginDialog extends ListeningComponent {
             up: boolean
         },
         user: UserType,
-        error: string 
+        error: string
     };
-    
+
     protected oldState: {
         dialogs: {
             in: boolean,
@@ -40,12 +40,12 @@ export class LoginDialog extends ListeningComponent {
         },
         user: UserType
     };
-    
+
     private _user: UserType;
-    
+
     constructor () {
         super();
-        
+
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
@@ -55,7 +55,7 @@ export class LoginDialog extends ListeningComponent {
             dialogs: store.getState().dialogs,
             user: store.getState().user
         };
-               
+
         this._user = {
             name: ``,
             pas: ``,
@@ -63,7 +63,7 @@ export class LoginDialog extends ListeningComponent {
             rem: false
         };
     }
-    
+
     private _verifyInput (): string {
         // check input for correctness
         if (this._user.name.match(/[^0-1a-zA-Z\s]/)) {
@@ -80,9 +80,9 @@ export class LoginDialog extends ListeningComponent {
         }
         return ``;
     }
-        
+
     private _signin () {
-        var error = this._verifyInput(); 
+        var error = this._verifyInput();
         if (!error) {
             if (this.state.dialogs.in) {
                 // send signin request
@@ -125,7 +125,7 @@ export class LoginDialog extends ListeningComponent {
         UserActions.hideDialogs();
         this.setState({error: ``});
     }
-    
+
     private hideError () {
         if (this.state.error) {
             this.setState({error: ``});
@@ -133,23 +133,23 @@ export class LoginDialog extends ListeningComponent {
     }
 
     render () {
-        
+
         let name, pas, pas2, rem;
-        
+
         let error = this.state.error;
         let dialogs = this.state.dialogs;
-        
+
         let label: string;
-        
+
         if (dialogs.in) label = `SignIn`;
         else if (dialogs.up) label = `SignUp`;
         else label = `Error`;
-              
+
         // need confirmation only for signup
         let confirmPassword;
         if (dialogs.up) {
             confirmPassword =
-                <span> 
+                <span>
                     <TextField
                         hintText="Confirm password"
                         multiline={false}
@@ -163,7 +163,7 @@ export class LoginDialog extends ListeningComponent {
         } else {
             confirmPassword = null;
         }
-        
+
         return (
             <Modal
                 isOpen={dialogs.in || dialogs.up}
@@ -201,14 +201,14 @@ export class LoginDialog extends ListeningComponent {
                     }}
                     onChange={() => { this.hideError() }}
                 /><br />
-                <FlatButton 
+                <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
                     onClick={() => {
                         this.closeModal();
                     }}
                 />
-                <RaisedButton 
+                <RaisedButton
                     style={{float: 'right', marginRight: '15px'}}
                     label={label}
                     onClick={() => {

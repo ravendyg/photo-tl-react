@@ -4,51 +4,51 @@ const io = vendor.io;
 
 const config: (query: any) => string = require('./../config.ts');
 
-const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
-const store: IStore = require('./../store.ts');
+const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
+const store: IStore = require('./../store.ts').Store;
 
 class SocketServiceClass implements ISocketService {
     private _socket: any;
-    
+
     constructor () {
         // has access to server actions emmiter -> when user action on the client delivered to the server
         // there it should be confirmed and after that server broadcasts server action
         // that would be delivered to the stores
     }
-    
+
     public connect () {
         this._socket = io(config('url') + config('port'));
         this._listen();
     }
-    
+
     public disconnect () {
         this._socket.disconnect();
         this._stopListen();
     }
-    
+
     public getConnection () {
         return this._socket;
     }
-    
+
     // tell the server to remove specified photo
     public removePhoto (_id: string) {
         this._socket.emit('remove-photo', {_id});
     }
-    
+
     // tell the server information about uploaded file
     public uploadPhoto (filename: string, title: string, text: string) {
         this._socket.emit('upload-photo', {
             filename, title, text
         });
     }
-    
+
     // tell the server information about uploaded file
     public editPhoto (id: string, title: string, text: string) {
         this._socket.emit('edit-photo', {
             id, title, text
         });
     }
-    
+
     // vote
     public vote (newVote: number, _id: string) {
         this._socket.emit('vote-photo', {
@@ -56,7 +56,7 @@ class SocketServiceClass implements ISocketService {
             newVote
         });
     }
-    
+
     // comment
     public postComment (id: string, text: string) {
         this._socket.emit('comment-photo', {
@@ -64,7 +64,7 @@ class SocketServiceClass implements ISocketService {
             text
         });
     }
-    
+
     // uncomment
     public deleteComment (id: string, date: string) {
         this._socket.emit('uncomment-photo', {
@@ -72,7 +72,7 @@ class SocketServiceClass implements ISocketService {
             date
         });
     }
-        
+
     // start listen
     private _listen () {
         // photo deleted
@@ -89,7 +89,7 @@ class SocketServiceClass implements ISocketService {
         });
         // new vote accepted
         this._socket.on('vote-photo', (newRating: NewRatingType) => {
-            store.dispatch(actionCreators.votePhoto(newRating)); 
+            store.dispatch(actionCreators.votePhoto(newRating));
         });
         // // all photos
         // this._socket.on(`photo-list`, (data) => {

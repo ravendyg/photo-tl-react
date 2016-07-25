@@ -3,8 +3,8 @@
 const aja: AjaType = vendor.aja;
 const config: (query: any) => string = require('./../config.ts');
 
-const actionCreators: IActionCreators = require('./../action-creators.ts').actionCreators;
-const store: IStore = require('./../store.ts');
+const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
+const store = require('./../store.ts').Store;
 // const socket = require('./socket-service.ts').SocketService;
 
 class ImageServiceClass implements IImageService {
@@ -17,26 +17,26 @@ class ImageServiceClass implements IImageService {
     private _images: ImageType [];
     // flag to prevent repetitive photos loading
     private _loadedImages: boolean;
-    
-    constructor () {      
-        
+
+    constructor () {
+
         this._images = store.getState().photos;
         this._loadedImages = false;
         // download photos if signedin
         if (store.getState().user.name) {
             this._getImageData();
         }
-        
+
         store.subscribe(() => {
             if (store.getState().user.name && !this._loadedImages) {
                 // if just logged in
                 this._getImageData();
             }
         });
-        
+
         // var getImageData = () => this.getImageData();
     }
-    
+
     private _getImageData (): void {
         // real call to the server
         aja()
@@ -52,33 +52,33 @@ class ImageServiceClass implements IImageService {
                 .on(`50x`, err => {
                     console.log(err);
                 })
-                .go();   
+                .go();
     }
-    
+
     public uploadPhoto (photo: any): IPromise {
         var promise = new Promise ( (resolve, reject) => {
             // ajax
             var xhr = new XMLHttpRequest();
             xhr.open('POST', config('url') + config('port') + config('imageDriver') + '/upload-image');
-            
+
             xhr.onload = function (resp) {
                 resolve(JSON.parse(xhr.responseText).filename);
             };
-            
+
             xhr.onreadystatechange = function() {
                 console.log(xhr.status);
             };
-            
+
             xhr.onerror = function (err) {
                 reject(err);
             };
-            
+
             xhr.upload.onprogress = function (e) {
                 console.log(e.total);
                 console.log(e.loaded / e.total);
             };
-            
-            xhr.send(photo);    
+
+            xhr.send(photo);
         });
         return promise;
     }

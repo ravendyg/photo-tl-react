@@ -5,7 +5,7 @@ const React: IReact = vendor.React;
 
 const FlatButton = vendor.mUi.FlatButton;
 
-const Utils: IUtils = require('./../../utils/utils.ts');
+const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
@@ -13,28 +13,28 @@ export class Comment extends React.Component {
     protected setState: (state: any) => void;
     protected state: {
     };
-        
+
     protected oldState: {
     };
-    
+
     public props: {
         user: string,
         comment: CommentType,
         deleteComment: (date: string) => void
     }
-    
+
     constructor(){
         super();
-        
+
         this.oldState = {
         };
     }
-    
+
     private _deleteComment (date: string): void {
         this.props.deleteComment(date);
     }
-    
-    render() {     
+
+    render() {
         let brr = (window.outerWidth > 500)
             ? null
             : <br />;

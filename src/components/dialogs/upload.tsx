@@ -10,7 +10,7 @@ import {ListeningComponent} from './../listening-component.ts';
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 // data
-const store: IStore = require('./../../store.ts');
+const store: IStore = require('./../../store.ts').Store;
 
 // ui
 const Modal = vendor.mUi.Modal;
@@ -24,7 +24,7 @@ const Toggle = vendor.mUi.Toggle;
 const customStyles = require('./modal-style.ts');
 console.log(customStyles);
 
-export class UploadDialog extends ListeningComponent {  
+export class UploadDialog extends ListeningComponent {
     protected setState: (state: any) => void;
     protected state: {
         dialogs: {
@@ -37,19 +37,19 @@ export class UploadDialog extends ListeningComponent {
         inKey: number, // to force input update
         disabled: boolean
     };
-    
+
     protected oldState: {
         dialogs: {
             upload: boolean
         },
         user: UserType
     };
-    
+
     private _user: UserType;
-    
+
     constructor () {
         super();
-        
+
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
@@ -62,9 +62,9 @@ export class UploadDialog extends ListeningComponent {
         this.oldState = {
             dialogs: store.getState().dialogs,
             user: store.getState().user
-        };          
+        };
     }
-    
+
     private _verifyInput (e: any) {
         // check input for correctness
         var reader = new FileReader();
@@ -93,9 +93,9 @@ export class UploadDialog extends ListeningComponent {
                 disabled: true
             });
         }
-        
+
     }
-        
+
     private _upload (title: string, text: string) {
         console.log(`sent to server`);
         UserActions.uploadPhoto(this.state.blob, title, text);
@@ -110,7 +110,7 @@ export class UploadDialog extends ListeningComponent {
             blob: null
         });
     }
-    
+
     private hideError () {
         if (this.state.error) {
             this.setState({error: ``});
@@ -123,7 +123,7 @@ export class UploadDialog extends ListeningComponent {
         let dialogs = this.state.dialogs;
         let img: any;
         let title: any, text: any;
-               
+
         return (
             <Modal
                 isOpen={dialogs.upload}
@@ -149,7 +149,7 @@ export class UploadDialog extends ListeningComponent {
                     onChange={() => { this._verifyInput(img); }}
                     onClick={() => { this.hideError(); }}
                 /><br />
-                
+
                 <TextField
                     hintText="Title"
                     multiLine={false}
@@ -170,15 +170,15 @@ export class UploadDialog extends ListeningComponent {
                     }}
                     onChange={() => { this.hideError() }}
                 /><br />
- 
-                <FlatButton 
+
+                <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
                     onClick={() => {
                         this.closeModal();
                     }}
                 />
-                <RaisedButton 
+                <RaisedButton
                     style={{float: 'right', marginRight: '15px'}}
                     label={`Upload`}
                     disabled={this.state.disabled}
