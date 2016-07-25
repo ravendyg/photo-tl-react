@@ -1,16 +1,18 @@
 /* global process */
 /* global __dirname */
-const NODE_ENV = process.env.NODE_ENV || 'development';
+// const NODE_ENV = process.env.NODE_ENV || 'development';
 
 var webpack = require('webpack');
 var path = require('path');
 
-console.log(NODE_ENV);
+const dev = !(process.argv.indexOf('--env=prod') !== -1);
 
-module.exports = {  
+console.log(dev);
+
+module.exports = {
     entry: {
       vendor: './src/vendor.tsx',
-      app: './src/app.tsx'      
+      app: './src/app.tsx'
     },
     output: {
         path: __dirname + "/build/",
@@ -20,8 +22,8 @@ module.exports = {
     resolve: {
         extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.tsx', '.jsx', '.html']
     },
-    watch: NODE_ENV === 'development',
-    devtool: NODE_ENV === 'development' ? "source-map" : null,
+    watch: dev === 'development',
+    devtool: dev === 'development' ? "source-map" : null,
     module: {
         loaders: [
             { test: /\.tsx?$/, loader: 'babel!ts-loader' },
@@ -32,10 +34,10 @@ module.exports = {
             { test: /\.css$/, loader: "style-loader!css-loader" },
         ]
     },
-    plugins: NODE_ENV === 'development' ? [] : [
+    plugins: dev === 'development' ? [] : [
         new webpack.DefinePlugin({
             'process.env': {
-            'NODE_ENV': JSON.stringify('production')
+            'dev': JSON.stringify('production')
             }
         }),
         new webpack.optimize.DedupePlugin(),
@@ -50,7 +52,7 @@ module.exports = {
                 conditionals: true,
                 unused: true,
                 drop_console: true
-            }            
+            }
         }),
     ]
 }

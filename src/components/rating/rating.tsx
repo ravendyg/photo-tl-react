@@ -21,7 +21,7 @@ export class Rating extends React.Component {
     // given a rating produces an array of strings with icons 
     private _calculate (rt: number): string [] {
         let tmp: string [] = [];
-        for (let i=1; i<=5; i++) {
+        for (let i=1; i <= 5; i++) {
             if (i <= rt) {
                 tmp.push(``);
             } else if (i-1 < rt) {

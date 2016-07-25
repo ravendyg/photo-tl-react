@@ -3,9 +3,9 @@
 export = function (query): string {
     switch (query) {
         case `url`:
-            return `http://excur.info`;
+            return window.location.origin;//`http://excur.info`;
         case `port`:
-            return `:8085`; 
+            return '';//`:8085`;
         case 'userDriver':
             return '/user-processor';
         case 'imageDriver':
