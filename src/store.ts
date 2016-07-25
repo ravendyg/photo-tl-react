@@ -2,24 +2,24 @@
 
 const Redux: IRedux = vendor.Redux;
 
-const Utils: IUtils = require('./utils/utils.ts');
+import {Utils} from './utils/utils.ts';
 
-const actions: Actions = require('./action-creators.ts').Actions;
-const filters: Filters = require('./consts.ts').Filters;
+import {Actions} from './action-creators';
+import {Filters} from './consts.ts';
 
 // reducers
 const user = (state: UserType = { name: `` }, action: ActionType) => {
     switch (action.type) {
-        case actions.SIGNIN_USER:
+        case Actions.SIGNIN_USER:
             return {
                 name: action.payload.user.name,
             };
-            
-        case actions.SIGNOUT_USER:
+
+        case Actions.SIGNOUT_USER:
             return {
                 name: ``,
             };
-    
+
         default:
             return state;
     }
@@ -28,73 +28,73 @@ const user = (state: UserType = { name: `` }, action: ActionType) => {
 const dialogs = (state: dialogsType, action: ActionType) => {
     // new state doesn't depend on the previous one
     let def: dialogsType = { in: false, up: false, upload: false, editPhoto: ``};
-    
+
     switch (action.type) {
-        
-        case actions.SET_IN_DIALOG:
+
+        case Actions.SET_IN_DIALOG:
             def.in = true
             return def;
-            
-        case actions.SET_UP_DIALOG:
+
+        case Actions.SET_UP_DIALOG:
             def.up = true
             return def;
-            
-        case actions.SET_UPLOAD_DIALOG:
+
+        case Actions.SET_UPLOAD_DIALOG:
             def.upload = true
             return def;
-           
-        case actions.SET_EDIT_DIALOG:
+
+        case Actions.SET_EDIT_DIALOG:
             def.editPhoto = action.payload._id;
             return def;
-            
-        case actions.HIDE_DIALOGS:
+
+        case Actions.HIDE_DIALOGS:
             return def;
-    
+
         default:
             return def;
-    }  
+    }
 };
 
 const photo = (state, action: ActionType) => {
     let tmp: ImageType = Utils.objectAssign({}, [state]);
-    
+
     switch (action.type) {
-        case actions.ADD_PHOTO:
+        case Actions.ADD_PHOTO:
             return action.payload.photo;
-            
-        case actions.DELETE_PHOTO:
+
+        case Actions.DELETE_PHOTO:
             if (action.payload._id !== state._id) return true;
             else return false;
-            
-        case actions.VOTE:
+
+        case Actions.VOTE:
             tmp.averageRating = action.payload.newRating.averageRating;
             tmp.rating = [
                 // select all other user's votes
                 ...tmp.rating.filter(e => e.user !== action.payload.newRating.ratingElem.user),
                 // add from this one
                 action.payload.newRating.ratingElem
-            ]           
+            ]
             return tmp;
-            
-        case actions.POST_COMMENT:
+
+        case Actions.POST_COMMENT:
             tmp.comments = [
                 ...tmp.comments,
                 action.payload.newComment.comment
             ]
             return tmp;
-            
-        case actions.DELETE_COMMENT:
+
+        case Actions.DELETE_COMMENT:
             tmp.comments = tmp.comments.filter(e => e.date !== action.payload.date);
             return tmp;
-            
-        case actions.EDIT_PHOTO:
+
+        case Actions.EDIT_PHOTO:
             tmp.description = action.payload.dataChange.text;
             tmp.title = action.payload.dataChange.title;
             tmp.changed = action.payload.dataChange.time;
             tmp.changedBy = action.payload.dataChange.user
             return tmp;
-            
-    
+
+
         default:
             return state;
     }
@@ -104,7 +104,7 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
     // creates new array of photos requesting change of selected one from photo reducer
     function transferHelper (state, comparator, action) {
         for (let i=state.length-1; i>=0; i--) {
-            if (state[i]._id === comparator) {                    
+            if (state[i]._id === comparator) {
                 return [
                     ...state.slice(0,i),
                     photo(state[i], action),
@@ -114,121 +114,42 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
         }
         // not found?!
         return state;
-    } 
-    
+    }
+
     switch (action.type) {
-        case actions.ADD_PHOTO:
+        case Actions.ADD_PHOTO:
             return [
                 ...state,
                 photo(undefined, action)
             ];
-            
-        case actions.DELETE_PHOTO:
+
+        case Actions.DELETE_PHOTO:
             return state.filter( p => photo(p, action));
-            
-        case actions.ADD_PHOTOS:
+
+        case Actions.ADD_PHOTOS:
             return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => {
                                                                     if (el1._id > el2._id) return 1;
                                                                     if (el1._id < el2._id) return -1;
-                                                                    return 0;      
+                                                                    return 0;
                                                                 }
             );
-            
-        case actions.VOTE:
+
+        case Actions.VOTE:
             return transferHelper(state, action.payload.newRating._id, action);
-            
-        case actions.POST_COMMENT:
+
+        case Actions.POST_COMMENT:
             return transferHelper(state, action.payload.newComment.id, action);
-            
-        case actions.DELETE_COMMENT:
+
+        case Actions.DELETE_COMMENT:
             return transferHelper(state, action.payload._id, action);
-            
-        case actions.EDIT_PHOTO:
+
+        case Actions.EDIT_PHOTO:
             return transferHelper(state, action.payload.dataChange._id, action);
-            
+
         default:
             return state;
     }
 }
-
-
-// const todo = (state, action: ActionType) => {
-//     switch (action.type) {
-        
-//         case actions.ADD_TODO:
-//             return {
-//                 id: action.payload.id,
-//                 text: action.payload.text,
-//                 completed: false
-//             }
-            
-//         case actions.TOGGLE_TODO:
-//             if (state.id === action.payload.id) {
-//                 return polyfils.objectAssign({}, [state, {completed: !state.completed}]);
-//             } else {
-//                 return state;
-//             }
-            
-//         default:
-//             return state;
-//     }
-// };
-
-// const todos = (state = [], action: ActionType) => {
-//     switch (action.type) {
-        
-//         case actions.ADD_TODO:
-//             return [
-//                 ...state,
-//                 todo(undefined, action)                
-//             ];
-            
-//         case actions.TOGGLE_TODO:
-//             return state.map( t => todo(t, action));
-    
-//         default:
-//             return state;
-//     }   
-// };
-
-// const visibilityFilter = (state = filters.SHOW_ALL, action: ActionType) => {
-//     switch (action.type) {
-        
-//         case actions.SET_VISIBITY_FILTER:
-//             return action.payload.filter;
-                
-//         default:
-//             return state;
-//     }
-// };
-
-// const todoApp = (state: ITodoApp = {}, action: ActionType) => {
-//     return {
-//         todos: todos (
-//             state.todos,
-//             action
-//         ),
-//         visibilityFilter: visibilityFilter (
-//             state.visibilityFilter,
-//             action
-//         )
-//     };
-// };
-
-// const combineReducers = (reducers) => {
-//     return (state = {}, action: ActionType) => {
-//         return Object.keys(reducers).reduce(
-//             (nextState, key) => {
-//                 nextState[key] = reducers[key](
-//                     state[key],
-//                     action
-//                 );
-//                 return nextState;
-//             },
-//             {}
-//         );
-//     }
-// }
 
 const photoApp = Redux.combineReducers({
     user,
@@ -236,4 +157,4 @@ const photoApp = Redux.combineReducers({
     photos
 });
 
-export = Redux.createStore(photoApp);
+export const Store = Redux.createStore(photoApp);

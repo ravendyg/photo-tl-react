@@ -3,27 +3,27 @@
 /**
  * Utils
  */
-class Utils implements IUtils {
+class UtilsClass implements IUtils {
     constructor() {
-        
+
     }
-    
+
     public transformDate (num: number): string {
         return ''+num;
     }
-    
+
     public formatDate (date: string): string {
         let tmp = new Date(date);
         return `${this.indentDate(tmp.getDate())}-${this.indentDate(tmp.getMonth())
                 }-${tmp.getFullYear()} ${this.indentDate(tmp.getHours())
                 }:${this.indentDate(tmp.getMinutes())}`;
     }
-    
+
     private indentDate (num: number): string {
         if (num < 10) return `0${num}`;
         else return `${num}`;
     }
-    
+
     /*** creates new array from arr
      * order == 1 ascending, == -1 descending
      */
@@ -32,17 +32,17 @@ class Utils implements IUtils {
         return arr.sort( (elem1, elem2) => {
                 if (elem1 < elem2) return -order;
                 if (elem1 > elem2) return order;
-                return 0; 
+                return 0;
             });
     }
-    
+
     /*** merges several arrays into one and removes duplicated elements
      * @param arrs - arrays to be merged
      * @param compare - comparator function
      * example call mergeUnic([arr1, arr2], (el1, el2) => {
      *      if (el1.id > el2.id) return 1;
      *      if (el1.id < el2.id) return -1;
-     *      return 0;      
+     *      return 0;
      * })
     */
     public mergeUnic (arrs: any [], compare: (el1: any, el2: any) => number): any [] {
@@ -56,7 +56,7 @@ class Utils implements IUtils {
         );
         return concatenated;
     }
-    
+
     /*** writes properties of objects from sources array on target object
      * to create new object from sources use target = {}
      */
@@ -85,4 +85,4 @@ class Utils implements IUtils {
     }
 }
 
-export = new Utils();
+export const Utils = new UtilsClass();

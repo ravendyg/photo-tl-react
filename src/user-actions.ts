@@ -1,85 +1,85 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-const actionCreators: IActionCreators = require('./action-creators.ts').actionCreators;
-const store: IStore = require('./store.ts');
+import {ActionCreators} from './action-creators.ts';
+import {Store} from './store.ts';
 
-const UserService: IUserService = require('./server-apis/user-service.ts').UserService;
-const ImageService: IImageService = require('./server-apis/image-service.ts').ImageService;
-const SocketService: ISocketService = require('./server-apis/socket-service.ts').SocketService;
+import {UserService} from './server-apis/user-service.ts';
+import {ImageService} from './server-apis/image-service.ts';
+import {SocketService} from './server-apis/socket-service.ts';
 
 class UserActionsClass implements IUserActions {
-    
-    constructor () { 
+
+    constructor () {
     }
-    
+
     public displaySignin () {
-        store.dispatch(actionCreators.setInDialog());
+        Store.dispatch(ActionCreators.setInDialog());
     }
-    
+
     public displaySignup () {
-        store.dispatch(actionCreators.setUpDialog());
+        Store.dispatch(ActionCreators.setUpDialog());
     }
-    
+
     public displayPhotoUpload () {
-        store.dispatch(actionCreators.setUploadDialog());
+        Store.dispatch(ActionCreators.setUploadDialog());
     }
-    
+
     public displayPhotoEdit (_id: string) {
-        store.dispatch(actionCreators.setEditDialog(_id));
+        Store.dispatch(ActionCreators.setEditDialog(_id));
     }
-    
+
     public hideDialogs () {
-        store.dispatch(actionCreators.hideDialogs());
+        Store.dispatch(ActionCreators.hideDialogs());
     }
-    
+
     public signin (name: string, pas: string, rem: boolean) {
         return UserService.signin({
             name, pas, rem
         });
     }
-    
+
     public signup (name: string, pas: string, pas2: string, rem: boolean) {
         return UserService.signup({
             name, pas, pas2, rem
         });
     }
-    
+
     public signout (name: string) {
         UserService.signout({
             name
         });
     }
-    
+
     public vote (rating: number, _id: string): void {
         SocketService.vote(rating, _id);
     }
-    
+
     public deletePhoto (_id: string): void {
         SocketService.removePhoto(_id);
     }
-    
+
     public postComment (_id: string, text: string): void {
         SocketService.postComment(_id, text);
     }
-    
+
     public deleteComment (_id: string, text: string): void {
         SocketService.deleteComment(_id, text);
     }
-    
+
     public uploadPhoto (photo: any, title: string, text: string): void {
         ImageService.uploadPhoto(photo)
             .then(
                 filename => {
                     SocketService.uploadPhoto(filename, title, text);
-                    // store.dispatch(actionCreators.hideDialogs());
+                    // Store.dispatch(ActionCreators.hideDialogs());
                 },
                 err => {
                     console.log(err);
-                    // store.dispatch(actionCreators.hideDialogs());
+                    // Store.dispatch(ActionCreators.hideDialogs());
                 }
             );
     }
-    
+
     public editPhoto (_id: string, title: string, text: string): void {
         SocketService.editPhoto(_id, title, text);
     }

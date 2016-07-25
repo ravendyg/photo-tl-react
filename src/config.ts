@@ -1,6 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-export = function (query): string {
+export = function (query) : string {
     switch (query) {
         case `url`:
             return window.location.origin;//`http://excur.info`;
