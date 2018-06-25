@@ -88,8 +88,10 @@ ReactDom.render(
 
 // if user changed rerender
 Store.subscribe(() => {
-    if (Store.getState().user.name && Store.getState().user.name !== username) {
+    const state = Store.getState();
+    if (state.user.name && state.user.name !== username) {
         // logged in
+        // username = state.user.name;
         location.hash = `loggedin/all-photos`
     } else if (!Store.getState().user.name && username) {
         // logged out

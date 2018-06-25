@@ -40,19 +40,19 @@ class ImageServiceClass implements IImageService {
     private _getImageData (): void {
         // real call to the server
         aja()
-                .method(`GET`)
-                .url(config('url') + config('port') + config('imageDriver') + '/all-images')
-                .on(`200`, resp => {
-                    this._loadedImages = true;
-                    store.dispatch(actionCreators.addPhotos(resp));
-                })
-                .on('40x', err => {
-                    console.log(err);
-                })
-                .on(`50x`, err => {
-                    console.log(err);
-                })
-                .go();
+            .method(`GET`)
+            .url(config('url') + config('port') + config('imageDriver') + '/all-images')
+            .on(`200`, resp => {
+                this._loadedImages = true;
+                store.dispatch(actionCreators.addPhotos(resp || []));
+            })
+            .on('40x', err => {
+                console.log(err);
+            })
+            .on(`50x`, err => {
+                console.log(err);
+            })
+            .go();
     }
 
     public uploadPhoto (photo: any): IPromise {

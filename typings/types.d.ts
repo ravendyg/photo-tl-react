@@ -20,7 +20,7 @@ declare type StateType = {
 };
 
 declare type ActionType = {
-    type: number;
+    type: string;
     payload?: {
         _id?: string,
         filter?: number,

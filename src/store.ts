@@ -127,12 +127,7 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             return state.filter( p => photo(p, action));
 
         case Actions.ADD_PHOTOS:
-            return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => {
-                                                                    if (el1._id > el2._id) return 1;
-                                                                    if (el1._id < el2._id) return -1;
-                                                                    return 0;
-                                                                }
-            );
+            return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => el1._id - el2._id);
 
         case Actions.VOTE:
             return transferHelper(state, action.payload.newRating._id, action);
@@ -157,4 +152,6 @@ const photoApp = Redux.combineReducers({
     photos
 });
 
-export const Store = Redux.createStore(photoApp);
+const win: any = window;
+
+export const Store = Redux.createStore(photoApp, win.__REDUX_DEVTOOLS_EXTENSION__ && win.__REDUX_DEVTOOLS_EXTENSION__());

@@ -104,11 +104,6 @@ export class EditPhotoDialog extends ListeningComponent {
 
     private _closeModal () {
         UserActions.hideDialogs();
-        // this.setState({
-        //     img: `react/assets/noimage.png`,
-        //     error: ``,
-        //     blob: null
-        // });
     }
 
     private _checkInput (title: any, text: any) {
@@ -121,7 +116,6 @@ export class EditPhotoDialog extends ListeningComponent {
     }
 
     private _doEdit (title: string, text: string) {
-        // console.log(this.state.dialogs.editPhoto, title, text);
         UserActions.editPhoto(this.state.dialogs.editPhoto, title, text);
     }
 

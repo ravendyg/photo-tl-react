@@ -34,7 +34,6 @@ export class PhotoList extends ListeningComponent {
 
     constructor(){
         super();
-
         this.oldState = {
             photos: store.getState().photos,
             // nothing displayed by default

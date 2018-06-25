@@ -3,12 +3,12 @@
 // vendor
 const React: IReact = vendor.React;
 
-import {ListeningComponent} from './../listening-component.ts';
+import {ListeningComponent} from '../listening-component';
 
-const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
+const UserActions: IUserActions = require('../../user-actions.ts').UserActions;
 
 // data
-const store: IStore = require('./../../store.ts').Store;
+const store: IStore = require('../../store.ts').Store;
 
 // ui
 const Modal = vendor.mUi.Modal;

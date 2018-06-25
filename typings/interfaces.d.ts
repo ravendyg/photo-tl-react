@@ -5,13 +5,13 @@ interface IStore {
 }
 
 interface IRedux {
-    createStore (reducer: any): IStore;
+    createStore (reducer: any, tools?: any): IStore;
     combineReducers (reducers: any): any;
 }
 
 interface IReactComponent {
-    new (...args: any []): IReactComponent;   
-    props: any; 
+    new (...args: any []): IReactComponent;
+    props: any;
     input: HTMLInputElement;
     // unsubscribe (): void;
     // componentDidMount (): void;
@@ -19,7 +19,7 @@ interface IReactComponent {
     render (): void;
     forceUpdate: () => void;
     context: any;
-    // setState: (state: any) => void; 
+    // setState: (state: any) => void;
     // state: any;
 }
 
@@ -47,19 +47,19 @@ interface IPromise {
 interface IActionCreators {
     signInUser (user: UserType): ActionType;
     signOutUser (): ActionType;
-    
+
     setInDialog (): ActionType;
     setUpDialog (): ActionType;
     setUploadDialog (): ActionType;
     setEditDialog (_id: string): ActionType;
     hideDialogs (): ActionType;
-    
+
     addPhoto (photo: ImageType): ActionType;
     addPhotos (photos: ImageType []): ActionType;
     deletePhoto (id: string): ActionType;
     editPhoto (dataChange: DataChangeType): ActionType;
     deleteComment (_id: string, date: string): ActionType;
-    
+
     votePhoto (newRating: NewRatingType): ActionType;
     postComment (newComment: {comment: CommentType, id: string}): ActionType;
 }
@@ -75,14 +75,14 @@ interface IUserActions {
     signin: (name: string, pas: string, rem: boolean) => IPromise;
     signup: (name: string, pas: string, pas2: string, rem: boolean) => IPromise;
     signout: (name: string) => void;
-    
+
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
     postComment: (_id: string, text: string) => void;
     deleteComment: (_id: string, date: string) => void;
-    
+
     uploadPhoto: (photo: any, title: string, text: string) => void;
-    editPhoto: (_id: string, title: string, text: string) => void;    
+    editPhoto: (_id: string, title: string, text: string) => void;
 }
 
 
@@ -99,7 +99,7 @@ interface IAja {
     data: (data: any) => IAja;
     body: (data: any) => IAja;
     on: (code: string, callback: (resp: any) => void) => IAja;
-    go: () => void; 
+    go: () => void;
 }
 
 interface ISocketService {

@@ -1,23 +1,20 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-export enum Actions {
-    SIGNIN_USER = 3,
-    SIGNOUT_USER = 4,
-
-    SET_IN_DIALOG = 5,
-    SET_UP_DIALOG = 6,
-    SET_UPLOAD_DIALOG = 12,
-    SET_EDIT_DIALOG = 15,
-    HIDE_DIALOGS = 7,
-
-    ADD_PHOTO = 8,
-    ADD_PHOTOS = 9,
-    DELETE_PHOTO = 10,
-    EDIT_PHOTO = 16,
-
-    VOTE = 11,
-    POST_COMMENT = 13,
-    DELETE_COMMENT = 14,
+export const Actions = {
+    SIGNIN_USER: 'SIGNIN_USER',
+    SIGNOUT_USER: 'SIGNOUT_USER',
+    SET_IN_DIALOG: 'SET_IN_DIALOG',
+    SET_UP_DIALOG: 'SET_UP_DIALOG',
+    SET_UPLOAD_DIALOG: 'SET_UPLOAD_DIALOG',
+    SET_EDIT_DIALOG: 'SET_EDIT_DIALOG',
+    HIDE_DIALOGS: 'HIDE_DIALOGS',
+    ADD_PHOTO: 'ADD_PHOTO',
+    ADD_PHOTOS: 'ADD_PHOTOS',
+    DELETE_PHOTO: 'DELETE_PHOTO',
+    EDIT_PHOTO: 'EDIT_PHOTO',
+    VOTE: 'VOTE',
+    POST_COMMENT: 'POST_COMMENT',
+    DELETE_COMMENT: 'DELETE_COMMENT',
 }
 
 var nextTodo = 0;
