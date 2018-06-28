@@ -20,7 +20,7 @@ export const Actions = {
 var nextTodo = 0;
 
 export const ActionCreators: IActionCreators = {
-    signInUser: (user: UserType) => {
+    signInUser: (user: TUser) => {
       return {
           type: Actions.SIGNIN_USER,
           payload: {

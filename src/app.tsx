@@ -34,9 +34,12 @@ var username = ``;
 // if -> dispatch
 var dataset: {user?: string} = document.body.dataset;
 if (dataset.user) {
-    Store.dispatch(ActionCreators.signInUser({name: dataset.user}));
-    username = Store.getState().user.name;
-    SocketService.connect();
+    try {
+        const user = JSON.parse(dataset.user);
+        Store.dispatch(ActionCreators.signInUser(user));
+        username = Store.getState().user.name;
+        SocketService.connect();
+    } catch (e) {}
 }
 
 class App extends React.Component {
@@ -52,7 +55,8 @@ class App extends React.Component {
 }
 
 const redir = (nextState, replace) => {
-    if (!Store.getState().user.name) {
+    const {user} = Store.getState();
+    if (!user) {
         // logged out
         replace('/no-user');
     } else if (nextState.location.pathname === `/no-user`) {
@@ -88,15 +92,13 @@ ReactDom.render(
 
 // if user changed rerender
 Store.subscribe(() => {
-    const state = Store.getState();
-    if (state.user.name && state.user.name !== username) {
-        // logged in
-        // username = state.user.name;
-        location.hash = `loggedin/all-photos`
-    } else if (!Store.getState().user.name && username) {
-        // logged out
+    const {user} = Store.getState();
+    if (!user) {
         location.hash = `no-user`
+    } else if (user.name !== username) {
+        // logged in
+        username = user.name;
+        location.hash = `loggedin/all-photos`
     }
-    username = Store.getState().user.name;
-})
+});
 

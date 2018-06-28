@@ -20,15 +20,15 @@ export class UserToolbarDesktop extends React.Component {
     protected state: {
         userMenu: {
             open: boolean,
-            anchorEl: any    
+            anchorEl: any
         }
     }
-    
+
     private displayedButton: any;
     props: any;
-    
+
     private menuItems: any [];
-    
+
     constructor(){
         super();
 
@@ -37,8 +37,8 @@ export class UserToolbarDesktop extends React.Component {
                 open: false,
                 anchorEl: null
             }
-        }    
-        
+        }
+
         this.menuItems = [{
             key: 1,
             text: `User data`,
@@ -69,11 +69,11 @@ export class UserToolbarDesktop extends React.Component {
             disp: 0,
             click: () => {
                 this._closeUserMenu();
-                this._signout(this.props.userName);
+                this._signout();
             }
         }];
     }
-    
+
     private _openUserMenu (event) {
         this.setState({
             userMenu: {
@@ -82,27 +82,27 @@ export class UserToolbarDesktop extends React.Component {
             }
         });
     }
-    
+
     private _closeUserMenu () {
         this.setState({
             userMenu: {
                 open: false
             }
-        });    
+        });
     }
-    
-    private _signout (username: string) {
-        UserActions.signout(username);
+
+    private _signout() {
+        UserActions.signout();
     }
-    
+
     render() {
         let title = this.props.title;
         let filter: number;
         let userMenu = this.state.userMenu;
-        
+
         if (title === `Data`) {
             filter = -1;
-            this.displayedButton = null;   
+            this.displayedButton = null;
         } else {
             filter = 1;
             this.displayedButton =
@@ -117,9 +117,9 @@ export class UserToolbarDesktop extends React.Component {
         return (
             <Toolbar>
                 {this.displayedButton}
-                
+
                 <ToolbarTitle text={title}/>
-                
+
                 <ToolbarGroup float="right">
                     <RaisedButton
                         onClick={event => this._openUserMenu(event)}
@@ -133,7 +133,7 @@ export class UserToolbarDesktop extends React.Component {
                         onRequestClose={event => this._closeUserMenu()}
                     >
                         <div style={{padding: `20px`}}>
-                            {this.menuItems.filter(e => filter * e.disp <= 0).map( e => 
+                            {this.menuItems.filter(e => filter * e.disp <= 0).map( e =>
                                 <MenuItem
                                     key={e.key}
                                     primaryText={e.text}
@@ -145,5 +145,5 @@ export class UserToolbarDesktop extends React.Component {
                 </ToolbarGroup>
             </Toolbar>
         )
-    } 
+    }
 }

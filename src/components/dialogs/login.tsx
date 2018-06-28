@@ -29,7 +29,7 @@ export class LoginDialog extends ListeningComponent {
             in: boolean,
             up: boolean
         },
-        user: UserType,
+        user: TUser,
         error: string
     };
 
@@ -38,10 +38,10 @@ export class LoginDialog extends ListeningComponent {
             in: boolean,
             up: boolean
         },
-        user: UserType
+        user: TUser
     };
 
-    private _user: UserType;
+    private _user: TUserRequest;
 
     constructor () {
         super();
@@ -101,7 +101,6 @@ export class LoginDialog extends ListeningComponent {
                 UserActions.signup(
                     this._user.name,
                     this._user.pas,
-                    this._user.pas2,
                     this._user.rem
                 ).then(
                     () => { this.closeModal(); },

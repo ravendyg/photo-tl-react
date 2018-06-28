@@ -10,18 +10,16 @@ const ImageService: IImageService = require('./image-service.ts').ImageService;
 const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
 const store: IStore = require('./../store.ts').Store;
 
-class UserServiceClass implements IUserService{
-
+class UserServiceClass implements IUserService {
 
     // generic sign up or in operation
-    private _signUpIn (user: UserType, options) {
+    private _signUpIn (userRequest: TUserRequest, options) {
         var promise: IPromise = new Promise ( (resolve, reject) => {
             aja()
                 .method(options.method)
                 .url(options.url)
-                .data(user)
-                .on(`200`, resp => {
-                    console.log(resp);
+                .data(userRequest)
+                .on(`200`, user => {
                     store.dispatch(actionCreators.signInUser(user));
                     SocketService.connect();
                     resolve();
@@ -38,29 +36,29 @@ class UserServiceClass implements IUserService{
         return promise;
     }
 
-    public signin (user: UserType) {
-        var q= this._signUpIn(user, {
+    public signin(userRequest: TUserRequest) {
+        var q = this._signUpIn(userRequest, {
                     method: 'GET',
                     url: config('url') + config('port') + config('userDriver') + '/sign-in'
                 });
-                console.log(q);
-                return q;
+        console.log(q);
+        return q;
     }
 
-    public signup (user: UserType) {
-        return this._signUpIn(user, {
+    public signup (userRequest: TUserRequest) {
+        return this._signUpIn(userRequest, {
                     method: 'POST',
                     url: config('url') + config('port') + config('userDriver') + '/new-user'
                 });
     }
 
     // remove cookie
-    public signout (user: UserType): void {
+    public signout(): void {
         aja()
             .method(`DELETE`)
-            .url(config('url') + config('port') + config('userDriver') + '/sign-out?name=' + user.name)
-            .on(`200`, resp => {
-                console.log(resp);
+            .url(config('url') + config('port') + config('userDriver'))
+            .on(`20*`, resp => {
+                store.dispatch(actionCreators.signOutUser());
             })
             .on('40x', resp => {
                 console.log(resp);

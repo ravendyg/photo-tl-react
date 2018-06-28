@@ -11,6 +11,7 @@ class SocketServiceClass implements ISocketService {
     private _socket: WebSocket;
 
     public connect = () => {
+        debugger;
         this._socket = new WebSocket(`${config('url')}${config('port')}/socket`.replace(/^http/, 'ws'));
         this._socket.addEventListener('close', this.connect);
         this._socket.onmessage = this._listen;

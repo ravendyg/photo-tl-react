@@ -30,7 +30,7 @@ export class UploadDialog extends ListeningComponent {
         dialogs: {
             upload: boolean
         },
-        user: UserType,
+        user: TUser,
         error: string,
         img: string,
         blob: any,
@@ -42,10 +42,10 @@ export class UploadDialog extends ListeningComponent {
         dialogs: {
             upload: boolean
         },
-        user: UserType
+        user: TUser
     };
 
-    private _user: UserType;
+    private _user: TUser;
 
     constructor () {
         super();

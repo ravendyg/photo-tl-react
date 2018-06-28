@@ -1,9 +1,13 @@
-declare type UserType = {
+declare type TUserRequest = {
     name: string,
-    pas?: string,
+    pas: string,
     pas2?: string,
-    rem?: boolean,
-    then?: any
+    rem: boolean,
+}
+
+declare type TUser = {
+    uid: number,
+    name: string,
 }
 
 declare type dialogsType = {
@@ -14,7 +18,7 @@ declare type dialogsType = {
 }
 
 declare type StateType = {
-    user: UserType,
+    user: TUser,
     dialogs: dialogsType,
     photos: ImageType [],
 };
@@ -26,7 +30,7 @@ declare type ActionType = {
         filter?: number,
         name?: string,
         text?: string,
-        user?: UserType,
+        user?: TUser,
         photo?: ImageType,
         photos?: ImageType [],
         newRating?: NewRatingType,

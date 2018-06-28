@@ -8,7 +8,7 @@ import {Actions} from './action-creators';
 import {Filters} from './consts.ts';
 
 // reducers
-const user = (state: UserType = { name: `` }, action: ActionType) => {
+const user = (state: TUser = null, action: ActionType) => {
     switch (action.type) {
         case Actions.SIGNIN_USER:
             return {
@@ -16,9 +16,7 @@ const user = (state: UserType = { name: `` }, action: ActionType) => {
             };
 
         case Actions.SIGNOUT_USER:
-            return {
-                name: ``,
-            };
+            return null;
 
         default:
             return state;

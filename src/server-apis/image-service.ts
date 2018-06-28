@@ -23,12 +23,12 @@ class ImageServiceClass implements IImageService {
         this._images = store.getState().photos;
         this._loadedImages = false;
         // download photos if signedin
-        if (store.getState().user.name) {
+        if (store.getState().user) {
             this._getImageData();
         }
 
         store.subscribe(() => {
-            if (store.getState().user.name && !this._loadedImages) {
+            if (store.getState().user && !this._loadedImages) {
                 // if just logged in
                 this._getImageData();
             }

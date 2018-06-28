@@ -45,7 +45,7 @@ interface IPromise {
 }
 
 interface IActionCreators {
-    signInUser (user: UserType): ActionType;
+    signInUser (user: TUser): ActionType;
     signOutUser (): ActionType;
 
     setInDialog (): ActionType;
@@ -73,8 +73,8 @@ interface IUserActions {
     // hideSignin: () => void;
     // hideSignup: () => void;
     signin: (name: string, pas: string, rem: boolean) => IPromise;
-    signup: (name: string, pas: string, pas2: string, rem: boolean) => IPromise;
-    signout: (name: string) => void;
+    signup: (name: string, pas: string, rem: boolean) => IPromise;
+    signout: () => void;
 
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
@@ -87,9 +87,9 @@ interface IUserActions {
 
 
 interface IUserService {
-    signin (user: UserType): IPromise;
-    signup (user: UserType): IPromise;
-    signout (user: UserType): void;
+    signin(user: TUserRequest): IPromise;
+    signup(user: TUserRequest): IPromise;
+    signout(): void;
 }
 
 interface IAja {

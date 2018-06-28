@@ -32,22 +32,20 @@ class UserActionsClass implements IUserActions {
         Store.dispatch(ActionCreators.hideDialogs());
     }
 
-    public signin (name: string, pas: string, rem: boolean) {
+    public signin(name: string, pas: string, rem: boolean) {
         return UserService.signin({
-            name, pas, rem
+            name, pas, rem,
         });
     }
 
-    public signup (name: string, pas: string, pas2: string, rem: boolean) {
+    public signup(name: string, pas: string, rem: boolean) {
         return UserService.signup({
-            name, pas, pas2, rem
+            name, pas, rem,
         });
     }
 
-    public signout (name: string) {
-        UserService.signout({
-            name
-        });
+    public signout() {
+        UserService.signout();
     }
 
     public vote (rating: number, _id: string): void {
