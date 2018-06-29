@@ -46,27 +46,19 @@ class ImageServiceClass implements IImageService {
                 this._loadedImages = true;
                 store.dispatch(actionCreators.addPhotos(resp || []));
             })
-            .on('40x', err => {
-                console.log(err);
-            })
-            .on(`50x`, err => {
-                console.log(err);
-            })
+            .on('40x', console.error)
+            .on(`50x`, console.error)
             .go();
     }
 
     public uploadPhoto (photo: any): IPromise {
-        var promise = new Promise ( (resolve, reject) => {
+        return new Promise ( (resolve, reject) => {
             // ajax
             var xhr = new XMLHttpRequest();
             xhr.open('POST', config('url') + config('port') + config('imageDriver') + '/upload-image');
 
             xhr.onload = function (resp) {
                 resolve(JSON.parse(xhr.responseText).filename);
-            };
-
-            xhr.onreadystatechange = function() {
-                console.log(xhr.status);
             };
 
             xhr.onerror = function (err) {
@@ -80,7 +72,6 @@ class ImageServiceClass implements IImageService {
 
             xhr.send(photo);
         });
-        return promise;
     }
 
 }

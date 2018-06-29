@@ -94,7 +94,7 @@ export class PhotoCard extends React.Component {
             brr = <br />;
         }
 
-        let e = this.props.photo;
+        const e = this.props.photo;
 
         return (
             <div style={cardStyle}>
@@ -103,7 +103,7 @@ export class PhotoCard extends React.Component {
                     <CardMedia
                         overlay={<CardTitle title={e.title} />} >
                         <img
-                            src={`users_data/images/${e.src}`}
+                            src={`users_data/images/${e.iid + '.png'}`}
                             onLoad={() => { this._showCard(); }}/>
                     </CardMedia>
 
@@ -116,7 +116,7 @@ export class PhotoCard extends React.Component {
                             rating={e.rating}
                             title={`My rating: `}
                             user={this.props.user.name}
-                            onClick={vote => this._vote(vote, e._id)}/>
+                            onClick={vote => this._vote(vote, e.iid)}/>
                     </div>
 
                     <CardActions style={{
@@ -133,20 +133,20 @@ export class PhotoCard extends React.Component {
                             secondary={true}
                             badgeStyle={{top: 12, right: 12}} >
                             <FlatButton
-                                onClick={() => this.props.toggleComments(e._id)}>
+                                onClick={() => this.props.toggleComments(e.iid)}>
                                 <i className="material-icons">comment</i>
                             </FlatButton>
                         </Badge>
-                        <FlatButton onClick={() => { this._deletePhoto(e._id);}}>
+                        <FlatButton onClick={() => { this._deletePhoto(e.iid);}}>
                             <i className="material-icons">delete_forever</i>
                         </FlatButton>
                     </CardActions>
 
                     <Comments
                         comments={e.comments}
-                        display={this.props.showComs===e._id}
+                        display={this.props.showComs===e.iid}
                         user={this.props.user}
-                        id={e._id}/>
+                        id={e.iid}/>
 
                     <div>Added: <strong>{e.uploadedBy.name}</strong> - {Utils.formatDate(e.uploaded)}</div>
 

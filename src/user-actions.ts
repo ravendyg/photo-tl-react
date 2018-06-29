@@ -72,7 +72,7 @@ class UserActionsClass implements IUserActions {
                     // Store.dispatch(ActionCreators.hideDialogs());
                 },
                 err => {
-                    console.log(err);
+                    console.error(err);
                     // Store.dispatch(ActionCreators.hideDialogs());
                 }
             );

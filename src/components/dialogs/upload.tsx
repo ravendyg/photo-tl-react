@@ -22,7 +22,6 @@ const TextField = vendor.mUi.TextField;
 const Toggle = vendor.mUi.Toggle;
 
 const customStyles = require('./modal-style.ts');
-console.log(customStyles);
 
 export class UploadDialog extends ListeningComponent {
     protected setState: (state: any) => void;
@@ -97,7 +96,6 @@ export class UploadDialog extends ListeningComponent {
     }
 
     private _upload (title: string, text: string) {
-        console.log(`sent to server`);
         UserActions.uploadPhoto(this.state.blob, title, text);
         this.closeModal()
     }

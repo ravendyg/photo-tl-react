@@ -68,8 +68,7 @@ declare type CommentType = {
 }
 
 declare type ImageType = {
-    _id: string,
-    src: string,
+    iid: string,
     title: string,
     description: string,
     uploaded: string,

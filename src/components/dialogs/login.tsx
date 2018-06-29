@@ -20,7 +20,6 @@ const TextField = vendor.mUi.TextField;
 const Toggle = vendor.mUi.Toggle;
 
 const customStyles = require('./modal-style.ts');
-console.log(customStyles);
 
 export class LoginDialog extends ListeningComponent {
     protected setState: (state: any) => void;

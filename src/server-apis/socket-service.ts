@@ -13,7 +13,6 @@ class SocketServiceClass implements ISocketService {
     private _retryTimeout: number;
 
     public connect = () => {
-        console.log('connect');
         this._connectRetry = false;
         this._socket = new WebSocket(`${config('url')}${config('port')}/socket`.replace(/^http/, 'ws'));
         this._socket.addEventListener('message', this._listen);

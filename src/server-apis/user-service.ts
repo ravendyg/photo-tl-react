@@ -41,7 +41,6 @@ class UserServiceClass implements IUserService {
                     method: 'GET',
                     url: config('url') + config('port') + config('userDriver') + '/sign-in'
                 });
-        console.log(q);
         return q;
     }
 
@@ -60,12 +59,8 @@ class UserServiceClass implements IUserService {
             .on(`20*`, resp => {
                 store.dispatch(actionCreators.signOutUser());
             })
-            .on('40x', resp => {
-                console.log(resp);
-            })
-            .on(`50x`, resp => {
-                console.log(resp);
-            })
+            .on('40x', console.error)
+            .on(`50x`, console.error)
             .go();
 
         store.dispatch(actionCreators.signOutUser());
