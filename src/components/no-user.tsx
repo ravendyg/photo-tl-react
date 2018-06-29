@@ -9,7 +9,7 @@ import {LoginDialog} from './dialogs/login.tsx';
 
 export class NoUser extends React.Component {
     constructor(){ super();}
-    
+
     render() {
         let toolbar = (window.outerWidth > 500)
             ?
@@ -21,7 +21,7 @@ export class NoUser extends React.Component {
             {toolbar}
             <h4>Please signin</h4>
             <p>Client: react, redux, material-ui, typescript</p>
-            <p>Server: nodejs, mongodb, express, socket.io (try to run it in different tabs or browsers simultaneously)</p> 
+            <p>Server: nodejs, mongodb, express, websockets (try to run it in different tabs or browsers simultaneously)</p>
             <LoginDialog />
         </div>
         )

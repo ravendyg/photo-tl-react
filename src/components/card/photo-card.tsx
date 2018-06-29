@@ -38,7 +38,7 @@ export class PhotoCard extends React.Component {
 
     public props: {
         photo: ImageType,
-        user: string,
+        user: TUser,
         vote: (vote: number, _id: string) => void,
         delete: (_id: string) => void,
         showComs: string,
@@ -115,7 +115,7 @@ export class PhotoCard extends React.Component {
                         <Rating
                             rating={e.rating}
                             title={`My rating: `}
-                            user={this.props.user}
+                            user={this.props.user.name}
                             onClick={vote => this._vote(vote, e._id)}/>
                     </div>
 
@@ -148,7 +148,7 @@ export class PhotoCard extends React.Component {
                         user={this.props.user}
                         id={e._id}/>
 
-                    <div>Added: <strong>{e.uploadedBy}</strong> - {Utils.formatDate(e.uploaded)}</div>
+                    <div>Added: <strong>{e.uploadedBy.name}</strong> - {Utils.formatDate(e.uploaded)}</div>
 
                     <div style={{display: e.changed ? `` : `none`}}>
                         Edited: <strong>{e.changedBy}</strong> - {Utils.formatDate(e.changed)}

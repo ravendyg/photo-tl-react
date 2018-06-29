@@ -11,9 +11,7 @@ import {Filters} from './consts.ts';
 const user = (state: TUser = null, action: ActionType) => {
     switch (action.type) {
         case Actions.SIGNIN_USER:
-            return {
-                name: action.payload.user.name,
-            };
+            return action.payload.user;
 
         case Actions.SIGNOUT_USER:
             return null;

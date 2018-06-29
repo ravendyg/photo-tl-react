@@ -32,12 +32,12 @@ var username = ``;
 
 // check for username in body
 // if -> dispatch
-var dataset: {user?: string} = document.body.dataset;
-if (dataset.user) {
+var dataset: {userName?: string, userUid?: string} = document.body.dataset;
+const { userName, userUid } = dataset;
+if (userName && userUid) {
     try {
-        const user = JSON.parse(dataset.user);
+        const user = {name: userName, uid: userUid};
         Store.dispatch(ActionCreators.signInUser(user));
-        username = Store.getState().user.name;
         SocketService.connect();
     } catch (e) {}
 }
@@ -94,7 +94,8 @@ ReactDom.render(
 Store.subscribe(() => {
     const {user} = Store.getState();
     if (!user) {
-        location.hash = `no-user`
+        location.hash = `no-user`;
+        username = '';
     } else if (user.name !== username) {
         // logged in
         username = user.name;

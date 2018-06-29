@@ -1,28 +1,30 @@
 /// <reference path="./../../typings/interfaces.d.ts" />
 
-// const io = vendor.io;
-
 const config: (query: any) => string = require('./../config.ts');
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
 const store: IStore = require('./../store.ts').Store;
 
 class SocketServiceClass implements ISocketService {
+    static RETRY_AFTER = 1 * 1000;
+
     private _socket: WebSocket;
+    private _connectRetry: boolean;
+    private _retryTimeout: number;
 
     public connect = () => {
-        debugger;
+        console.log('connect');
+        this._connectRetry = false;
         this._socket = new WebSocket(`${config('url')}${config('port')}/socket`.replace(/^http/, 'ws'));
-        this._socket.addEventListener('close', this.connect);
-        this._socket.onmessage = this._listen;
-        // this._socket.addEventListener('message', this._listen);
+        this._socket.addEventListener('message', this._listen);
+        this._socket.addEventListener('close', this._handleDisconnect);
     };
 
     public disconnect () {
-        this._socket.removeEventListener('close', this.connect);
-        // this._socket.removeEventListener('message', this._listen);
+        clearTimeout(this._retryTimeout);
+        this._socket.removeEventListener('message', this._listen);
+        this._socket.removeEventListener('close', this._handleDisconnect);
         this._socket.close();
-        // this._stopListen();
     }
 
     public getConnection () {
@@ -72,6 +74,18 @@ class SocketServiceClass implements ISocketService {
         //     date
         // });
     }
+
+    private _handleDisconnect = () => {
+        if (this._connectRetry) {
+            this._retryTimeout = setTimeout(() => {
+                this.connect();
+                this._connectRetry = true;
+            }, SocketServiceClass.RETRY_AFTER);
+        } else {
+            this.connect();
+            this._connectRetry = true;
+        }
+    };
 
     private _listen = (message) => {
 

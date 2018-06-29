@@ -6,7 +6,7 @@ declare type TUserRequest = {
 }
 
 declare type TUser = {
-    uid: number,
+    uid: string,
     name: string,
 }
 
@@ -74,8 +74,8 @@ declare type ImageType = {
     description: string,
     uploaded: string,
     changed: string,
-    uploadedBy: string,
-    changedBy: string,
+    uploadedBy: TUser,
+    changedBy: TUser,
     averageRating: AverageRatingType,
     rating: RatingType [],
     views: number,
@@ -87,5 +87,5 @@ declare type DataChangeType = {
     title: string,
     text: string,
     time: string,
-    user: string
+    user: TUser
 }

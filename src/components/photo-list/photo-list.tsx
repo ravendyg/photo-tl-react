@@ -50,7 +50,7 @@ export class PhotoList extends ListeningComponent {
     protected transformState () {
         if (this.props.filter === `my`) {
             // select only photos uploaded by the current user
-            let ph = this.oldState.photos.filter(e => e.uploadedBy === store.getState().user.name);
+            let ph = this.oldState.photos.filter(e => e.uploadedBy.uid === store.getState().user.uid);
             this.setState({
                 photos: ph
             });
@@ -83,7 +83,7 @@ export class PhotoList extends ListeningComponent {
                     <PhotoCard
                         key={e._id}
                         photo={e}
-                        user={store.getState().user.name}
+                        user={store.getState().user}
                         editPhoto={() => { this._editPhoto(e._id)} }
                         showComs={this.state.commentsDisplayed}
                         toggleComments={(_id: string) => this._toggleComments(_id)}

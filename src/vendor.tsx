@@ -37,8 +37,6 @@ const CardMedia = require('material-ui/lib/card/card-media');
 const CardTitle = require('material-ui/lib/card/card-title');
 const CardText = require('material-ui/lib/card/card-text');
 
-var io = require('./../node_modules/socket.io-client');
-
 const Modal = require('react-modal');
 
 var mUi = {
@@ -73,6 +71,5 @@ export {
     ReactRouter,
     mUi,
     aja,
-    io,
     fixOrientation
 };
