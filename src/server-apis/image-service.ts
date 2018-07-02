@@ -58,7 +58,7 @@ class ImageServiceClass implements IImageService {
             xhr.open('POST', config('url') + config('port') + config('imageDriver') + '/upload-image');
 
             xhr.onload = function (resp) {
-                resolve(JSON.parse(xhr.responseText).filename);
+                resolve(JSON.parse(xhr.responseText).iid);
             };
 
             xhr.onerror = function (err) {

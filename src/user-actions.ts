@@ -67,13 +67,12 @@ class UserActionsClass implements IUserActions {
     public uploadPhoto (photo: any, title: string, text: string): void {
         ImageService.uploadPhoto(photo)
             .then(
-                filename => {
-                    SocketService.uploadPhoto(filename, title, text);
-                    // Store.dispatch(ActionCreators.hideDialogs());
+                iid => {
+                    SocketService.uploadPhoto(iid, title, text);
                 },
                 err => {
                     console.error(err);
-                    // Store.dispatch(ActionCreators.hideDialogs());
+                    Store.dispatch(ActionCreators.hideDialogs());
                 }
             );
     }

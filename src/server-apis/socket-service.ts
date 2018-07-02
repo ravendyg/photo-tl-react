@@ -4,26 +4,40 @@ const config: (query: any) => string = require('./../config.ts');
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
 const store: IStore = require('./../store.ts').Store;
+import { Actions } from '../action-creators';
+
+interface ISocketMessage {
+    [key: string]: string | number;
+    action: string
+};
 
 class SocketServiceClass implements ISocketService {
     static RETRY_AFTER = 1 * 1000;
+    static PING_PERIOD = 50 * 1000; // jetty closes after 1 min
 
     private _socket: WebSocket;
     private _connectRetry: boolean;
     private _retryTimeout: number;
+    private _pingInterval: number;
 
     public connect = () => {
         this._connectRetry = false;
         this._socket = new WebSocket(`${config('url')}${config('port')}/socket`.replace(/^http/, 'ws'));
         this._socket.addEventListener('message', this._listen);
         this._socket.addEventListener('close', this._handleDisconnect);
+        clearInterval(this._pingInterval);
+        this._pingInterval = setInterval(() => {
+            this._sendMessage()
+        }, SocketServiceClass.PING_PERIOD);
     };
 
     public disconnect () {
         clearTimeout(this._retryTimeout);
+        clearInterval(this._pingInterval);
         this._socket.removeEventListener('message', this._listen);
         this._socket.removeEventListener('close', this._handleDisconnect);
         this._socket.close();
+        this._socket = null;
     }
 
     public getConnection () {
@@ -36,16 +50,19 @@ class SocketServiceClass implements ISocketService {
     }
 
     // tell the server information about uploaded file
-    public uploadPhoto (filename: string, title: string, text: string) {
-        // this._socket.emit('upload-photo', {
-        //     filename, title, text
-        // });
+    public uploadPhoto (iid: string, title: string, description: string) {
+        this._sendMessage({
+            action: Actions.ADD_PHOTO,
+            iid,
+            title,
+            description
+        });
     }
 
     // tell the server information about uploaded file
-    public editPhoto (id: string, title: string, text: string) {
+    public editPhoto (id: string, title: string, description: string) {
         // this._socket.emit('edit-photo', {
-        //     id, title, text
+        //     id, title, description
         // });
     }
 
@@ -75,6 +92,7 @@ class SocketServiceClass implements ISocketService {
     }
 
     private _handleDisconnect = () => {
+        this._socket = null;
         if (this._connectRetry) {
             this._retryTimeout = setTimeout(() => {
                 this.connect();
@@ -86,9 +104,18 @@ class SocketServiceClass implements ISocketService {
         }
     };
 
-    private _listen = (message) => {
-
-        console.log(message);
+    private _listen = ({ data }: MessageEvent) => {
+        try {
+            const { action, payload } = JSON.parse(data);
+            switch (action) {
+                case Actions.ADD_PHOTO: {
+                    store.dispatch(actionCreators.addPhoto(payload as ImageType));
+                    return;
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
         //this._socket.removeEventListener('close', this.connect);
         // // photo deleted
         // this._socket.on('remove-photo', (data: any) => {
@@ -132,8 +159,12 @@ class SocketServiceClass implements ISocketService {
         // this._socket._callbacks['$uncomment-photo'] = [];
     }
 
-    private _sendMessage(message: Object) {
-        this._socket.send(JSON.stringify(message));
+    private _sendMessage(message?: ISocketMessage) {
+        if (this._socket) {
+            this._socket.send(
+                message ? JSON.stringify(message) : ''
+            );
+        }
     }
 }
 
