@@ -8,10 +8,10 @@ const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 export class Rating extends React.Component {
 
     public props: {
-        rating: RatingType [],
+        photo: ImageType,
         title: string,
         user?: string,
-        onClick?: (vote: number) => void
+        onClick?: (voteValue: number, iid: string) => void
     }
 
     constructor(){
@@ -33,15 +33,20 @@ export class Rating extends React.Component {
         return tmp;
     }
 
-    private _onClick (i: number) {
-        if (this.props.onClick !== undefined) {
-            this.props.onClick(i);
+    private _onClick(i: number) {
+        const {
+            onClick,
+            photo
+        } = this.props;
+        if (typeof onClick === 'function') {
+            onClick(i, photo.iid);
         }
     }
 
     render() {
         // cursor over 'my rating'
         let iStyle = {cursor: ``, marginTop: ``, marginBottom: ``};
+        const { photo } = this.props;
         if (this.props.user !== undefined) {
             iStyle.cursor = `pointer`;
         }
@@ -51,8 +56,8 @@ export class Rating extends React.Component {
         }
         // rating
         let rating = (this.props.user !== undefined)
-                ? this.props.rating.filter(e=>e.user===this.props.user)
-                : this.props.rating;
+                ? photo.rating.filter(e=>e.user===this.props.user)
+                : photo.rating;
         let rt = (rating.length > 0) ? (rating.reduce( (p,c) => p+c.val, 0) / rating.length) : 0;
         rt = Math.round(rt * 10) / 10;
         let rtArr = this._calculate(rt);

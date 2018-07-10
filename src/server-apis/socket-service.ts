@@ -66,13 +66,13 @@ class SocketServiceClass implements ISocketService {
         // });
     }
 
-    // vote
-    public vote (newVote: number, _id: string) {
-        // this._socket.emit('vote-photo', {
-        //     _id,
-        //     newVote
-        // });
-    }
+    public vote = (rating: number, iid: string) => {
+        this._sendMessage({
+            action: Actions.VOTE,
+            iid,
+            rating
+        });
+    };
 
     // comment
     public postComment (id: string, text: string) {
@@ -107,6 +107,7 @@ class SocketServiceClass implements ISocketService {
     private _listen = ({ data }: MessageEvent) => {
         try {
             const { action, payload } = JSON.parse(data);
+            debugger
             switch (action) {
                 case Actions.ADD_PHOTO: {
                     store.dispatch(actionCreators.addPhoto(payload as ImageType));

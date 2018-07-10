@@ -48,9 +48,7 @@ class UserActionsClass implements IUserActions {
         UserService.signout();
     }
 
-    public vote (rating: number, _id: string): void {
-        SocketService.vote(rating, _id);
-    }
+    public vote = SocketService.vote;
 
     public deletePhoto (_id: string): void {
         SocketService.removePhoto(_id);

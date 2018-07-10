@@ -68,8 +68,8 @@ export class PhotoCard extends React.Component {
         });
     }
 
-    private _vote (vote: number, _id: string) {
-        this.props.vote(vote, _id);
+    private _vote = (voteValue: number, _id: string) => {
+        this.props.vote(voteValue, _id);
     }
 
     private _deletePhoto (_id: string) {
@@ -94,29 +94,39 @@ export class PhotoCard extends React.Component {
             brr = <br />;
         }
 
-        const e = this.props.photo;
+        const {photo} = this.props;
+        const {
+            iid,
+            comments,
+            changed,
+            changedBy,
+            description,
+            uploaded,
+            uploadedBy,
+            title
+        } = photo;
 
         return (
             <div style={cardStyle}>
                 <Preloader show={this.state.displayPreloader} />
                 <Card style={{display: this.state.displayCard}}>
                     <CardMedia
-                        overlay={<CardTitle title={e.title} />} >
+                        overlay={<CardTitle title={title} />} >
                         <img
-                            src={`users_data/images/${e.iid + '.png'}`}
+                            src={`users_data/images/${iid + '.png'}`}
                             onLoad={() => { this._showCard(); }}/>
                     </CardMedia>
 
                     <div style={{textAlign: `right`, marginTop: `10px`}}>
                         <Rating
-                            rating={e.rating}
+                            photo={photo}
                             title={`Rating: `}/>
                         {brr}
                         <Rating
-                            rating={e.rating}
+                            photo={photo}
                             title={`My rating: `}
                             user={this.props.user.name}
-                            onClick={vote => this._vote(vote, e.iid)}/>
+                            onClick={this._vote}/>
                     </div>
 
                     <CardActions style={{
@@ -129,32 +139,32 @@ export class PhotoCard extends React.Component {
                             <i className="material-icons">mode_edit</i>
                         </FlatButton>
                         <Badge
-                            badgeContent={e.comments.length}
+                            badgeContent={comments.length}
                             secondary={true}
                             badgeStyle={{top: 12, right: 12}} >
                             <FlatButton
-                                onClick={() => this.props.toggleComments(e.iid)}>
+                                onClick={() => this.props.toggleComments(iid)}>
                                 <i className="material-icons">comment</i>
                             </FlatButton>
                         </Badge>
-                        <FlatButton onClick={() => { this._deletePhoto(e.iid);}}>
+                        <FlatButton onClick={() => { this._deletePhoto(iid);}}>
                             <i className="material-icons">delete_forever</i>
                         </FlatButton>
                     </CardActions>
 
                     <Comments
-                        comments={e.comments}
-                        display={this.props.showComs===e.iid}
+                        comments={comments}
+                        display={this.props.showComs===iid}
                         user={this.props.user}
-                        id={e.iid}/>
+                        id={iid}/>
 
-                    <div>Added: <strong>{e.uploadedBy.name}</strong> - {Utils.formatDate(e.uploaded)}</div>
+                    <div>Added: <strong>{uploadedBy.name}</strong> - {Utils.formatDate(uploaded)}</div>
 
-                    <div style={{display: e.changed ? `` : `none`}}>
-                        Edited: <strong>{e.changedBy}</strong> - {Utils.formatDate(e.changed)}
+                    <div style={{display: changed ? `` : `none`}}>
+                        Edited: <strong>{changedBy}</strong> - {Utils.formatDate(changed)}
                     </div>
 
-                    <CardText>{e.description}</CardText>
+                    <CardText>{description}</CardText>
                 </Card>
             </div>
         )
