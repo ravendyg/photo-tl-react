@@ -33,7 +33,7 @@ declare type ActionType = {
         user?: TUser,
         photo?: ImageType,
         photos?: ImageType [],
-        newRating?: NewRatingType,
+        newRating?: RatingType,
         newComment?: {
             comment: CommentType,
             id: string
@@ -46,20 +46,13 @@ declare type ActionType = {
 declare type AjaType = () => IAja;
 
 declare type RatingType = {
+    rid: string,
+    date: number,
     user: string,
-    val: number
+    image: string,
+    value: number
 }
 
-declare type AverageRatingType = {
-    count: number,
-    val: number
-}
-
-declare type NewRatingType = {
-    _id: string,
-    averageRating: AverageRatingType,
-    ratingElem: RatingType
-}
 
 declare type CommentType = {
     user: string,
@@ -75,10 +68,9 @@ declare type ImageType = {
     changed: string,
     uploadedBy: TUser,
     changedBy: TUser,
-    averageRating: AverageRatingType,
-    rating: RatingType [],
+    ratings: RatingType[],
     views: number,
-    comments: CommentType []
+    comments: CommentType[]
 }
 
 declare type DataChangeType = {

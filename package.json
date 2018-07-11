@@ -25,7 +25,10 @@
     "style-loader": "0.13.0",
     "ts-loader": "0.8.1",
     "tsd": "0.6.5",
-    "typescript": "1.8.2",
     "webpack": "1.12.14"
+  },
+  "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "typescript": "^2.9.2"
   }
 }

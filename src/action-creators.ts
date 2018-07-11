@@ -101,7 +101,7 @@ export const ActionCreators: IActionCreators = {
         }
     },
 
-    votePhoto: (newRating: NewRatingType) => {
+    votePhoto: (newRating: RatingType) => {
         return {
             type: Actions.VOTE,
             payload: {

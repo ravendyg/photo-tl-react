@@ -2,10 +2,8 @@
 
 const Redux: IRedux = vendor.Redux;
 
-import {Utils} from './utils/utils.ts';
-
+import {Utils} from './utils/utils';
 import {Actions} from './action-creators';
-import {Filters} from './consts.ts';
 
 // reducers
 const user = (state: TUser = null, action: ActionType) => {
@@ -51,56 +49,54 @@ const dialogs = (state: dialogsType, action: ActionType) => {
     }
 };
 
-const photo = (state, action: ActionType) => {
-    let tmp: ImageType = Utils.objectAssign({}, [state]);
-
+const photo = (state: ImageType, action: ActionType) => {
     switch (action.type) {
         case Actions.ADD_PHOTO:
             return action.payload.photo;
 
-        case Actions.DELETE_PHOTO:
-            if (action.payload._id !== state._id) return true;
-            else return false;
+        case Actions.VOTE: {
+            return {
+                ...state,
+                ratings: state.ratings
+                    .filter(e => e.user !== action.payload.newRating.user)
+                    .concat(action.payload.newRating)
+            };
+        }
 
-        case Actions.VOTE:
-            tmp.averageRating = action.payload.newRating.averageRating;
-            tmp.rating = [
-                // select all other user's votes
-                ...tmp.rating.filter(e => e.user !== action.payload.newRating.ratingElem.user),
-                // add from this one
-                action.payload.newRating.ratingElem
-            ]
-            return tmp;
+        case Actions.POST_COMMENT: {
+            return {
+                ...state,
+                comments: state.comments.concat(action.payload.newComment.comment)
+            };
+        }
 
-        case Actions.POST_COMMENT:
-            tmp.comments = [
-                ...tmp.comments,
-                action.payload.newComment.comment
-            ]
-            return tmp;
+        case Actions.DELETE_COMMENT: {
+            return {
+                ...state,
+                comments: state.comments.filter(e => e.date !== action.payload.date)
+            };
+        }
 
-        case Actions.DELETE_COMMENT:
-            tmp.comments = tmp.comments.filter(e => e.date !== action.payload.date);
-            return tmp;
-
-        case Actions.EDIT_PHOTO:
-            tmp.description = action.payload.dataChange.text;
-            tmp.title = action.payload.dataChange.title;
-            tmp.changed = action.payload.dataChange.time;
-            tmp.changedBy = action.payload.dataChange.user
-            return tmp;
-
+        case Actions.EDIT_PHOTO: {
+            return {
+                ...state,
+                description: action.payload.dataChange.text,
+                title: action.payload.dataChange.title,
+                changed: action.payload.dataChange.time,
+                changedBy: action.payload.dataChange.user
+            };
+        }
 
         default:
             return state;
     }
 }
 
-const photos = (state: ImageType [] = [], action: ActionType) => {
+const photos = (state: ImageType[] = [], action: ActionType) => {
     // creates new array of photos requesting change of selected one from photo reducer
-    function transferHelper (state, comparator, action) {
-        for (let i=state.length-1; i>=0; i--) {
-            if (state[i]._id === comparator) {
+    function transferHelper (state: ImageType[], iid, action) {
+        for (let i = state.length-1; i >= 0; i--) {
+            if (state[i].iid === iid) {
                 return [
                     ...state.slice(0,i),
                     photo(state[i], action),
@@ -120,13 +116,13 @@ const photos = (state: ImageType [] = [], action: ActionType) => {
             ];
 
         case Actions.DELETE_PHOTO:
-            return state.filter( p => photo(p, action));
+            return state.filter(p => action.payload._id === p.iid);
 
         case Actions.ADD_PHOTOS:
             return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => el1._id - el2._id);
 
         case Actions.VOTE:
-            return transferHelper(state, action.payload.newRating._id, action);
+            return transferHelper(state, action.payload.newRating.image, action);
 
         case Actions.POST_COMMENT:
             return transferHelper(state, action.payload.newComment.id, action);

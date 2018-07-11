@@ -7,11 +7,11 @@ const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-import {ListeningComponent} from './../listening-component.ts';
+import {ListeningComponent} from './../listening-component';
 
-import {PhotoCard} from './../card/photo-card.tsx';
+import {PhotoCard} from './../card/photo-card';
 
-import {EditPhotoDialog} from './../dialogs/edit-photo.tsx';
+import {EditPhotoDialog} from './../dialogs/edit-photo';
 
 // data
 const store: IStore = require('./../../store.ts').Store;

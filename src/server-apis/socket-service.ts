@@ -107,11 +107,19 @@ class SocketServiceClass implements ISocketService {
     private _listen = ({ data }: MessageEvent) => {
         try {
             const { action, payload } = JSON.parse(data);
-            debugger
             switch (action) {
                 case Actions.ADD_PHOTO: {
                     store.dispatch(actionCreators.addPhoto(payload as ImageType));
                     return;
+                }
+
+                case Actions.VOTE: {
+                    if (payload) {
+                        store.dispatch(actionCreators.votePhoto(payload as RatingType));
+                        return;
+                    } else {
+                        // should display a warning, that an image has not been found?
+                    }
                 }
             }
         } catch (err) {

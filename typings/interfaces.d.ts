@@ -60,7 +60,7 @@ interface IActionCreators {
     editPhoto (dataChange: DataChangeType): ActionType;
     deleteComment (_id: string, date: string): ActionType;
 
-    votePhoto (newRating: NewRatingType): ActionType;
+    votePhoto (newRating: RatingType): ActionType;
     postComment (newComment: {comment: CommentType, id: string}): ActionType;
 }
 

@@ -5,11 +5,9 @@ const React: IReact = vendor.React;
 
 const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
-import {Preloader} from './../preloader.tsx';
-
-import {Rating} from './../rating/rating.tsx';
-
-import {Comments} from './../comments/comments.tsx';
+import {Preloader} from './../preloader';
+import {Rating} from './../rating/rating';
+import {Comments} from './../comments/comments';
 
 const Card = vendor.mUi.Card;
 const CardActions = vendor.mUi.CardActions;
@@ -125,7 +123,7 @@ export class PhotoCard extends React.Component {
                         <Rating
                             photo={photo}
                             title={`My rating: `}
-                            user={this.props.user.name}
+                            user={this.props.user}
                             onClick={this._vote}/>
                     </div>
 
