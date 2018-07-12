@@ -39,7 +39,7 @@ declare type ActionType = {
             id: string
         },
         date?: string,
-        dataChange?: DataChangeType,
+        dataChange?: ImageType,
     };
 };
 
@@ -55,28 +55,20 @@ declare type RatingType = {
 
 
 declare type CommentType = {
+    cid: string,
     user: string,
     text: string,
-    date: string
+    date: number
 }
 
 declare type ImageType = {
     iid: string,
     title: string,
     description: string,
-    uploaded: string,
-    changed: string,
+    uploaded: number,
+    changed: number,
     uploadedBy: TUser,
-    changedBy: TUser,
     ratings: RatingType[],
     views: number,
     comments: CommentType[]
-}
-
-declare type DataChangeType = {
-    _id: string,
-    title: string,
-    text: string,
-    time: string,
-    user: TUser
 }

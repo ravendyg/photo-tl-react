@@ -41,7 +41,7 @@ export class PhotoCard extends React.Component {
         delete: (_id: string) => void,
         showComs: string,
         toggleComments: (_id: string) => void,
-        editPhoto: () => void;
+        editPhoto: (iid: string) => void;
     }
 
     constructor(){
@@ -78,8 +78,23 @@ export class PhotoCard extends React.Component {
         this.setState({displayComments: ``});
     }
 
-    private _editPhotoInfo () {
-        this.props.editPhoto();
+    private _editPhoto = () => {
+        const {
+            photo,
+            editPhoto,
+            user
+        } = this.props;
+        if (this._isUserPhotoAuthor) {
+            editPhoto(photo.iid);
+        }
+    };
+
+    private _isUserPhotoAuthor() {
+        const {
+            user,
+            photo
+        } = this.props;
+        return user.uid === photo.uploadedBy.uid;
     }
 
     render() {
@@ -97,7 +112,6 @@ export class PhotoCard extends React.Component {
             iid,
             comments,
             changed,
-            changedBy,
             description,
             uploaded,
             uploadedBy,
@@ -132,10 +146,12 @@ export class PhotoCard extends React.Component {
                         flexDirection: `row`,
                         flexWrap: `wrap`,
                         justifyContent: `space-around` }}>
-                        <FlatButton
-                            onClick={() => {this._editPhotoInfo()}}>
-                            <i className="material-icons">mode_edit</i>
-                        </FlatButton>
+                        {this._isUserPhotoAuthor() && (
+                            <FlatButton
+                                onClick={this._editPhoto}>
+                                <i className="material-icons">mode_edit</i>
+                            </FlatButton>
+                        )}
                         <Badge
                             badgeContent={comments.length}
                             secondary={true}
@@ -156,10 +172,18 @@ export class PhotoCard extends React.Component {
                         user={this.props.user}
                         id={iid}/>
 
-                    <div>Added: <strong>{uploadedBy.name}</strong> - {Utils.formatDate(uploaded)}</div>
-
-                    <div style={{display: changed ? `` : `none`}}>
-                        Edited: <strong>{changedBy}</strong> - {Utils.formatDate(changed)}
+                    <div className='photo-card__metadata'>
+                        <span className='photo-card__metadata-item'>
+                            <strong>Author:</strong> {uploadedBy.name}
+                        </span>
+                        <span className='photo-card__metadata-item'>
+                            <strong>Created:</strong> {Utils.formatDate(uploaded)}
+                        </span>
+                        {changed !== 0 && (
+                            <span className='photo-card__metadata-item'>
+                                <strong>Edited</strong>: {Utils.formatDate(changed)}
+                            </span>
+                        )}
                     </div>
 
                     <CardText>{description}</CardText>

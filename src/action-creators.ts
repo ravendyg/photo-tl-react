@@ -92,7 +92,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    editPhoto: (dataChange: DataChangeType) => {
+    editPhoto: (dataChange: ImageType) => {
         return {
             type: Actions.EDIT_PHOTO,
             payload: {
@@ -119,11 +119,11 @@ export const ActionCreators: IActionCreators = {
         }
     },
 
-    deleteComment: (_id: string, date: string) => {
+    deleteComment: (cid: string, date: string) => {
         return {
             type: Actions.DELETE_COMMENT,
             payload: {
-                _id,
+                cid,
                 date
             }
         }

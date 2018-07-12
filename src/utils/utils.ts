@@ -12,8 +12,8 @@ class UtilsClass implements IUtils {
         return ''+num;
     }
 
-    public formatDate (date: string): string {
-        let tmp = new Date(date);
+    public formatDate(timestamp: number): string {
+        let tmp = new Date(timestamp);
         return `${this.indentDate(tmp.getDate())}-${this.indentDate(tmp.getMonth())
                 }-${tmp.getFullYear()} ${this.indentDate(tmp.getHours())
                 }:${this.indentDate(tmp.getMinutes())}`;

@@ -72,19 +72,19 @@ export class PhotoList extends ListeningComponent {
         }
     }
 
-    private _editPhoto (_id: string) {
-        UserActions.displayPhotoEdit(_id);
+    private editPhoto(iid: string) {
+        UserActions.displayPhotoEdit(iid);
     }
 
     render() {
         return (
         <div>
-            {this.state.photos.map( (e, i) =>
+            {this.state.photos.map((photo, i) =>
                     <PhotoCard
-                        key={e.iid}
-                        photo={e}
+                        key={photo.iid}
+                        photo={photo}
                         user={store.getState().user}
-                        editPhoto={() => { this._editPhoto(e.iid)} }
+                        editPhoto={this.editPhoto}
                         showComs={this.state.commentsDisplayed}
                         toggleComments={(_id: string) => this._toggleComments(_id)}
                         vote={UserActions.vote}

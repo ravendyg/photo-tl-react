@@ -59,11 +59,13 @@ class SocketServiceClass implements ISocketService {
         });
     }
 
-    // tell the server information about uploaded file
-    public editPhoto (id: string, title: string, description: string) {
-        // this._socket.emit('edit-photo', {
-        //     id, title, description
-        // });
+    public editPhoto(iid: string, title: string, description: string) {
+        this._sendMessage({
+            action: Actions.EDIT_PHOTO,
+            iid,
+            title,
+            description
+        });
     }
 
     public vote = (rating: number, iid: string) => {
@@ -84,10 +86,10 @@ class SocketServiceClass implements ISocketService {
     }
 
     // uncomment
-    public deleteComment (id: string, date: string) {
+    public deleteComment (id: string, cid: string) {
         // this._socket.emit('uncomment-photo', {
         //     id,
-        //     date
+        //     cid
         // });
     }
 
@@ -109,16 +111,20 @@ class SocketServiceClass implements ISocketService {
             const { action, payload } = JSON.parse(data);
             switch (action) {
                 case Actions.ADD_PHOTO: {
-                    store.dispatch(actionCreators.addPhoto(payload as ImageType));
-                    return;
+                    return store.dispatch(actionCreators.addPhoto(payload as ImageType));
                 }
 
                 case Actions.VOTE: {
                     if (payload) {
-                        store.dispatch(actionCreators.votePhoto(payload as RatingType));
-                        return;
+                        return store.dispatch(actionCreators.votePhoto(payload as RatingType));
                     } else {
                         // should display a warning, that an image has not been found?
+                    }
+                }
+
+                case Actions.EDIT_PHOTO: {
+                    if (payload) {
+                        return store.dispatch(actionCreators.editPhoto(payload as ImageType));
                     }
                 }
             }
@@ -135,7 +141,7 @@ class SocketServiceClass implements ISocketService {
         //     store.dispatch(actionCreators.addPhoto(newPhoto));
         // });
         // // photo edited
-        // this._socket.on('edit-photo', (dataChange: DataChangeType) => {
+        // this._socket.on('edit-photo', (dataChange: ImageType) => {
         //     store.dispatch(actionCreators.editPhoto(dataChange));
         // });
         // // new vote accepted
@@ -153,7 +159,7 @@ class SocketServiceClass implements ISocketService {
         // });
         // // delete comment
         // this._socket.on(`uncomment-photo`, (data) => {
-        //     store.dispatch(actionCreators.deleteComment(data.id, data.date));
+        //     store.dispatch(actionCreators.deleteComment(data.id, data.cid));
         // });
     };
 

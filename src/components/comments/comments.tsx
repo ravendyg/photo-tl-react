@@ -40,9 +40,9 @@ export class Comments extends React.Component {
         input.setValue(``);
     }
 
-    private _deleteComment (date: string) {
-        UserActions.deleteComment(this.props.id, date);
-    }
+    private _deleteComment = (cid: string) => {
+        UserActions.deleteComment(this.props.id, cid);
+    };
 
     render() {
         let postInput: any;
@@ -86,7 +86,7 @@ export class Comments extends React.Component {
                         key={i}
                         user={this.props.user}
                         comment={cm}
-                        deleteComment={(date) => this._deleteComment(date)}/>
+                        deleteComment={this._deleteComment}/>
                 )}
             </div>
         )

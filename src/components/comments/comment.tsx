@@ -20,7 +20,7 @@ export class Comment extends React.Component {
     public props: {
         user: string,
         comment: CommentType,
-        deleteComment: (date: string) => void
+        deleteComment: (cid: string) => void
     }
 
     constructor(){
@@ -30,9 +30,9 @@ export class Comment extends React.Component {
         };
     }
 
-    private _deleteComment (date: string): void {
-        this.props.deleteComment(date);
-    }
+    private _deleteComment = (cid: string): void => {
+        this.props.deleteComment(cid);
+    };
 
     render() {
         let brr = (window.outerWidth > 500)
@@ -47,7 +47,7 @@ export class Comment extends React.Component {
                     {brr}
                     <span>{Utils.formatDate(com.date)}</span>
                     <FlatButton
-                        onClick={() => { this._deleteComment(com.date);}}
+                        onClick={this._deleteComment}
                         style={{display: (com.user===this.props.user) ? `` : `none`,
                                 float: `right`}}>
                         <i className="material-icons">delete_forever</i>

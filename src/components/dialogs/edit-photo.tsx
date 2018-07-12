@@ -51,6 +51,8 @@ export class EditPhotoDialog extends ListeningComponent {
     };
 
     private _user: TUser;
+    private _titleRef: any = null;
+    private _textRef: any = null;
 
     constructor () {
         super();
@@ -105,25 +107,33 @@ export class EditPhotoDialog extends ListeningComponent {
         UserActions.hideDialogs();
     }
 
-    private _checkInput (title: any, text: any) {
-        if (this.state.disabled && title.input.value.length > 0 && text.input.getInputNode().value.length > 0) {
+    private _checkInput = () => {
+        const {
+            _titleRef,
+            _textRef
+        } = this;
+        if (!_textRef || !_titleRef || !_titleRef.getValue() || !_textRef.getValue()) {
             this.setState({disabled: false});
-        } else if (!this.state.disabled && (
-                    title.input.value.length === 0 || text.input.getInputNode().value.length === 0) ) {
-            this.setState({disabled: true});
         }
-    }
+    };
 
-    private _doEdit (title: string, text: string) {
-        UserActions.editPhoto(this.state.dialogs.editPhoto, title, text);
-    }
+    private _doEdit = () => {
+        const {
+            _titleRef,
+            _textRef
+        } = this;
+        if (!_textRef || !_titleRef) {
+            return;
+        }
+        UserActions.editPhoto(this.state.dialogs.editPhoto, _titleRef.getValue(), _textRef.getValue());
+        this._closeModal();
+    };
 
     render () {
         // preloader is useless when rotating an image, because it blocks everything
         // let error = this.state.error;
         let dialogs = this.state.dialogs;
         let img: any;
-        let title: any, text: any;
 
         return (
             <Modal
@@ -140,9 +150,9 @@ export class EditPhotoDialog extends ListeningComponent {
                     multiLine={false}
                     fullWidth={true}
                     ref={node => {
-                        title = node;
+                        this._titleRef = node;
                     }}
-                    onChange={() => { this._checkInput(title, text) }}
+                    onChange={this._checkInput}
                 /><br />
                 <TextField
                     hintText="Description"
@@ -151,25 +161,21 @@ export class EditPhotoDialog extends ListeningComponent {
                     rowsMax={6}
                     fullWidth={true}
                     ref={node => {
-                        text = node;
+                        this._textRef = node;
                     }}
-                    onChange={() => { this._checkInput(title, text) }}
+                    onChange={this._checkInput}
                 /><br />
 
                 <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
-                    onClick={() => {
-                        this._closeModal();
-                    }}
+                    onClick={this._closeModal}
                 />
                 <RaisedButton
                     style={{float: 'right', marginRight: '15px'}}
                     label={`Save`}
                     disabled={this.state.disabled}
-                    onClick={() => {
-                        this._doEdit(title.input.value, text.input.getInputNode().value);
-                    }}
+                    onClick={this._doEdit}
                 /><br />
                 <div style={{
                     marginTop: `40px`,

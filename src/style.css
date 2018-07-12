@@ -343,3 +343,9 @@
 		-moz-transform: rotate(900deg);
 	}
 }
+
+.photo-card__metadata {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}

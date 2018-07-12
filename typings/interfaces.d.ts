@@ -57,8 +57,8 @@ interface IActionCreators {
     addPhoto (photo: ImageType): ActionType;
     addPhotos (photos: ImageType []): ActionType;
     deletePhoto (id: string): ActionType;
-    editPhoto (dataChange: DataChangeType): ActionType;
-    deleteComment (_id: string, date: string): ActionType;
+    editPhoto(dataChange: ImageType): ActionType;
+    deleteComment (_id: string, cid: string): ActionType;
 
     votePhoto (newRating: RatingType): ActionType;
     postComment (newComment: {comment: CommentType, id: string}): ActionType;
@@ -79,7 +79,7 @@ interface IUserActions {
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
     postComment: (_id: string, text: string) => void;
-    deleteComment: (_id: string, date: string) => void;
+    deleteComment: (_id: string, cid: string) => void;
 
     uploadPhoto: (photo: any, title: string, text: string) => void;
     editPhoto: (_id: string, title: string, text: string) => void;
@@ -111,7 +111,7 @@ interface ISocketService {
     editPhoto (id: string, title: string, text: string): void;
     vote (newVote: number, _id: string): void;
     postComment (_id: string, text: string): void;
-    deleteComment (id: string, date: string): void;
+    deleteComment (id: string, cid: string): void;
 }
 
 interface IImageService {
@@ -123,5 +123,5 @@ interface IUtils {
     transformDate (num: number): string;
     objectAssign (target: any, sources: any []): any;
     mergeUnic (arrs: any [], compare: (el1: any, el2: any) => number): any [];
-    formatDate (date: string): string;
+    formatDate(timestamp: number): string;
 }

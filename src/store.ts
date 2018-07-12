@@ -73,17 +73,7 @@ const photo = (state: ImageType, action: ActionType) => {
         case Actions.DELETE_COMMENT: {
             return {
                 ...state,
-                comments: state.comments.filter(e => e.date !== action.payload.date)
-            };
-        }
-
-        case Actions.EDIT_PHOTO: {
-            return {
-                ...state,
-                description: action.payload.dataChange.text,
-                title: action.payload.dataChange.title,
-                changed: action.payload.dataChange.time,
-                changedBy: action.payload.dataChange.user
+                comments: state.comments.filter(e => e.cid !== action.payload.date)
             };
         }
 
@@ -130,8 +120,34 @@ const photos = (state: ImageType[] = [], action: ActionType) => {
         case Actions.DELETE_COMMENT:
             return transferHelper(state, action.payload._id, action);
 
-        case Actions.EDIT_PHOTO:
-            return transferHelper(state, action.payload.dataChange._id, action);
+        case Actions.EDIT_PHOTO: {
+            let newPhotos: ImageType[] = [];
+            let updated = false;
+            const {dataChange} = action.payload;
+            if (!dataChange) {
+                return state;
+            }
+            const {
+                changed,
+                description,
+                iid,
+                title
+            } = dataChange;
+            state.forEach((image) => {
+                if (image.iid === iid) {
+                    updated = true;
+                    newPhotos.push({
+                        ...image,
+                        changed,
+                        description,
+                        title
+                    });
+                } else {
+                    newPhotos.push(image);
+                }
+            });
+            return updated ? newPhotos : state;
+        }
 
         default:
             return state;
