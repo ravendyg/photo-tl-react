@@ -88,7 +88,7 @@ export class PhotoList extends ListeningComponent {
                         showComs={this.state.commentsDisplayed}
                         toggleComments={(_id: string) => this._toggleComments(_id)}
                         vote={UserActions.vote}
-                        delete={(_id) => UserActions.deletePhoto(_id)}/>
+                        deletePhoto={UserActions.deletePhoto}/>
             )}
             <EditPhotoDialog />
         </div>

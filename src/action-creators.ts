@@ -20,7 +20,7 @@ export const Actions = {
 var nextTodo = 0;
 
 export const ActionCreators: IActionCreators = {
-    signInUser: (user: TUser) => {
+    signInUser(user: TUser) {
       return {
           type: Actions.SIGNIN_USER,
           payload: {
@@ -28,47 +28,45 @@ export const ActionCreators: IActionCreators = {
           }
       }
     },
-    signOutUser: () => {
+    signOutUser() {
         return {
             type: Actions.SIGNOUT_USER,
             payload: {}
         }
     },
 
-    setInDialog: () => {
+    setInDialog() {
         return {
             type: Actions.SET_IN_DIALOG,
             payload: {}
         };
     },
-    setUpDialog: () => {
+    setUpDialog() {
         return {
             type: Actions.SET_UP_DIALOG,
             payload: {}
         };
     },
-    setUploadDialog: () => {
+    setUploadDialog() {
         return {
             type: Actions.SET_UPLOAD_DIALOG,
             payload: {}
         };
     },
-    setEditDialog: (_id) => {
+    setEditDialog(id) {
         return {
             type: Actions.SET_EDIT_DIALOG,
-            payload: {
-                _id
-            }
+            payload: { id }
         };
     },
-    hideDialogs: () => {
+    hideDialogs() {
         return {
             type: Actions.HIDE_DIALOGS,
             payload: {}
         };
     },
 
-    addPhoto: (photo: ImageType) => {
+    addPhoto(photo: ImageType) {
         return {
             type: Actions.ADD_PHOTO,
             payload: {
@@ -76,7 +74,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    addPhotos: (photos: ImageType []) => {
+    addPhotos(photos: ImageType []) {
         return {
             type: Actions.ADD_PHOTOS,
             payload: {
@@ -84,15 +82,13 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    deletePhoto: (_id: string) => {
+    deletePhoto(id: string) {
         return {
             type: Actions.DELETE_PHOTO,
-            payload: {
-                _id
-            }
+            payload: { id }
         }
     },
-    editPhoto: (dataChange: ImageType) => {
+    editPhoto(dataChange: ImageType) {
         return {
             type: Actions.EDIT_PHOTO,
             payload: {
@@ -100,8 +96,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-
-    votePhoto: (newRating: RatingType) => {
+    votePhoto(newRating: RatingType) {
         return {
             type: Actions.VOTE,
             payload: {
@@ -109,8 +104,7 @@ export const ActionCreators: IActionCreators = {
             }
         };
     },
-
-    postComment: (newComment: {comment: CommentType, id: string}) => {
+    postComment(newComment: {comment: CommentType, id: string}) {
         return {
             type: Actions.POST_COMMENT,
             payload: {
@@ -118,8 +112,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-
-    deleteComment: (cid: string, date: string) => {
+    deleteComment(cid: string, date: string) {
         return {
             type: Actions.DELETE_COMMENT,
             payload: {
@@ -128,7 +121,4 @@ export const ActionCreators: IActionCreators = {
             }
         }
     }
-
-
-
 }

@@ -50,8 +50,8 @@ class UserActionsClass implements IUserActions {
 
     public vote = SocketService.vote;
 
-    public deletePhoto (_id: string): void {
-        SocketService.removePhoto(_id);
+    public deletePhoto(iid: string): void {
+        SocketService.deletePhoto(iid);
     }
 
     public postComment (_id: string, text: string): void {

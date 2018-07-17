@@ -44,12 +44,13 @@ class SocketServiceClass implements ISocketService {
         return this._socket;
     }
 
-    // tell the server to remove specified photo
-    public removePhoto (_id: string) {
-        // this._socket.emit('remove-photo', {_id});
+    public deletePhoto(iid: string) {
+        this._sendMessage({
+            action: Actions.DELETE_PHOTO,
+            iid
+        });
     }
 
-    // tell the server information about uploaded file
     public uploadPhoto (iid: string, title: string, description: string) {
         this._sendMessage({
             action: Actions.ADD_PHOTO,
@@ -76,7 +77,6 @@ class SocketServiceClass implements ISocketService {
         });
     };
 
-    // comment
     public postComment (id: string, text: string) {
         this._sendMessage({
             action: 'comment-photo',
@@ -127,31 +127,18 @@ class SocketServiceClass implements ISocketService {
                         return store.dispatch(actionCreators.editPhoto(payload as ImageType));
                     }
                 }
+
+                case Actions.DELETE_PHOTO: {
+                    if (payload) {
+                        const id = (payload as DeleteDTO).id;
+                        return store.dispatch(actionCreators.deletePhoto(id));
+                    }
+                }
             }
         } catch (err) {
             console.error(err);
         }
         //this._socket.removeEventListener('close', this.connect);
-        // // photo deleted
-        // this._socket.on('remove-photo', (data: any) => {
-        //     store.dispatch(actionCreators.deletePhoto(data._id));
-        // });
-        // // new photo uploaded
-        // this._socket.on('upload-photo', (newPhoto: ImageType) => {
-        //     store.dispatch(actionCreators.addPhoto(newPhoto));
-        // });
-        // // photo edited
-        // this._socket.on('edit-photo', (dataChange: ImageType) => {
-        //     store.dispatch(actionCreators.editPhoto(dataChange));
-        // });
-        // // new vote accepted
-        // this._socket.on('vote-photo', (newRating: NewRatingType) => {
-        //     store.dispatch(actionCreators.votePhoto(newRating));
-        // });
-        // // // all photos
-        // // this._socket.on(`photo-list`, (data) => {
-        // //     this._serverActions.downloadPhotos(data);
-        // // });
         // new comment
         // this._socket.addEventListener(`comment-photo`, (newComment) => {
         // this._socket.addEventListener(`message`, (newComment) => {

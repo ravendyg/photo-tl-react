@@ -26,7 +26,7 @@ declare type StateType = {
 declare type ActionType = {
     type: string;
     payload?: {
-        _id?: string,
+        id?: string,
         filter?: number,
         name?: string,
         text?: string,
@@ -72,3 +72,7 @@ declare type ImageType = {
     views: number,
     comments: CommentType[]
 }
+
+declare type DeleteDTO = {
+    id: string;
+};

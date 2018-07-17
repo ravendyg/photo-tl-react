@@ -38,7 +38,7 @@ const dialogs = (state: dialogsType, action: ActionType) => {
             return def;
 
         case Actions.SET_EDIT_DIALOG:
-            def.editPhoto = action.payload._id;
+            def.editPhoto = action.payload.id;
             return def;
 
         case Actions.HIDE_DIALOGS:
@@ -106,7 +106,7 @@ const photos = (state: ImageType[] = [], action: ActionType) => {
             ];
 
         case Actions.DELETE_PHOTO:
-            return state.filter(p => action.payload._id === p.iid);
+            return state.filter(({iid}) => action.payload.id !== iid);
 
         case Actions.ADD_PHOTOS:
             return Utils.mergeUnic( [state, action.payload.photos], (el1, el2) => el1._id - el2._id);
@@ -118,7 +118,7 @@ const photos = (state: ImageType[] = [], action: ActionType) => {
             return transferHelper(state, action.payload.newComment.id, action);
 
         case Actions.DELETE_COMMENT:
-            return transferHelper(state, action.payload._id, action);
+            return transferHelper(state, action.payload.id, action);
 
         case Actions.EDIT_PHOTO: {
             let newPhotos: ImageType[] = [];

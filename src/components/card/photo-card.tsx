@@ -37,8 +37,8 @@ export class PhotoCard extends React.Component {
     public props: {
         photo: ImageType,
         user: TUser,
-        vote: (vote: number, _id: string) => void,
-        delete: (_id: string) => void,
+        vote: (vote: number, iid: string) => void,
+        deletePhoto: (iid: string) => void,
         showComs: string,
         toggleComments: (_id: string) => void,
         editPhoto: (iid: string) => void;
@@ -70,8 +70,12 @@ export class PhotoCard extends React.Component {
         this.props.vote(voteValue, _id);
     }
 
-    private _deletePhoto (_id: string) {
-        this.props.delete(_id);
+    private _deletePhoto = (_id: string) => {
+        const {
+            photo: { iid },
+            deletePhoto
+        } = this.props
+        deletePhoto(iid);
     }
 
     private _toggleComments () {
@@ -100,7 +104,9 @@ export class PhotoCard extends React.Component {
     render() {
         let cardStyle, brr;
         if (window.outerWidth > 500) {
-            cardStyle = {marginTop: `1%`, marginLeft: `5%`, marginRight: `5%`};
+            cardStyle = {
+                margin: '1% 5% 5%'
+            };
             brr = null;
         } else {
             cardStyle = {};
@@ -161,7 +167,7 @@ export class PhotoCard extends React.Component {
                                 <i className="material-icons">comment</i>
                             </FlatButton>
                         </Badge>
-                        <FlatButton onClick={() => { this._deletePhoto(iid);}}>
+                        <FlatButton onClick={this._deletePhoto}>
                             <i className="material-icons">delete_forever</i>
                         </FlatButton>
                     </CardActions>

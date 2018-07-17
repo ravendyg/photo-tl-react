@@ -24,8 +24,6 @@ import {AllPhotos} from './components/loggedin/all-photos.tsx';
 import {MyPhotos} from './components/loggedin/my-photos.tsx';
 import {UserData} from './components/loggedin/user-data.tsx';
 
-import {LoginDialog} from './components/dialogs/login.tsx';
-
 var css = require("./style.css");
 
 var username = ``;
