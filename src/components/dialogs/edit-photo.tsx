@@ -5,25 +5,21 @@ import {
     IUserActions
 } from '../../../typings/interfaces';
 
-const fixOrientation = vendor.fixOrientation;
-
 import {ListeningComponent} from './../listening-component';
-
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 // data
 const store: IStore = require('./../../store.ts').Store;
 
 // ui
-const Modal = vendor.mUi.Modal;
-const FlatButton = vendor.mUi.FlatButton;
-const RaisedButton = vendor.mUi.RaisedButton;
-const Toolbar = vendor.mUi.Toolbar;
-const Title = require('./../toolbar/title.tsx');
-const TextField = vendor.mUi.TextField;
-const Toggle = vendor.mUi.Toggle;
+import * as Modal from 'react-modal';
+import * as TextField from 'material-ui/lib/text-field';
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as RaisedButton from 'material-ui/lib/raised-button';
+import * as Toolbar from 'material-ui/lib/toolbar/toolbar';
+import * as ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
-const customStyles = require('./modal-style.ts');
+import * as customStyles from './modal-style';
 
 interface IState {
     dialogs: {
@@ -35,15 +31,14 @@ interface IState {
     img: string;
     blob: any;
     inKey: number;
-    user: TUser,
-    error: string,
-    disabled: boolean
+    user: TUser;
+    error: string;
+    disabled: boolean;
+    text: string;
+    title: string;
 };
 
 export class EditPhotoDialog extends ListeningComponent<{}, IState> {
-    private _titleRef: any = null;
-    private _textRef: any = null;
-
     constructor (props) {
         super(props);
 
@@ -54,71 +49,43 @@ export class EditPhotoDialog extends ListeningComponent<{}, IState> {
             disabled: true,
             blob: null,
             img: '',
-            inKey: 0
+            inKey: 0,
+            text: '',
+            title: ''
         };
         this.oldState = this.state;
-    }
-
-    private _verifyInput (e: any) {
-        // check input for correctness
-        var reader = new FileReader();
-        try {
-            if (e.input.files[0] && e.input.files[0].type.match(/image/)) {
-                reader.readAsDataURL(e.input.files[0]);
-                reader.onload = () => {
-                    // display preview
-                    fixOrientation(reader.result, { image: true }, (fixed: string, image) => {
-                        this.setState({
-                            img: fixed,
-                            blob: e.input.files[0],
-                            disabled: false
-                        });
-                    });
-                };
-            } else {
-                throw new Error("Wrong file");
-            }
-        } catch (e) {
-            this.setState({
-                error: e.message,
-                inKey: Date.now(),
-                img: `react/assets/noimage.png`,
-                blob: null,
-                disabled: true
-            });
-        }
-
     }
 
     private _closeModal () {
         UserActions.hideDialogs();
     }
 
+    private handleTitleChange = ({ target: { value } }: any) => {
+        this.setState({title: value}, this._checkInput);
+    };
+
+    private handleTextChange = ({ target: { value } }: any) => {
+        this.setState({text: value}, this._checkInput);
+    };
+
     private _checkInput = () => {
-        const {
-            _titleRef,
-            _textRef
-        } = this;
-        if (!_textRef || !_titleRef || !_titleRef.getValue() || !_textRef.getValue()) {
+        const { title, text } = this.state;
+        if (!title || !text) {
             this.setState({disabled: false});
         }
     };
 
     private _doEdit = () => {
-        const {
-            _titleRef,
-            _textRef
-        } = this;
-        if (!_textRef || !_titleRef) {
+        const { title, text } = this.state;
+        if (!title || !text) {
             return;
         }
-        UserActions.editPhoto(this.state.dialogs.editPhoto, _titleRef.getValue(), _textRef.getValue());
+        UserActions.editPhoto(this.state.dialogs.editPhoto, title, text);
         this._closeModal();
     };
 
     render () {
         let dialogs = this.state.dialogs;
-        let img: any;
 
         return (
             <Modal
@@ -127,29 +94,23 @@ export class EditPhotoDialog extends ListeningComponent<{}, IState> {
                 style={customStyles}
             >
                 <Toolbar>
-                    <Title title={`Edit Photo`} />
+                    <ToolbarTitle text={'Edit Photo'}/>
                 </Toolbar>
 
                 <TextField
                     hintText="Title"
                     multiLine={false}
                     fullWidth={true}
-                    ref={node => {
-                        this._titleRef = node;
-                    }}
-                    onChange={this._checkInput}
-                /><br />
+                    onChange={this.handleTitleChange}
+                /><br/>
                 <TextField
                     hintText="Description"
                     multiLine={true}
                     rows={1}
                     rowsMax={6}
                     fullWidth={true}
-                    ref={node => {
-                        this._textRef = node;
-                    }}
-                    onChange={this._checkInput}
-                /><br />
+                    onChange={this.handleTextChange}
+                /><br/>
 
                 <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
@@ -161,13 +122,17 @@ export class EditPhotoDialog extends ListeningComponent<{}, IState> {
                     label={`Save`}
                     disabled={this.state.disabled}
                     onClick={this._doEdit}
-                /><br />
-                <div style={{
-                    marginTop: `40px`,
-                    textAlign: `center`,
-                    display: this.state.error ? `block` : `none`
-                }}>{this.state.error}</div>
+                /><br/>
+                {this.state.error && (
+                    <div style={{
+                        marginTop: `40px`,
+                        textAlign: `center`,
+                        display: this.state.error ? `block` : `none`
+                    }}>{this.state.error}</div>
+                )}
             </Modal>
         );
     }
 }
+
+

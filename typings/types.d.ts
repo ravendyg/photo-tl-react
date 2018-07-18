@@ -42,8 +42,6 @@ declare type TAction = {
     };
 };
 
-declare type TAja = () => IAja;
-
 declare type TRating = {
     rid: string,
     date: number,

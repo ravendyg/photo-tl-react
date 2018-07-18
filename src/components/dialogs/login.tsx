@@ -10,21 +10,21 @@ import {
 
 import {ListeningComponent} from '../listening-component';
 
-const UserActions: IUserActions = require('../../user-actions.ts').UserActions;
+const UserActions: IUserActions = require('../../user-actions').UserActions;
 
 // data
-const store: IStore = require('../../store.ts').Store;
+const store: IStore = require('../../store').Store;
 
 // ui
-const Modal = vendor.mUi.Modal;
-const FlatButton = vendor.mUi.FlatButton;
-const RaisedButton = vendor.mUi.RaisedButton;
-const Toolbar = vendor.mUi.Toolbar;
-const Title = require('./../toolbar/title.tsx');
-const TextField = vendor.mUi.TextField;
-const Toggle = vendor.mUi.Toggle;
+import * as Modal from 'react-modal';
+import * as TextField from 'material-ui/lib/text-field';
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as RaisedButton from 'material-ui/lib/raised-button';
+import * as Toolbar from 'material-ui/lib/toolbar/toolbar';
+import * as ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
+import * as Toggle from 'material-ui/lib/toggle';
 
-const customStyles = require('./modal-style.ts');
+import * as customStyles from './modal-style';
 
 interface IState {
     dialogs: {
@@ -78,7 +78,7 @@ export class LoginDialog extends ListeningComponent<{}, IState> {
         return ``;
     }
 
-    private _signin () {
+    private _signin = () => {
         var error = this._verifyInput();
         if (!error) {
             if (this.state.dialogs.in) {
@@ -128,10 +128,32 @@ export class LoginDialog extends ListeningComponent<{}, IState> {
         }
     }
 
+    private handleNameChange = ({ target: { value } }: any) => {
+        this._user.name = value;
+        this.hideError();
+    };
+
+    private handlePasswordChange = ({ target: { value } }: any) => {
+        this._user.pas = value;
+        this.hideError();
+    };
+
+    private handlePassword2Change = ({ target: { value } }: any) => {
+        this._user.pas2 = value;
+        this.hideError()
+    };
+
+    private handleRememberChange = ({ target: { value } }: any) => {
+        this._user.rem = Boolean(value);
+        this.hideError();
+    };
+
+    private handleSign = () => {
+
+        this._signin();
+    }
+
     render () {
-
-        let name, pas, pas2, rem;
-
         let error = this.state.error;
         let dialogs = this.state.dialogs;
 
@@ -151,9 +173,7 @@ export class LoginDialog extends ListeningComponent<{}, IState> {
                         multiline={false}
                         type="password"
                         fullWidth={true}
-                        ref={node => {
-                            pas2 = node;
-                        }}
+                        onChange={this.handlePassword2Change}
                     /><br />
                 </span>;
         } else {
@@ -167,55 +187,36 @@ export class LoginDialog extends ListeningComponent<{}, IState> {
                 style={customStyles}
             >
                 <Toolbar>
-                    <Title title={label} />
+                    <ToolbarTitle text={label}/>
                 </Toolbar>
                 <TextField
                     hintText="User name"
                     multiline={false}
                     fullWidth={true}
-                    ref={node => {
-                        name = node;
-                    }}
-                    onChange={() => { this.hideError() }}
+                    onChange={this.handleNameChange}
                 /><br />
                 <TextField
                     hintText="Password"
                     multiline={false}
                     type="password"
                     fullWidth={true}
-                    ref={node => {
-                        pas = node;
-                    }}
-                    onChange={() => { this.hideError() }}
+                    onChange={this.handlePasswordChange}
                 /><br />
                 {confirmPassword}
                 <Toggle
                     label="Remember"
                     defaultToggled={this._user.rem}
-                    ref={node => {
-                        rem = node;
-                    }}
-                    onChange={() => { this.hideError() }}
+                    onChange={this.handleRememberChange}
                 /><br />
                 <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}
                     label="Cancel"
-                    onClick={() => {
-                        this.closeModal();
-                    }}
+                    onClick={this.closeModal}
                 />
                 <RaisedButton
                     style={{float: 'right', marginRight: '15px'}}
                     label={label}
-                    onClick={() => {
-                        this._user = {
-                            name: name.input.value,
-                            pas: pas.input.value,
-                            pas2: dialogs.up ? pas2.input.value : ``,
-                            rem: rem.isToggled()
-                        };
-                        this._signin();
-                    }}
+                    onClick={this._signin}
                 /><br />
                 <div style={{
                     marginTop: `40px`,

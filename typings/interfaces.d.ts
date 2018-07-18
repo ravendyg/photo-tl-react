@@ -68,16 +68,6 @@ interface IUserService {
     signout(): void;
 }
 
-interface IAja {
-    method: (type: string) => IAja;
-    url: (url: string) => IAja;
-    into: (element: string) => IAja;
-    data: (data: any) => IAja;
-    body: (data: any) => IAja;
-    on: (code: string, callback: (resp: any) => void) => IAja;
-    go: () => void;
-}
-
 interface ISocketService {
     connect (): void;
     disconnect (): void;

@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@types/react": "^16.4.6",
+    "@types/react-router": "^2.0.54",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "typescript": "^2.9.2"
   }

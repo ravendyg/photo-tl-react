@@ -11,7 +11,6 @@ console.log(dev);
 
 module.exports = {
     entry: {
-      vendor: './src/vendor.tsx',
       app: './src/app.tsx'
     },
     output: {

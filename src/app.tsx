@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {render} from 'react-dom';
-
-var Router = vendor.ReactRouter.Router
-var hashHistory = vendor.ReactRouter.hashHistory;
+import {Router, hashHistory} from 'react-router';
 
 import {Store} from './store';
 import {ActionCreators} from './action-creators';

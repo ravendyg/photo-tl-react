@@ -1,14 +1,11 @@
-import {
-    TAja,
-    TImage
-} from '../../typings/types';
+import { TImage } from '../../typings/types';
 import {
     IActionCreators,
     IImageService,
     IPromise
 } from '../../typings/interfaces';
 
-const aja: TAja = vendor.aja;
+import * as aja from 'aja';
 const config: (query: any) => string = require('./../config.ts');
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;

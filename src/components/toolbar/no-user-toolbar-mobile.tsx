@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { IUserActions } from '../../../typings/interfaces';
 
-// ui
-const Toolbar = vendor.mUi.Toolbar;
-const ToolbarTitle = vendor.mUi.ToolbarTitle;
-const ToolbarGroup = vendor.mUi.ToolbarGroup;
-
-const FlatButton = vendor.mUi.FlatButton;
-
-const Popover = vendor.mUi.Popover;
-const MenuItem = vendor.mUi.MenuItem;
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import * as Toolbar from 'material-ui/lib/toolbar/toolbar';
+import * as ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
+import * as MenuItem from 'material-ui/lib/menus/menu-item';
+import * as Popover from 'material-ui/lib/popover/popover';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 

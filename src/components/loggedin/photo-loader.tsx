@@ -3,7 +3,7 @@ import { IUserActions } from '../../../typings/interfaces';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-const FlatButton = vendor.mUi.FlatButton;
+import * as FlatButton from 'material-ui/lib/flat-button';
 
 export class PhotoLoader extends React.Component<{}, {}> {
     render() {

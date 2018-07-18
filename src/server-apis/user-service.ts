@@ -1,7 +1,4 @@
-import {
-    TAja,
-    TUserRequest
-} from '../../typings/types';
+import { TUserRequest } from '../../typings/types';
 import {
     IActionCreators,
     IImageService,
@@ -11,7 +8,7 @@ import {
     IUserService
 } from '../../typings/interfaces';
 
-const aja: TAja = vendor.aja;
+import * as aja from 'aja';
 const config: (query: any) => string = require('./../config.ts');
 
 const SocketService: ISocketService = require('./socket-service.ts').SocketService;

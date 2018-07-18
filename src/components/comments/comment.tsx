@@ -3,10 +3,7 @@ import {
     TComment,
     TUser
 } from '../../../typings/types';
-import {
-    IUtils,
-    IUserActions
-} from '../../../typings/interfaces';
+import { IUtils } from '../../../typings/interfaces';
 
 interface IProps {
     user: TUser,
@@ -14,9 +11,8 @@ interface IProps {
     deleteComment: (cid: string) => void
 }
 
-const FlatButton = vendor.mUi.FlatButton;
+import * as FlatButton from 'material-ui/lib/flat-button';
 const Utils: IUtils = require('./../../utils/utils.ts').Utils;
-const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 export class Comment extends React.Component<IProps, {}> {
 

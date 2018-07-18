@@ -20,7 +20,6 @@ interface IState {
     displayComments: string
 }
 
-// const React: IReact<IProps, IState> = vendor.React;
 import * as React from 'react';
 
 const Utils: IUtils = require('./../../utils/utils.ts').Utils;
@@ -29,15 +28,13 @@ import {Preloader} from './../preloader';
 import {Rating} from './../rating/rating';
 import {Comments} from './../comments/comments';
 
-const Card = vendor.mUi.Card;
-const CardActions = vendor.mUi.CardActions;
-const CardHeader = vendor.mUi.CardHeader;
-const CardMedia = vendor.mUi.CardMedia;
-const CardText = vendor.mUi.CardText;
-const CardTitle = vendor.mUi.CardTitle;
-
-const FlatButton = vendor.mUi.FlatButton;
-const Badge = vendor.mUi.Badge;
+import * as Card from 'material-ui/lib/card/card';
+import * as CardActions from 'material-ui/lib/card/card-actions';
+import * as CardMedia from 'material-ui/lib/card/card-media';
+import * as CardText from 'material-ui/lib/card/card-text';
+import * as CardTitle from 'material-ui/lib/card/card-title';
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as Badge from 'material-ui/lib/badge';
 
 
 export class PhotoCard extends React.Component<IProps, IState> {

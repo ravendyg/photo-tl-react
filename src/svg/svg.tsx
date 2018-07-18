@@ -1,5 +1,5 @@
 import * as React from 'react';
-const SvgIcon = vendor.mUi.SvgIcon;
+import * as SvgIcon from 'material-ui/lib/svg-icon';
 
 export var AlarmIcon = (props) => (
   <SvgIcon {...props}>

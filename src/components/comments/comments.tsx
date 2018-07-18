@@ -2,9 +2,9 @@ import * as React from 'react';
 import { TComment, TUser } from '../../../typings/types';
 import { IUserActions } from '../../../typings/interfaces';
 
-const FlatButton = vendor.mUi.FlatButton;
-const RaisedButton = vendor.mUi.RaisedButton;
-const TextField = vendor.mUi.TextField;
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as RaisedButton from 'material-ui/lib/raised-button';
+import * as TextField from 'material-ui/lib/text-field';
 
 import {Comment} from './../comments/comment';
 

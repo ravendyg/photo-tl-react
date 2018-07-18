@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { IUserActions } from '../../../typings/interfaces';
 
-// ui
-const Toolbar = vendor.mUi.Toolbar;
-const ToolbarTitle = vendor.mUi.ToolbarTitle;
-const ToolbarGroup = vendor.mUi.ToolbarGroup;
-const RaisedButton = vendor.mUi.RaisedButton;
+import * as RaisedButton from 'material-ui/lib/raised-button';
+import * as ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import * as Toolbar from 'material-ui/lib/toolbar/toolbar';
+import * as ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
+
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
@@ -18,15 +18,11 @@ export class NoUserToolbarDesktop extends React.Component<{}, {}> {
                 <ToolbarGroup float="right">
                     <RaisedButton
                         label="SignIn"
-                        onClick={() => {
-                            UserActions.displaySignin();
-                        }}
+                        onClick={UserActions.displaySignin}
                     />
                     <RaisedButton
                         label="SignUp"
-                        onClick={() => {
-                            UserActions.displaySignup();
-                        }}
+                        onClick={UserActions.displaySignup}
                     />
                 </ToolbarGroup>
             </Toolbar>

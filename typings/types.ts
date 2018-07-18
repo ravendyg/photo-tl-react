@@ -1,5 +1,3 @@
-import { IAja } from './interfaces';
-
 export declare type TUserRequest = {
     name: string,
     pas: string,
@@ -41,8 +39,6 @@ export declare type TAction = {
         dataChange?: TImage,
     };
 };
-
-export declare type TAja = () => IAja;
 
 export declare type TRating = {
     rid: string,

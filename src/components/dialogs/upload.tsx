@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TUser } from '../../../typings/types';
 import { IStore, IUserActions } from '../../../typings/interfaces';
 
-const fixOrientation = vendor.fixOrientation;
+import * as fixOrientation from 'fix-orientation';
 
 import {ListeningComponent} from './../listening-component';
 
@@ -12,13 +12,12 @@ const UserActions: IUserActions = require('./../../user-actions.ts').UserActions
 const store: IStore = require('./../../store.ts').Store;
 
 // ui
-const Modal = vendor.mUi.Modal;
-const FlatButton = vendor.mUi.FlatButton;
-const RaisedButton = vendor.mUi.RaisedButton;
-const Toolbar = vendor.mUi.Toolbar;
-const Title = require('./../toolbar/title.tsx');
-const TextField = vendor.mUi.TextField;
-const Toggle = vendor.mUi.Toggle;
+import * as Modal from 'react-modal';
+import * as FlatButton from 'material-ui/lib/flat-button';
+import * as RaisedButton from 'material-ui/lib/raised-button';
+import * as Toolbar from 'material-ui/lib/toolbar/toolbar';
+import * as ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
+import * as TextField from 'material-ui/lib/text-field';
 
 const customStyles = require('./modal-style.ts');
 
@@ -116,7 +115,7 @@ export class UploadDialog extends ListeningComponent<{}, IState> {
                 style={customStyles}
             >
                 <Toolbar>
-                    <Title title={`New Photo`} />
+                    <ToolbarTitle text={'New Photo'}/>
                 </Toolbar>
                 <div style={{textAlign: `center`}}>
                     <img style={{margin: `auto`, maxWidth: `265px`, maxHeight: `256px`}}
