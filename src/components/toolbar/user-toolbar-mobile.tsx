@@ -1,13 +1,11 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import {TUser} from '../../../typings/types';
+import { IUserActions } from '../../../typings/interfaces';
 
 // ui
 const Toolbar = vendor.mUi.Toolbar;
 const ToolbarTitle = vendor.mUi.ToolbarTitle;
 const ToolbarGroup = vendor.mUi.ToolbarGroup;
-const RaisedButton = vendor.mUi.RaisedButton;
 const FlatButton = vendor.mUi.FlatButton;
 
 const Popover = vendor.mUi.Popover;
@@ -15,64 +13,29 @@ const MenuItem = vendor.mUi.MenuItem;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
+import {menuItems} from './menu-items';
 
-export class UserToolbarMobile extends React.Component {
-    protected setState: (state: any) => void;
-    protected state: {
-        userMenu: {
-            open: boolean,
-            anchorEl: any
-        }
+interface IProps {
+    title: string;
+    hash: string;
+    user: TUser;
+}
+
+interface IState {
+    userMenu: {
+        open: boolean,
+        anchorEl: any
     }
-
-    private displayedButton: any;
-    props: any;
-
-    private menuItems: any [];
-
-    constructor(){
-        super();
-
+}
+export class UserToolbarMobile extends React.Component<IProps, IState> {
+    constructor(props) {
+        super(props);
         this.state = {
             userMenu: {
                 open: false,
                 anchorEl: null
             }
         }
-
-        this.menuItems = [{
-            key: 1,
-            text: `User data`,
-            disp: -1,
-            click: () => {
-                this._closeUserMenu();
-                location.hash = `/loggedin/user-data`;
-            }
-        },{
-            key: 2,
-            text: `All photos`,
-            disp: 1,
-            click: () => {
-                this._closeUserMenu();
-                location.hash = `/loggedin/all-photos`;
-            }
-        },{
-            key: 3,
-            text: `My photos`,
-            disp: 1,
-            click: () => {
-                this._closeUserMenu();
-                location.hash = `/loggedin/my-photos`;
-            }
-        },{
-            key: 4,
-            text: `SignOut`,
-            disp: 0,
-            click: () => {
-                this._closeUserMenu();
-                this._signout();
-            }
-        }];
     }
 
     private _openUserMenu (event) {
@@ -87,7 +50,8 @@ export class UserToolbarMobile extends React.Component {
     private _closeUserMenu () {
         this.setState({
             userMenu: {
-                open: false
+                open: false,
+                anchorEl: null
             }
         });
     }
@@ -120,7 +84,7 @@ export class UserToolbarMobile extends React.Component {
                         onRequestClose={event => this._closeUserMenu()}
                     >
                         <div style={{padding: `20px`}}>
-                            {this.menuItems.filter(e => !e.text.toLowerCase().match(title.toLowerCase())).map( e =>
+                            {menuItems.filter(e => !e.text.toLowerCase().match(title.toLowerCase())).map( e =>
                                 <MenuItem
                                     key={e.key}
                                     primaryText={e.text}

@@ -1,7 +1,17 @@
-/// <reference path="./../../typings/tsd.d.ts" />
+import {
+    TAja,
+    TUserRequest
+} from '../../typings/types';
+import {
+    IActionCreators,
+    IImageService,
+    ISocketService,
+    IStore,
+    IPromise,
+    IUserService
+} from '../../typings/interfaces';
 
-// import {config} from './../config.ts';
-const aja: AjaType = vendor.aja;
+const aja: TAja = vendor.aja;
 const config: (query: any) => string = require('./../config.ts');
 
 const SocketService: ISocketService = require('./socket-service.ts').SocketService;

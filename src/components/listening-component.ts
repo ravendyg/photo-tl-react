@@ -1,30 +1,21 @@
-/// <reference path="../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import { IStore } from '../../typings/interfaces';
 
 const store: IStore = require('./../store.ts').Store;
 
-export class ListeningComponent extends React.Component {
+export class ListeningComponent<P, S> extends React.Component<P, S> {
     private _unsubscribe: () => void;
-    protected setState: (state: any) => void;
 
-    protected state: any;
-    protected oldState: any;
+    protected oldState: S;
 
-    public props: any;
-
-    constructor () {
-        super();
-    }
-
-    private componentDidMount () {
+    componentDidMount () {
         this._unsubscribe = store.subscribe(() => {
             let mutated = false;
+            const state: any = store.getState();
             for (var key in this.oldState) {
                 // check given property exists on the global state, if then check whether it changed
-                if (store.getState()[key] && this.oldState[key] !== store.getState()[key]) {
-                    this.oldState[key] = store.getState()[key];
+                if (state[key] && this.oldState[key] !== state[key]) {
+                    this.oldState[key] = state[key];
                     mutated = true;
                     break;
                 }
@@ -35,11 +26,11 @@ export class ListeningComponent extends React.Component {
         });
     }
 
-    private componentWillUnmount () {
+    componentWillUnmount () {
         this._unsubscribe();
     }
 
-    // if child component needs data to be filtered, it shoul overload transformState
+    // if child component needs data to be filtered, it should overload transformState
     protected transformState () {
         this.setState(this.oldState);
     }

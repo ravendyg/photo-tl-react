@@ -1,8 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
-
-const React: IReact = vendor.React;
-
-const Colors = vendor.mUi.Colors;
+import * as React from 'react';
 const SvgIcon = vendor.mUi.SvgIcon;
 
 export var AlarmIcon = (props) => (

@@ -1,14 +1,12 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
-
+import * as React from 'react';
 // ui
 const ToolbarTitle = vendor.mUi.ToolbarTitle;
 
-export = class Title extends React.Component {
-    constructor(){ super();}
+interface IProps {
+    title: string;
+}
 
+export class Title extends React.Component<IProps, {}> {
     render() {
         return (
             <ToolbarTitle text={this.props.title}/>

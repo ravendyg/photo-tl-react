@@ -1,12 +1,18 @@
-/// <reference path="../typings/tsd.d.ts" />
-
-const Redux: IRedux = vendor.Redux;
-
+import {
+    combineReducers,
+    createStore
+} from 'redux';
+import {
+    TAction,
+    TImage,
+    TDialog,
+    TUser,
+} from '../typings/types';
 import {Utils} from './utils/utils';
 import {Actions} from './action-creators';
 
 // reducers
-const user = (state: TUser = null, action: ActionType) => {
+const user = (state: TUser = null, action: TAction) => {
     switch (action.type) {
         case Actions.SIGNIN_USER:
             return action.payload.user;
@@ -19,9 +25,9 @@ const user = (state: TUser = null, action: ActionType) => {
     }
 };
 
-const dialogs = (state: dialogsType, action: ActionType) => {
+const dialogs = (state: TDialog, action: TAction) => {
     // new state doesn't depend on the previous one
-    let def: dialogsType = { in: false, up: false, upload: false, editPhoto: ``};
+    let def: TDialog = { in: false, up: false, upload: false, editPhoto: ``};
 
     switch (action.type) {
 
@@ -49,7 +55,7 @@ const dialogs = (state: dialogsType, action: ActionType) => {
     }
 };
 
-const photo = (state: ImageType, action: ActionType) => {
+const photo = (state: TImage, action: TAction) => {
     switch (action.type) {
         case Actions.ADD_PHOTO:
             return action.payload.photo;
@@ -66,7 +72,7 @@ const photo = (state: ImageType, action: ActionType) => {
         case Actions.POST_COMMENT: {
             return {
                 ...state,
-                comments: state.comments.concat(action.payload.newComment.comment)
+                comments: state.comments.concat(action.payload.newComment)
             };
         }
 
@@ -82,9 +88,9 @@ const photo = (state: ImageType, action: ActionType) => {
     }
 }
 
-const photos = (state: ImageType[] = [], action: ActionType) => {
+const photos = (state: TImage[] = [], action: TAction) => {
     // creates new array of photos requesting change of selected one from photo reducer
-    function transferHelper (state: ImageType[], iid, action) {
+    function transferHelper (state: TImage[], iid, action) {
         for (let i = state.length-1; i >= 0; i--) {
             if (state[i].iid === iid) {
                 return [
@@ -115,13 +121,13 @@ const photos = (state: ImageType[] = [], action: ActionType) => {
             return transferHelper(state, action.payload.newRating.image, action);
 
         case Actions.POST_COMMENT:
-            return transferHelper(state, action.payload.newComment.id, action);
+            return transferHelper(state, action.payload.newComment.iid, action);
 
         case Actions.DELETE_COMMENT:
             return transferHelper(state, action.payload.id, action);
 
         case Actions.EDIT_PHOTO: {
-            let newPhotos: ImageType[] = [];
+            let newPhotos: TImage[] = [];
             let updated = false;
             const {dataChange} = action.payload;
             if (!dataChange) {
@@ -154,7 +160,7 @@ const photos = (state: ImageType[] = [], action: ActionType) => {
     }
 }
 
-const photoApp = Redux.combineReducers({
+const photoApp = combineReducers({
     user,
     dialogs,
     photos
@@ -162,4 +168,4 @@ const photoApp = Redux.combineReducers({
 
 const win: any = window;
 
-export const Store = Redux.createStore(photoApp, win.__REDUX_DEVTOOLS_EXTENSION__ && win.__REDUX_DEVTOOLS_EXTENSION__());
+export const Store = createStore(photoApp, win.__REDUX_DEVTOOLS_EXTENSION__ && win.__REDUX_DEVTOOLS_EXTENSION__());

@@ -1,6 +1,14 @@
-/// <reference path="./../../typings/interfaces.d.ts" />
+import {
+    TAja,
+    TImage
+} from '../../typings/types';
+import {
+    IActionCreators,
+    IImageService,
+    IPromise
+} from '../../typings/interfaces';
 
-const aja: AjaType = vendor.aja;
+const aja: TAja = vendor.aja;
 const config: (query: any) => string = require('./../config.ts');
 
 const actionCreators: IActionCreators = require('./../action-creators.ts').ActionCreators;
@@ -14,7 +22,7 @@ class ImageServiceClass implements IImageService {
     // private _timeout: any;
     private _loggedInUser: any;
 
-    private _images: ImageType [];
+    private _images: TImage [];
     // flag to prevent repetitive photos loading
     private _loadedImages: boolean;
 

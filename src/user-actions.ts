@@ -1,11 +1,11 @@
-/// <reference path="../typings/tsd.d.ts" />
+import { IUserActions } from '../typings/interfaces';
 
-import {ActionCreators} from './action-creators.ts';
-import {Store} from './store.ts';
+import {ActionCreators} from './action-creators';
+import {Store} from './store';
 
-import {UserService} from './server-apis/user-service.ts';
-import {ImageService} from './server-apis/image-service.ts';
-import {SocketService} from './server-apis/socket-service.ts';
+import {UserService} from './server-apis/user-service';
+import {ImageService} from './server-apis/image-service';
+import {SocketService} from './server-apis/socket-service';
 
 class UserActionsClass implements IUserActions {
 
@@ -54,8 +54,8 @@ class UserActionsClass implements IUserActions {
         SocketService.deletePhoto(iid);
     }
 
-    public postComment (_id: string, text: string): void {
-        SocketService.postComment(_id, text);
+    public postComment(iid: string, text: string): void {
+        SocketService.postComment(iid, text);
     }
 
     public deleteComment (_id: string, cid: string): void {

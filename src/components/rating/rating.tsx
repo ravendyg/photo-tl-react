@@ -1,20 +1,17 @@
-const React: IReact = vendor.React;
+import * as React from 'react';
+import {
+    TImage,
+    TUser
+} from '../../../typings/types';
 
-// const Utils: IUtils = require('./../../utils/utils.ts').Utils;
+interface IProps {
+    photo: TImage,
+    title: string,
+    user?: TUser,
+    onClick?: (voteValue: number, iid: string) => void
+}
 
-export class Rating extends React.Component {
-
-    public props: {
-        photo: ImageType,
-        title: string,
-        user?: TUser,
-        onClick?: (voteValue: number, iid: string) => void
-    }
-
-    shouldComponentUpdate() {
-        // TODO: Implement pure.
-        return true;
-    }
+export class Rating extends React.Component<IProps, {}> {
 
     /**
      * given a rating produces an array of strings with icons

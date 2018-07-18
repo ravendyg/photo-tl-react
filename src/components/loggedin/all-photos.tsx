@@ -1,33 +1,33 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import {
+    TComment,
+    TUser
+} from '../../../typings/types';
+import { IStore } from '../../../typings/interfaces';
 
 // data
 const store: IStore = require('./../../store.ts').Store;
 
-import {UserToolbarDesktop} from './../toolbar/user-toolbar-desktop.tsx';
-import {UserToolbarMobile} from './../toolbar/user-toolbar-mobile.tsx';
-import {LoginDialog} from './../dialogs/login.tsx';
-import {PhotoList} from './../photo-list/photo-list.tsx';
+import {UserToolbarDesktop} from './../toolbar/user-toolbar-desktop';
+import {UserToolbarMobile} from './../toolbar/user-toolbar-mobile';
+import {LoginDialog} from './../dialogs/login';
+import {PhotoList} from './../photo-list/photo-list';
 
-export class AllPhotos extends React.Component {
-    constructor(){ super();}
+export class AllPhotos extends React.Component<{}, {}> {
 
     render() {
         let toolbar = (window.outerWidth > 500)
             ?
             <UserToolbarDesktop
-                userName={store.getState().user.name}
+                user={store.getState().user}
                 title={`All photos`}
                 label={`My photos`}
                 hash={`/loggedin/my-photos`}
             />
             :
             <UserToolbarMobile
-                userName={store.getState().user.name}
+                user={store.getState().user}
                 title={`All photos`}
-                label={`My photos`}
                 hash={`/loggedin/my-photos`}
             />
         return (

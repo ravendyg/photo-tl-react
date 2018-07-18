@@ -1,40 +1,23 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
-
-const Utils: IUtils = require('./../../utils/utils.ts').Utils;
+import * as React from 'react';
+import { TComment, TUser } from '../../../typings/types';
+import { IUserActions } from '../../../typings/interfaces';
 
 const FlatButton = vendor.mUi.FlatButton;
 const RaisedButton = vendor.mUi.RaisedButton;
 const TextField = vendor.mUi.TextField;
 
-import {Comment} from './../comments/comment.tsx';
+import {Comment} from './../comments/comment';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-export class Comments extends React.Component {
-    protected setState: (state: any) => void;
-    protected state: {
-    };
+interface IProps {
+    display: boolean,
+    comments: TComment [],
+    user: TUser,
+    id: string
+}
 
-    protected oldState: {
-    };
-
-    public props: {
-        display: string,
-        comments: CommentType [],
-        user: string,
-        id: string
-    }
-
-    constructor(){
-        super();
-
-        this.oldState = {
-        };
-    }
-
+export class Comments extends React.Component<IProps, {}> {
     private _post (input: any) {
         UserActions.postComment(this.props.id, input.getInputNode().value);
         input.setValue(``);

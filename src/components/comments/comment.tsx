@@ -1,34 +1,24 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+import * as React from 'react';
+import {
+    TComment,
+    TUser
+} from '../../../typings/types';
+import {
+    IUtils,
+    IUserActions
+} from '../../../typings/interfaces';
 
-// vendor
-const React: IReact = vendor.React;
+interface IProps {
+    user: TUser,
+    comment: TComment,
+    deleteComment: (cid: string) => void
+}
 
 const FlatButton = vendor.mUi.FlatButton;
-
 const Utils: IUtils = require('./../../utils/utils.ts').Utils;
-
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-export class Comment extends React.Component {
-    protected setState: (state: any) => void;
-    protected state: {
-    };
-
-    protected oldState: {
-    };
-
-    public props: {
-        user: string,
-        comment: CommentType,
-        deleteComment: (cid: string) => void
-    }
-
-    constructor(){
-        super();
-
-        this.oldState = {
-        };
-    }
+export class Comment extends React.Component<IProps, {}> {
 
     private _deleteComment = (cid: string): void => {
         this.props.deleteComment(cid);
@@ -38,22 +28,26 @@ export class Comment extends React.Component {
         let brr = (window.outerWidth > 500)
             ? null
             : <br />;
-        let com = this.props.comment;
+        const {
+            comment,
+            user
+        } = this.props;
+        console.log(user);
 
         return (
             <div>
                 <p>
-                    Author: <strong>{(com.user===this.props.user) ? `You` : com.user}</strong>
+                    Author: <strong>{(comment.user.uid===user.uid) ? `You` : comment.user.name}</strong>
                     {brr}
-                    <span>{Utils.formatDate(com.date)}</span>
+                    <span>{Utils.formatDate(comment.date)}</span>
                     <FlatButton
                         onClick={this._deleteComment}
-                        style={{display: (com.user===this.props.user) ? `` : `none`,
+                        style={{display: (comment.user.uid===user.uid) ? `` : `none`,
                                 float: `right`}}>
                         <i className="material-icons">delete_forever</i>
                     </FlatButton>
                 </p>
-                <p><em>{com.text}</em></p>
+                <p><em>{comment.text}</em></p>
             </div>
         )
     }

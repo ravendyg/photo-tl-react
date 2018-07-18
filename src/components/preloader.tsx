@@ -1,14 +1,16 @@
-/// <reference path="../../typings/tsd.d.ts" />
+import * as React from 'react';
 
-// vendor
-const React: IReact = vendor.React;
+export interface IProps {
+    show: string;
+}
 
-export class Preloader extends React.Component {
-    constructor(){ super();}
-    
+export class Preloader extends React.Component<IProps, {}> {
     render() {
         return (
-            <div style={{textAlign: `center`, display: this.props.show}}>
+            <div style={{
+                textAlign: 'center',
+                display: this.props.show
+            }}>
                 <div className="windows8">
                     <div className="wBall" id="wBall_1">
                         <div className="wInnerBall"></div>

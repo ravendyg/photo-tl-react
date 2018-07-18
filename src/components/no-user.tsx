@@ -1,15 +1,11 @@
 /// <reference path="../../typings/tsd.d.ts" />
+import * as React from 'react';
 
-// vendor
-const React: IReact = vendor.React;
+import {NoUserToolbarDesktop} from './toolbar/no-user-toolbar-desktop';
+import {NoUserToolbarMobile} from './toolbar/no-user-toolbar-mobile';
+import {LoginDialog} from './dialogs/login';
 
-import {NoUserToolbarDesktop} from './toolbar/no-user-toolbar-desktop.tsx';
-import {NoUserToolbarMobile} from './toolbar/no-user-toolbar-mobile.tsx';
-import {LoginDialog} from './dialogs/login.tsx';
-
-export class NoUser extends React.Component {
-    constructor(){ super();}
-
+export class NoUser extends React.Component<{}, {}> {
     render() {
         let toolbar = (window.outerWidth > 500)
             ?

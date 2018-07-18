@@ -1,7 +1,12 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import {
+    TUser,
+    TUserRequest
+} from '../../../typings/types';
+import {
+    IStore,
+    IUserActions
+} from '../../../typings/interfaces';
 
 import {ListeningComponent} from '../listening-component';
 
@@ -21,38 +26,31 @@ const Toggle = vendor.mUi.Toggle;
 
 const customStyles = require('./modal-style.ts');
 
-export class LoginDialog extends ListeningComponent {
-    protected setState: (state: any) => void;
-    protected state: {
-        dialogs: {
-            in: boolean,
-            up: boolean
-        },
-        user: TUser,
-        error: string
-    };
+interface IState {
+    dialogs: {
+        in: boolean,
+        up: boolean
+    },
+    user: TUser,
+    error: string
+};
 
-    protected oldState: {
-        dialogs: {
-            in: boolean,
-            up: boolean
-        },
-        user: TUser
-    };
+export class LoginDialog extends ListeningComponent<{}, IState> {
 
     private _user: TUserRequest;
 
-    constructor () {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
-            error: ``
+            error: ''
         };
         this.oldState = {
             dialogs: store.getState().dialogs,
-            user: store.getState().user
+            user: store.getState().user,
+            error: ''
         };
 
         this._user = {

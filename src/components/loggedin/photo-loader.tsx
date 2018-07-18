@@ -1,15 +1,11 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import { IUserActions } from '../../../typings/interfaces';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 const FlatButton = vendor.mUi.FlatButton;
 
-export class PhotoLoader extends React.Component {
-    constructor(){ super();}
-    
+export class PhotoLoader extends React.Component<{}, {}> {
     render() {
         let btnStyle = (window.innerWidth>600) ? {marginLeft: `5%`} : {marginTop: `15px`, marginBottom: `15px`};
         return (

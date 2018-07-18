@@ -1,28 +1,17 @@
-/// <reference path="../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
-const ReactDom: IReactDom = vendor.ReactDom;
+import * as React from 'react';
+import {render} from 'react-dom';
 
 var Router = vendor.ReactRouter.Router
-var Route = vendor.ReactRouter.Route
-var Link = vendor.ReactRouter.Link
-
 var hashHistory = vendor.ReactRouter.hashHistory;
 
-import {Store} from './store.ts';
+import {Store} from './store';
+import {ActionCreators} from './action-creators';
+import {SocketService} from './server-apis/socket-service';
 
-import {ActionCreators} from './action-creators.ts';
-
-import {SocketService} from './server-apis/socket-service.ts';
-
-// view components
-import {NoUser} from './components/no-user.tsx';
-
-
-import {AllPhotos} from './components/loggedin/all-photos.tsx';
-import {MyPhotos} from './components/loggedin/my-photos.tsx';
-import {UserData} from './components/loggedin/user-data.tsx';
+import {NoUser} from './components/no-user';
+import {AllPhotos} from './components/loggedin/all-photos';
+import {MyPhotos} from './components/loggedin/my-photos';
+import {UserData} from './components/loggedin/user-data';
 
 var css = require("./style.css");
 
@@ -40,9 +29,7 @@ if (userName && userUid) {
     } catch (e) {}
 }
 
-class App extends React.Component {
-    constructor () { super(); }
-
+class App extends React.Component<{}, {}> {
     render () {
         return (
         <div>
@@ -83,7 +70,7 @@ const routes = {
 }
 
 // render
-ReactDom.render(
+render(
     <Router history={hashHistory} routes={routes} />,
     document.getElementById(`root`)
 );

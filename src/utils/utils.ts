@@ -1,4 +1,4 @@
-/// <reference path="./../../typings/tsd.d.ts" />
+import { IUtils } from '../../typings/interfaces';
 
 /**
  * Utils

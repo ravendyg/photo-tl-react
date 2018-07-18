@@ -1,11 +1,13 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import { TUser } from '../../../typings/types';
+import {
+    IStore,
+    IUserActions
+} from '../../../typings/interfaces';
 
 const fixOrientation = vendor.fixOrientation;
 
-import {ListeningComponent} from './../listening-component.ts';
+import {ListeningComponent} from './../listening-component';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
@@ -23,53 +25,38 @@ const Toggle = vendor.mUi.Toggle;
 
 const customStyles = require('./modal-style.ts');
 
-export class EditPhotoDialog extends ListeningComponent {
-    protected setState: (state: any) => void;
-    protected state: {
-        dialogs: {
-            in: boolean,
-            up: boolean,
-            upload: boolean,
-            editPhoto: string
-        },
-        user: TUser,
-        error: string,
-        // img: string,
-        // blob: any,
-        // inKey: number, // to force input update
-        disabled: boolean
-    };
+interface IState {
+    dialogs: {
+        in: boolean,
+        up: boolean,
+        upload: boolean,
+        editPhoto: string
+    },
+    img: string;
+    blob: any;
+    inKey: number;
+    user: TUser,
+    error: string,
+    disabled: boolean
+};
 
-    protected oldState: {
-        dialogs: {
-            in: boolean,
-            up: boolean,
-            upload: boolean,
-            editPhoto: string
-        },
-        user: TUser
-    };
-
-    private _user: TUser;
+export class EditPhotoDialog extends ListeningComponent<{}, IState> {
     private _titleRef: any = null;
     private _textRef: any = null;
 
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
 
         this.state = {
             dialogs: store.getState().dialogs,
             user: store.getState().user,
             error: ``,
-            // img: `react/assets/noimage.png`,
-            // blob: null,
-            // inKey: Date.now(),
-            disabled: true
+            disabled: true,
+            blob: null,
+            img: '',
+            inKey: 0
         };
-        this.oldState = {
-            dialogs: store.getState().dialogs,
-            user: store.getState().user
-        };
+        this.oldState = this.state;
     }
 
     private _verifyInput (e: any) {
@@ -130,8 +117,6 @@ export class EditPhotoDialog extends ListeningComponent {
     };
 
     render () {
-        // preloader is useless when rotating an image, because it blocks everything
-        // let error = this.state.error;
         let dialogs = this.state.dialogs;
         let img: any;
 

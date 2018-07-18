@@ -1,4 +1,14 @@
-/// <reference path="./../../typings/interfaces.d.ts" />
+import {
+    TComment,
+    TDeleteDTO,
+    TImage,
+    TRating
+} from '../../typings/types';
+import {
+    IActionCreators,
+    IStore,
+    ISocketService
+} from '../../typings/interfaces';
 
 const config: (query: any) => string = require('./../config.ts');
 
@@ -77,10 +87,10 @@ class SocketServiceClass implements ISocketService {
         });
     };
 
-    public postComment (id: string, text: string) {
+    public postComment(iid: string, text: string) {
         this._sendMessage({
-            action: 'comment-photo',
-            id,
+            action: Actions.POST_COMMENT,
+            iid,
             text,
         });
     }
@@ -111,12 +121,12 @@ class SocketServiceClass implements ISocketService {
             const { action, payload } = JSON.parse(data);
             switch (action) {
                 case Actions.ADD_PHOTO: {
-                    return store.dispatch(actionCreators.addPhoto(payload as ImageType));
+                    return store.dispatch(actionCreators.addPhoto(payload as TImage));
                 }
 
                 case Actions.VOTE: {
                     if (payload) {
-                        return store.dispatch(actionCreators.votePhoto(payload as RatingType));
+                        return store.dispatch(actionCreators.votePhoto(payload as TRating));
                     } else {
                         // should display a warning, that an image has not been found?
                     }
@@ -124,42 +134,33 @@ class SocketServiceClass implements ISocketService {
 
                 case Actions.EDIT_PHOTO: {
                     if (payload) {
-                        return store.dispatch(actionCreators.editPhoto(payload as ImageType));
+                        return store.dispatch(actionCreators.editPhoto(payload as TImage));
                     }
                 }
 
                 case Actions.DELETE_PHOTO: {
                     if (payload) {
-                        const id = (payload as DeleteDTO).id;
+                        const id = (payload as TDeleteDTO).id;
                         return store.dispatch(actionCreators.deletePhoto(id));
+                    }
+                }
+
+                case Actions.POST_COMMENT: {
+                    if (payload) {
+                        return store.dispatch(
+                            actionCreators.postComment(payload as TComment)
+                        );
                     }
                 }
             }
         } catch (err) {
             console.error(err);
         }
-        //this._socket.removeEventListener('close', this.connect);
-        // new comment
-        // this._socket.addEventListener(`comment-photo`, (newComment) => {
-        // this._socket.addEventListener(`message`, (newComment) => {
-            // store.dispatch(actionCreators.postComment(newComment));
-        // });
         // // delete comment
         // this._socket.on(`uncomment-photo`, (data) => {
         //     store.dispatch(actionCreators.deleteComment(data.id, data.cid));
         // });
     };
-
-    private _stopListen () {
-        // // walk around this issues
-        // this._socket._callbacks['$remove-photo'] = [];
-        // this._socket._callbacks['$upload-photo'] = [];
-        // this._socket._callbacks['$edit-photo'] = [];
-        // this._socket._callbacks['$vote-photo'] = [];
-        // // this._socket._callbacks['$photo-list'] = [];
-        // this._socket._callbacks['$comment-photo'] = [];
-        // this._socket._callbacks['$uncomment-photo'] = [];
-    }
 
     private _sendMessage(message?: ISocketMessage) {
         if (this._socket) {

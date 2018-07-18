@@ -1,40 +1,16 @@
+import {
+    TAction,
+    TState,
+    TUser,
+    TImage,
+    TRating,
+    TComment,
+    TUserRequest
+} from './types';
 interface IStore {
-    getState (): StateType;
-    dispatch (action: ActionType): void;
+    getState (): TState;
+    dispatch (action: TAction): void;
     subscribe (callback: any): () => void;
-}
-
-interface IRedux {
-    createStore (reducer: any, tools?: any): IStore;
-    combineReducers (reducers: any): any;
-}
-
-interface IReactComponent {
-    new (...args: any []): IReactComponent;
-    props: any;
-    input: HTMLInputElement;
-    // unsubscribe (): void;
-    // componentDidMount (): void;
-    // componentWillUnmount (): void;
-    render (): void;
-    forceUpdate: () => void;
-    context: any;
-    // setState: (state: any) => void;
-    // state: any;
-}
-
-interface IListeningComponent extends IReactComponent {
-    new (store: IStore): IListeningComponent;
-    _store: IStore;
-}
-
-interface IReact {
-    Component: IReactComponent;
-    PropTypes: any;
-}
-
-interface IReactDom {
-    render: any;
 }
 
 interface IPromise {
@@ -45,23 +21,23 @@ interface IPromise {
 }
 
 interface IActionCreators {
-    signInUser (user: TUser): ActionType;
-    signOutUser (): ActionType;
+    signInUser (user: TUser): TAction;
+    signOutUser (): TAction;
 
-    setInDialog (): ActionType;
-    setUpDialog (): ActionType;
-    setUploadDialog (): ActionType;
-    setEditDialog (_id: string): ActionType;
-    hideDialogs (): ActionType;
+    setInDialog (): TAction;
+    setUpDialog (): TAction;
+    setUploadDialog (): TAction;
+    setEditDialog (_id: string): TAction;
+    hideDialogs (): TAction;
 
-    addPhoto (photo: ImageType): ActionType;
-    addPhotos (photos: ImageType []): ActionType;
-    deletePhoto(id: string): ActionType;
-    editPhoto(dataChange: ImageType): ActionType;
-    deleteComment (_id: string, cid: string): ActionType;
+    addPhoto (photo: TImage): TAction;
+    addPhotos (photos: TImage []): TAction;
+    deletePhoto(id: string): TAction;
+    editPhoto(dataChange: TImage): TAction;
+    deleteComment (_id: string, cid: string): TAction;
 
-    votePhoto (newRating: RatingType): ActionType;
-    postComment (newComment: {comment: CommentType, id: string}): ActionType;
+    votePhoto (newRating: TRating): TAction;
+    postComment(comment: TComment): TAction;
 }
 
 interface IUserActions {
@@ -78,7 +54,7 @@ interface IUserActions {
 
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
-    postComment: (_id: string, text: string) => void;
+    postComment: (iid: string, text: string) => void;
     deleteComment: (_id: string, cid: string) => void;
 
     uploadPhoto: (photo: any, title: string, text: string) => void;
@@ -110,7 +86,7 @@ interface ISocketService {
     uploadPhoto (filename: string, title: string, text: string): void;
     editPhoto (id: string, title: string, text: string): void;
     vote (newVote: number, _id: string): void;
-    postComment (_id: string, text: string): void;
+    postComment(iid: string, text: string): void;
     deleteComment (id: string, cid: string): void;
 }
 

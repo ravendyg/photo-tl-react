@@ -1,7 +1,27 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+import {
+    TImage,
+    TUser
+} from '../../../typings/types';
+import { IUtils } from '../../../typings/interfaces';
 
-// vendor
-const React: IReact = vendor.React;
+interface IProps {
+    photo: TImage,
+    user: TUser,
+    vote: (vote: number, iid: string) => void,
+    deletePhoto: (iid: string) => void,
+    showComs: string,
+    toggleComments: (_id: string) => void,
+    editPhoto: (iid: string) => void;
+}
+
+interface IState {
+    displayCard: string,
+    displayPreloader: string,
+    displayComments: string
+}
+
+// const React: IReact<IProps, IState> = vendor.React;
+import * as React from 'react';
 
 const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
@@ -20,49 +40,28 @@ const FlatButton = vendor.mUi.FlatButton;
 const Badge = vendor.mUi.Badge;
 
 
-export class PhotoCard extends React.Component {
-    protected setState: (state: any) => void;
-    protected state: {
-        displayCard: string,
-        displayPreloader: string,
-        displayComments: string
-    };
+export class PhotoCard extends React.Component<IProps, IState> {
+    protected oldState: IState;
 
-    protected oldState: {
-        displayCard: string,
-        displayPreloader: string,
-        displayComments: string
-    };
-
-    public props: {
-        photo: ImageType,
-        user: TUser,
-        vote: (vote: number, iid: string) => void,
-        deletePhoto: (iid: string) => void,
-        showComs: string,
-        toggleComments: (_id: string) => void,
-        editPhoto: (iid: string) => void;
-    }
-
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
 
         this.state = {
-            displayCard: `none`,
-            displayPreloader: `block`,
-            displayComments: `none`
+            displayCard: 'none',
+            displayPreloader: 'block',
+            displayComments: 'none'
         };
         this.oldState = {
-            displayCard: `none`,
-            displayPreloader: `block`,
-            displayComments: `none`
+            displayCard: 'none',
+            displayPreloader: 'block',
+            displayComments: 'none'
         };
     }
 
     private _showCard (): void {
         this.setState({
-            displayCard: `block`,
-            displayPreloader: `none`,
+            displayCard: 'block',
+            displayPreloader: 'none',
         });
     }
 
@@ -79,7 +78,7 @@ export class PhotoCard extends React.Component {
     }
 
     private _toggleComments () {
-        this.setState({displayComments: ``});
+        this.setState({displayComments: ''});
     }
 
     private _editPhoto = () => {
@@ -131,27 +130,27 @@ export class PhotoCard extends React.Component {
                     <CardMedia
                         overlay={<CardTitle title={title} />} >
                         <img
-                            src={`users_data/images/${iid + '.png'}`}
+                            src={'users_data/images/' + iid + '.png'}
                             onLoad={() => { this._showCard(); }}/>
                     </CardMedia>
 
-                    <div style={{textAlign: `right`, marginTop: `10px`}}>
+                    <div style={{textAlign: 'right', marginTop: '10px'}}>
                         <Rating
                             photo={photo}
-                            title={`Rating: `}/>
+                            title={'Rating: '}/>
                         {brr}
                         <Rating
                             photo={photo}
-                            title={`My rating: `}
+                            title={'My rating: '}
                             user={this.props.user}
                             onClick={this._vote}/>
                     </div>
 
                     <CardActions style={{
-                        display: `flex`,
-                        flexDirection: `row`,
-                        flexWrap: `wrap`,
-                        justifyContent: `space-around` }}>
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-around' }}>
                         {this._isUserPhotoAuthor() && (
                             <FlatButton
                                 onClick={this._editPhoto}>

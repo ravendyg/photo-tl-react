@@ -1,7 +1,5 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import { IUserActions } from '../../../typings/interfaces';
 
 // ui
 const Toolbar = vendor.mUi.Toolbar;
@@ -15,47 +13,30 @@ const MenuItem = vendor.mUi.MenuItem;
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
+interface IState {
+    open: boolean,
+    anchorEl: any
+}
 
-export class NoUserToolbarMobile extends React.Component {
-    protected setState: (state: any) => void;
-    protected state: {
-        userMenu: {
-            open: boolean,
-            anchorEl: any    
-        }
-    }
-   
-    constructor(){
-        super(); 
-        
-        this.state = {
-            userMenu: {
-                open: false,
-                anchorEl: null
-            }
-        }    
-    }
-    
+export class NoUserToolbarMobile extends React.Component<{}, IState> {
+
     private _openUserMenu (event) {
         this.setState({
-            userMenu: {
-                open: true,
-                anchorEl: event.currentTarget
-            }
+            open: true,
+            anchorEl: event.currentTarget
         });
     }
-    
+
     private _closeUserMenu () {
         this.setState({
-            userMenu: {
-                open: false
-            }
-        });    
+            open: false,
+            anchorEl: null
+        });
     }
-    
+
     render() {
-        let userMenu = this.state.userMenu;
-        
+        const {anchorEl, open} = this.state;
+
         return (
             <Toolbar>
                 <ToolbarTitle text={'Photoalbum'}/>
@@ -66,8 +47,8 @@ export class NoUserToolbarMobile extends React.Component {
                         <i  className={`fa fa-ellipsis-v`}></i>
                     </FlatButton>
                     <Popover
-                        open={userMenu.open}
-                        anchorEl={userMenu.anchorEl}
+                        open={open}
+                        anchorEl={anchorEl}
                         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                         targetOrigin={{horizontal: 'left', vertical: 'top'}}
                         onRequestClose={event => this._closeUserMenu()}
@@ -84,7 +65,7 @@ export class NoUserToolbarMobile extends React.Component {
                                 onClick={() => {
                                     UserActions.displaySignup();
                                     this._closeUserMenu();
-                                }} />    
+                                }} />
                         </div>
                     </Popover>
                 </ToolbarGroup>

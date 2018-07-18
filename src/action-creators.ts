@@ -1,4 +1,10 @@
-/// <reference path="../typings/tsd.d.ts" />
+import {
+    TImage,
+    TComment,
+    TUser,
+    TRating
+} from '../typings/types';
+import { IActionCreators } from '../typings/interfaces';
 
 export const Actions = {
     SIGNIN_USER: 'SIGNIN_USER',
@@ -65,8 +71,7 @@ export const ActionCreators: IActionCreators = {
             payload: {}
         };
     },
-
-    addPhoto(photo: ImageType) {
+    addPhoto(photo: TImage) {
         return {
             type: Actions.ADD_PHOTO,
             payload: {
@@ -74,7 +79,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    addPhotos(photos: ImageType []) {
+    addPhotos(photos: TImage []) {
         return {
             type: Actions.ADD_PHOTOS,
             payload: {
@@ -88,7 +93,7 @@ export const ActionCreators: IActionCreators = {
             payload: { id }
         }
     },
-    editPhoto(dataChange: ImageType) {
+    editPhoto(dataChange: TImage) {
         return {
             type: Actions.EDIT_PHOTO,
             payload: {
@@ -96,7 +101,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    votePhoto(newRating: RatingType) {
+    votePhoto(newRating: TRating) {
         return {
             type: Actions.VOTE,
             payload: {
@@ -104,11 +109,11 @@ export const ActionCreators: IActionCreators = {
             }
         };
     },
-    postComment(newComment: {comment: CommentType, id: string}) {
+    postComment(comment: TComment) {
         return {
             type: Actions.POST_COMMENT,
             payload: {
-                newComment
+                newComment: comment
             }
         }
     },

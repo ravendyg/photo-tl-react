@@ -1,31 +1,31 @@
-import { UserData } from "../src/components/loggedin/user-data";
+import { IAja } from './interfaces';
 
-declare type TUserRequest = {
+export declare type TUserRequest = {
     name: string,
     pas: string,
     pas2?: string,
     rem: boolean,
 }
 
-declare type TUser = {
+export declare type TUser = {
     uid: string,
     name: string,
 }
 
-declare type TDialog = {
+export declare type TDialog = {
     in: boolean,
     up: boolean,
     upload: boolean,
     editPhoto: string,
 }
 
-declare type TState = {
+export declare type TState = {
     user: TUser,
     dialogs: TDialog,
     photos: TImage[],
 };
 
-declare type TAction = {
+export declare type TAction = {
     type: string;
     payload?: {
         id?: string,
@@ -42,9 +42,9 @@ declare type TAction = {
     };
 };
 
-declare type TAja = () => IAja;
+export declare type TAja = () => IAja;
 
-declare type TRating = {
+export declare type TRating = {
     rid: string,
     date: number,
     user: string,
@@ -52,7 +52,7 @@ declare type TRating = {
     value: number
 }
 
-declare type TImage = {
+export declare type TImage = {
     iid: string,
     title: string,
     description: string,
@@ -64,11 +64,11 @@ declare type TImage = {
     comments: TComment[]
 }
 
-declare type TDeleteDTO = {
+export declare type TDeleteDTO = {
     id: string;
 };
 
-declare type TComment = {
+export declare type TComment = {
     cid: string;
     iid: string;
     user: TUser;

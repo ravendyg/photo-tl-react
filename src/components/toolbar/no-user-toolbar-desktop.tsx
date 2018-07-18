@@ -1,7 +1,5 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
+import * as React from 'react';
+import { IUserActions } from '../../../typings/interfaces';
 
 // ui
 const Toolbar = vendor.mUi.Toolbar;
@@ -12,12 +10,7 @@ const RaisedButton = vendor.mUi.RaisedButton;
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
 
-export class NoUserToolbarDesktop extends React.Component {
-   
-    constructor(){
-        super();   
-    }
-    
+export class NoUserToolbarDesktop extends React.Component<{}, {}> {
     render() {
         return (
             <Toolbar>

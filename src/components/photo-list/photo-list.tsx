@@ -1,9 +1,9 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
-
-const Utils: IUtils = require('./../../utils/utils.ts').Utils;
+import * as React from 'react';
+import { TImage } from '../../../typings/types';
+import {
+    IUserActions,
+    IStore
+} from '../../../typings/interfaces';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
@@ -16,29 +16,25 @@ import {EditPhotoDialog} from './../dialogs/edit-photo';
 // data
 const store: IStore = require('./../../store.ts').Store;
 
-export class PhotoList extends ListeningComponent {
-    protected setState: (state: any) => void;
-    protected state: {
-        photos: ImageType [],
-        commentsDisplayed: string
-    };
+interface IProps {
+    filter: string;
+}
 
-    protected oldState: {
-        photos: ImageType [],
-        commentsDisplayed: string
-    };
+interface IState {
+    photos: TImage [];
+    commentsDisplayed: string;
+};
 
-    public props: any;
+export class PhotoList extends ListeningComponent<IProps, IState> {
 
-    private _preloader: any;
-
-    constructor(){
-        super();
-        this.oldState = {
+    constructor(props) {
+        super(props);
+        this.state = {
             photos: store.getState().photos,
             // nothing displayed by default
             commentsDisplayed: ``
         };
+        this.oldState = this.state;
     }
 
     componentWillMount () {
@@ -80,15 +76,15 @@ export class PhotoList extends ListeningComponent {
         return (
         <div>
             {this.state.photos.map((photo, i) =>
-                    <PhotoCard
-                        key={photo.iid}
-                        photo={photo}
-                        user={store.getState().user}
-                        editPhoto={this.editPhoto}
-                        showComs={this.state.commentsDisplayed}
-                        toggleComments={(_id: string) => this._toggleComments(_id)}
-                        vote={UserActions.vote}
-                        deletePhoto={UserActions.deletePhoto}/>
+                <PhotoCard
+                    key={photo.iid}
+                    photo={photo}
+                    user={store.getState().user}
+                    editPhoto={this.editPhoto}
+                    showComs={this.state.commentsDisplayed}
+                    toggleComments={(_id: string) => this._toggleComments(_id)}
+                    vote={UserActions.vote}
+                    deletePhoto={UserActions.deletePhoto}/>
             )}
             <EditPhotoDialog />
         </div>

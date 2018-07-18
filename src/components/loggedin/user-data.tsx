@@ -1,28 +1,22 @@
-/// <reference path="../../../typings/tsd.d.ts" />
-
-// vendor
-const React: IReact = vendor.React;
-
-// data
+import * as React from 'react';
+import { IStore } from '../../../typings/interfaces';
 const store: IStore = require('./../../store.ts').Store;
 
-import {UserToolbarDesktop} from './../toolbar/user-toolbar-desktop.tsx';
-import {UserToolbarMobile} from './../toolbar/user-toolbar-mobile.tsx';
-import {LoginDialog} from './../dialogs/login.tsx';
+import {UserToolbarDesktop} from './../toolbar/user-toolbar-desktop';
+import {UserToolbarMobile} from './../toolbar/user-toolbar-mobile';
 
-export class UserData extends React.Component {
-    constructor(){ super();}
-
+export class UserData extends React.Component<{}, {}> {
     render() {
         let toolbar = (window.outerWidth > 500)
             ?
             <UserToolbarDesktop
-                userName={store.getState().user.name}
+                user={store.getState().user}
                 title={`Data`}
+                label={`My photos`}
                 hash={`/loggedin/user-data`} />
             :
             <UserToolbarMobile
-                userName={store.getState().user.name}
+                user={store.getState().user}
                 title={`Data`}
                 hash={`/loggedin/user-data`} />
         return (
