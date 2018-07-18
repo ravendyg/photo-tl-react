@@ -117,12 +117,11 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    deleteComment(cid: string, date: string) {
+    deleteComment(deletedComment: TComment) {
         return {
             type: Actions.DELETE_COMMENT,
             payload: {
-                cid,
-                date
+                deletedComment
             }
         }
     }

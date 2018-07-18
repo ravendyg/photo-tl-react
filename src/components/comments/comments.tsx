@@ -24,7 +24,7 @@ export class Comments extends React.Component<IProps, {}> {
     }
 
     private _deleteComment = (cid: string) => {
-        UserActions.deleteComment(this.props.id, cid);
+        UserActions.deleteComment(cid);
     };
 
     render() {

@@ -35,6 +35,7 @@ export declare type TAction = {
         photos?: TImage [],
         newRating?: TRating,
         newComment?: TComment,
+        deletedComment?: TComment,
         date?: string,
         dataChange?: TImage,
     };

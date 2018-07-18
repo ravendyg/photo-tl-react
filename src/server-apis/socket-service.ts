@@ -95,12 +95,11 @@ class SocketServiceClass implements ISocketService {
         });
     }
 
-    // uncomment
-    public deleteComment (id: string, cid: string) {
-        // this._socket.emit('uncomment-photo', {
-        //     id,
-        //     cid
-        // });
+    public deleteComment(cid: string) {
+        this._sendMessage({
+            action: Actions.DELETE_COMMENT,
+            cid,
+        });
     }
 
     private _handleDisconnect = () => {
@@ -152,14 +151,18 @@ class SocketServiceClass implements ISocketService {
                         );
                     }
                 }
+
+                case Actions.DELETE_COMMENT: {
+                    if (payload) {
+                        return store.dispatch(
+                            actionCreators.deleteComment(payload as TComment)
+                        );
+                    }
+                }
             }
         } catch (err) {
             console.error(err);
         }
-        // // delete comment
-        // this._socket.on(`uncomment-photo`, (data) => {
-        //     store.dispatch(actionCreators.deleteComment(data.id, data.cid));
-        // });
     };
 
     private _sendMessage(message?: ISocketMessage) {

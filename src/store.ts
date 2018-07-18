@@ -79,7 +79,7 @@ const photo = (state: TImage, action: TAction) => {
         case Actions.DELETE_COMMENT: {
             return {
                 ...state,
-                comments: state.comments.filter(e => e.cid !== action.payload.date)
+                comments: state.comments.filter(e => e.cid !== action.payload.deletedComment.cid)
             };
         }
 
@@ -124,7 +124,7 @@ const photos = (state: TImage[] = [], action: TAction) => {
             return transferHelper(state, action.payload.newComment.iid, action);
 
         case Actions.DELETE_COMMENT:
-            return transferHelper(state, action.payload.id, action);
+            return transferHelper(state, action.payload.deletedComment.iid, action);
 
         case Actions.EDIT_PHOTO: {
             let newPhotos: TImage[] = [];

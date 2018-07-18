@@ -34,7 +34,7 @@ interface IActionCreators {
     addPhotos (photos: TImage []): TAction;
     deletePhoto(id: string): TAction;
     editPhoto(dataChange: TImage): TAction;
-    deleteComment (_id: string, cid: string): TAction;
+    deleteComment(deletedComment: TComment): TAction;
 
     votePhoto (newRating: TRating): TAction;
     postComment(comment: TComment): TAction;
@@ -55,7 +55,7 @@ interface IUserActions {
     vote: (vote: number, _id: string) => void;
     deletePhoto: (_id: string) => void;
     postComment: (iid: string, text: string) => void;
-    deleteComment: (_id: string, cid: string) => void;
+    deleteComment: (cid: string) => void;
 
     uploadPhoto: (photo: any, title: string, text: string) => void;
     editPhoto: (_id: string, title: string, text: string) => void;

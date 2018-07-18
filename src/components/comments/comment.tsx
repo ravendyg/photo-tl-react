@@ -16,8 +16,12 @@ const Utils: IUtils = require('./../../utils/utils.ts').Utils;
 
 export class Comment extends React.Component<IProps, {}> {
 
-    private _deleteComment = (cid: string): void => {
-        this.props.deleteComment(cid);
+    private _deleteComment = (): void => {
+        const {
+            deleteComment,
+            comment: { cid }
+        } = this.props;
+        deleteComment(cid);
     };
 
     render() {
@@ -28,7 +32,6 @@ export class Comment extends React.Component<IProps, {}> {
             comment,
             user
         } = this.props;
-        console.log(user);
 
         return (
             <div>
