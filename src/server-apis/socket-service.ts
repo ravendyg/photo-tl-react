@@ -1,7 +1,8 @@
 import {
     TComment,
     TDeleteDTO,
-    TImage,
+    IImage,
+    IImageExtended,
     TRating
 } from '../../typings/types';
 import {
@@ -120,7 +121,7 @@ class SocketServiceClass implements ISocketService {
             const { action, payload } = JSON.parse(data);
             switch (action) {
                 case Actions.ADD_PHOTO: {
-                    return store.dispatch(actionCreators.addPhoto(payload as TImage));
+                    return store.dispatch(actionCreators.addPhoto(payload as IImage));
                 }
 
                 case Actions.VOTE: {
@@ -133,7 +134,7 @@ class SocketServiceClass implements ISocketService {
 
                 case Actions.EDIT_PHOTO: {
                     if (payload) {
-                        return store.dispatch(actionCreators.editPhoto(payload as TImage));
+                        return store.dispatch(actionCreators.editPhoto(payload as IImage));
                     }
                 }
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-    TImage,
+    IImageExtended,
     TUser
 } from '../../../typings/types';
 
 interface IProps {
-    photo: TImage,
+    photo: IImageExtended,
     title: string,
     user?: TUser,
     onClick?: (voteValue: number, iid: string) => void

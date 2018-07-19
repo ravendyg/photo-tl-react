@@ -22,7 +22,7 @@ declare type TDialog = {
 declare type TState = {
     user: TUser,
     dialogs: TDialog,
-    photos: TImage[],
+    photos: IImageExtended[],
 };
 
 declare type TAction = {
@@ -33,12 +33,12 @@ declare type TAction = {
         name?: string,
         text?: string,
         user?: TUser,
-        photo?: TImage,
-        photos?: TImage [],
+        photo?: IImageExtended,
+        photos?: IImageExtended [],
         newRating?: TRating,
         newComment?: TComment,
         date?: string,
-        dataChange?: TImage,
+        dataChange?: IImageExtended,
     };
 };
 
@@ -50,7 +50,7 @@ declare type TRating = {
     value: number
 }
 
-declare type TImage = {
+declare type IImageExtended = {
     iid: string,
     title: string,
     description: string,

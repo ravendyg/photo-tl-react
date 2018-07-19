@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TImage } from '../../../typings/types';
+import { IImageExtended } from '../../../typings/types';
 import {
     IUserActions,
     IStore
@@ -21,7 +21,7 @@ interface IProps {
 }
 
 interface IState {
-    photos: TImage [];
+    photos: IImageExtended [];
     commentsDisplayed: string;
 };
 
@@ -40,6 +40,7 @@ export class PhotoList extends ListeningComponent<IProps, IState> {
     componentWillMount () {
         // props are not accessible in the constructor
         this.transformState();
+
     }
 
     // @Override
@@ -58,13 +59,13 @@ export class PhotoList extends ListeningComponent<IProps, IState> {
         }
     }
 
-    private _toggleComments (_id: string) {
-        if (this.state.commentsDisplayed === _id) {
+    private _toggleComments = (cid: string) => {
+        if (this.state.commentsDisplayed === cid) {
             // hide
             this.setState({commentsDisplayed: ``});
         } else {
             // show selected
-            this.setState({commentsDisplayed: _id});
+            this.setState({commentsDisplayed: cid});
         }
     }
 
@@ -72,17 +73,21 @@ export class PhotoList extends ListeningComponent<IProps, IState> {
         UserActions.displayPhotoEdit(iid);
     }
 
+    private _handleScrollEnd = (ev: any) => {
+        console.log(ev);
+    };
+
     render() {
         return (
         <div>
-            {this.state.photos.map((photo, i) =>
+            {this.state.photos.map((photo) =>
                 <PhotoCard
                     key={photo.iid}
                     photo={photo}
                     user={store.getState().user}
                     editPhoto={this.editPhoto}
                     showComs={this.state.commentsDisplayed}
-                    toggleComments={(_id: string) => this._toggleComments(_id)}
+                    toggleComments={this._toggleComments}
                     vote={UserActions.vote}
                     deletePhoto={UserActions.deletePhoto}/>
             )}

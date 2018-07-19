@@ -1,4 +1,4 @@
-import { TImage } from '../../typings/types';
+import { IImageExtended } from '../../typings/types';
 import {
     IActionCreators,
     IImageService,
@@ -19,7 +19,7 @@ class ImageServiceClass implements IImageService {
     // private _timeout: any;
     private _loggedInUser: any;
 
-    private _images: TImage [];
+    private _images: IImageExtended [];
     // flag to prevent repetitive photos loading
     private _loadedImages: boolean;
 
@@ -29,20 +29,20 @@ class ImageServiceClass implements IImageService {
         this._loadedImages = false;
         // download photos if signedin
         if (store.getState().user) {
-            this._getImageData();
+            this._geIImageExtendedData();
         }
 
         store.subscribe(() => {
             if (store.getState().user && !this._loadedImages) {
                 // if just logged in
-                this._getImageData();
+                this._geIImageExtendedData();
             }
         });
 
-        // var getImageData = () => this.getImageData();
+        // var geIImageExtendedData = () => this.geIImageExtendedData();
     }
 
-    private _getImageData (): void {
+    private _geIImageExtendedData (): void {
         // real call to the server
         aja()
             .method(`GET`)

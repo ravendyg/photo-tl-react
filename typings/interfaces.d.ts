@@ -2,11 +2,13 @@ import {
     TAction,
     TState,
     TUser,
-    TImage,
+    IImage,
+    IImageExtended,
     TRating,
     TComment,
     TUserRequest
 } from './types';
+
 interface IStore {
     getState (): TState;
     dispatch (action: TAction): void;
@@ -30,10 +32,10 @@ interface IActionCreators {
     setEditDialog (_id: string): TAction;
     hideDialogs (): TAction;
 
-    addPhoto (photo: TImage): TAction;
-    addPhotos (photos: TImage []): TAction;
+    addPhoto(photo: IImage): TAction;
+    addPhotos (photos: IImageExtended[]): TAction;
     deletePhoto(id: string): TAction;
-    editPhoto(dataChange: TImage): TAction;
+    editPhoto(dataChange: IImage): TAction;
     deleteComment(deletedComment: TComment): TAction;
 
     votePhoto (newRating: TRating): TAction;
@@ -46,8 +48,6 @@ interface IUserActions {
     displayPhotoUpload: () => void;
     displayPhotoEdit: (_id: string) => void;
     hideDialogs: () => void;
-    // hideSignin: () => void;
-    // hideSignup: () => void;
     signin: (name: string, pas: string, rem: boolean) => IPromise;
     signup: (name: string, pas: string, rem: boolean) => IPromise;
     signout: () => void;
@@ -60,7 +60,6 @@ interface IUserActions {
     uploadPhoto: (photo: any, title: string, text: string) => void;
     editPhoto: (_id: string, title: string, text: string) => void;
 }
-
 
 interface IUserService {
     signin(user: TUserRequest): IPromise;

@@ -1,5 +1,5 @@
 import {
-    TImage,
+    IImageExtended,
     TComment,
     TUser,
     TRating
@@ -71,7 +71,7 @@ export const ActionCreators: IActionCreators = {
             payload: {}
         };
     },
-    addPhoto(photo: TImage) {
+    addPhoto(photo: IImageExtended) {
         return {
             type: Actions.ADD_PHOTO,
             payload: {
@@ -79,7 +79,7 @@ export const ActionCreators: IActionCreators = {
             }
         }
     },
-    addPhotos(photos: TImage []) {
+    addPhotos(photos: IImageExtended []) {
         return {
             type: Actions.ADD_PHOTOS,
             payload: {
@@ -93,7 +93,7 @@ export const ActionCreators: IActionCreators = {
             payload: { id }
         }
     },
-    editPhoto(dataChange: TImage) {
+    editPhoto(dataChange: IImageExtended) {
         return {
             type: Actions.EDIT_PHOTO,
             payload: {

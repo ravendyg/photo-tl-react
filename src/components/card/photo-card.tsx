@@ -1,11 +1,11 @@
 import {
-    TImage,
+    IImageExtended,
     TUser
 } from '../../../typings/types';
 import { IUtils } from '../../../typings/interfaces';
 
 interface IProps {
-    photo: TImage,
+    photo: IImageExtended,
     user: TUser,
     vote: (vote: number, iid: string) => void,
     deletePhoto: (iid: string) => void,

@@ -4,7 +4,7 @@ import {
 } from 'redux';
 import {
     TAction,
-    TImage,
+    IImageExtended,
     TDialog,
     TUser,
 } from '../typings/types';
@@ -12,7 +12,7 @@ import {Utils} from './utils/utils';
 import {Actions} from './action-creators';
 
 // reducers
-const user = (state: TUser = null, action: TAction) => {
+const user = (state: TUser = null, action: TAction): TUser => {
     switch (action.type) {
         case Actions.SIGNIN_USER:
             return action.payload.user;
@@ -25,7 +25,7 @@ const user = (state: TUser = null, action: TAction) => {
     }
 };
 
-const dialogs = (state: TDialog, action: TAction) => {
+const dialogs = (state: TDialog, action: TAction): TDialog => {
     // new state doesn't depend on the previous one
     let def: TDialog = { in: false, up: false, upload: false, editPhoto: ``};
 
@@ -55,10 +55,15 @@ const dialogs = (state: TDialog, action: TAction) => {
     }
 };
 
-const photo = (state: TImage, action: TAction) => {
+const photo = (state: IImageExtended, action: TAction): IImageExtended => {
     switch (action.type) {
         case Actions.ADD_PHOTO:
-            return action.payload.photo;
+            return {
+                ...action.payload.photo,
+                comments: [],
+                ratings: [],
+                views: 0,
+            };
 
         case Actions.VOTE: {
             return {
@@ -88,9 +93,9 @@ const photo = (state: TImage, action: TAction) => {
     }
 }
 
-const photos = (state: TImage[] = [], action: TAction) => {
+const photos = (state: IImageExtended[] = [], action: TAction): IImageExtended[] => {
     // creates new array of photos requesting change of selected one from photo reducer
-    function transferHelper (state: TImage[], iid, action) {
+    function transferHelper (state: IImageExtended[], iid, action) {
         for (let i = state.length-1; i >= 0; i--) {
             if (state[i].iid === iid) {
                 return [
@@ -127,9 +132,7 @@ const photos = (state: TImage[] = [], action: TAction) => {
             return transferHelper(state, action.payload.deletedComment.iid, action);
 
         case Actions.EDIT_PHOTO: {
-            let newPhotos: TImage[] = [];
-            let updated = false;
-            const {dataChange} = action.payload;
+            const { dataChange } = action.payload;
             if (!dataChange) {
                 return state;
             }
@@ -139,20 +142,18 @@ const photos = (state: TImage[] = [], action: TAction) => {
                 iid,
                 title
             } = dataChange;
-            state.forEach((image) => {
+            return state.map((image) => {
                 if (image.iid === iid) {
-                    updated = true;
-                    newPhotos.push({
+                    return {
                         ...image,
                         changed,
                         description,
-                        title
-                    });
+                        title,
+                    };
                 } else {
-                    newPhotos.push(image);
+                    return image;
                 }
             });
-            return updated ? newPhotos : state;
         }
 
         default:

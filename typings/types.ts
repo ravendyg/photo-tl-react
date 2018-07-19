@@ -20,7 +20,7 @@ export declare type TDialog = {
 export declare type TState = {
     user: TUser,
     dialogs: TDialog,
-    photos: TImage[],
+    photos: IImageExtended[],
 };
 
 export declare type TAction = {
@@ -31,13 +31,13 @@ export declare type TAction = {
         name?: string,
         text?: string,
         user?: TUser,
-        photo?: TImage,
-        photos?: TImage [],
+        photo?: IImage,
+        photos?: IImageExtended [],
         newRating?: TRating,
         newComment?: TComment,
         deletedComment?: TComment,
         date?: string,
-        dataChange?: TImage,
+        dataChange?: IImageExtended,
     };
 };
 
@@ -49,16 +49,19 @@ export declare type TRating = {
     value: number
 }
 
-export declare type TImage = {
-    iid: string,
-    title: string,
-    description: string,
-    uploaded: number,
-    changed: number,
-    uploadedBy: TUser,
-    ratings: TRating[],
-    views: number,
-    comments: TComment[]
+export interface IImage {
+    iid: string;
+    title: string;
+    description: string;
+    uploaded: number;
+    changed: number;
+    uploadedBy: TUser;
+}
+
+export interface IImageExtended extends IImage {
+    ratings: TRating[];
+    views: number;
+    comments: TComment[];
 }
 
 export declare type TDeleteDTO = {
