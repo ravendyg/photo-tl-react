@@ -6,7 +6,8 @@ import {
     IImageExtended,
     TRating,
     TComment,
-    TUserRequest
+    TUserRequest,
+    TView,
 } from './types';
 
 interface IStore {
@@ -37,6 +38,7 @@ interface IActionCreators {
     deletePhoto(id: string): TAction;
     editPhoto(dataChange: IImage): TAction;
     deleteComment(deletedComment: TComment): TAction;
+    addViews(newViews: TView): TAction;
 
     votePhoto (newRating: TRating): TAction;
     postComment(comment: TComment): TAction;
@@ -56,6 +58,7 @@ interface IUserActions {
     deletePhoto: (_id: string) => void;
     postComment: (iid: string, text: string) => void;
     deleteComment: (cid: string) => void;
+    registerView: (iid: string) => void;
 
     uploadPhoto: (photo: any, title: string, text: string) => void;
     editPhoto: (_id: string, title: string, text: string) => void;
@@ -74,6 +77,7 @@ interface ISocketService {
     deletePhoto(iid: string): void;
     uploadPhoto (filename: string, title: string, text: string): void;
     editPhoto (id: string, title: string, text: string): void;
+    registerView(uid: string, iid: string): void;
     vote (newVote: number, _id: string): void;
     postComment(iid: string, text: string): void;
     deleteComment (id: string, cid: string): void;

@@ -16,6 +16,12 @@ import {EditPhotoDialog} from './../dialogs/edit-photo';
 // data
 const store: IStore = require('./../../store.ts').Store;
 
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 1.0,
+};
+
 interface IProps {
     filter: string;
 }
@@ -26,9 +32,15 @@ interface IState {
 };
 
 export class PhotoList extends ListeningComponent<IProps, IState> {
+    private observer: IntersectionObserver;
 
     constructor(props) {
         super(props);
+                        // check compatibility
+        this.observer = IntersectionObserver
+            // don't watch user's own images
+            && new IntersectionObserver(this._registerView, observerOptions);
+
         this.state = {
             photos: store.getState().photos,
             // nothing displayed by default
@@ -69,6 +81,24 @@ export class PhotoList extends ListeningComponent<IProps, IState> {
         }
     }
 
+    private _registerView = (entries: IntersectionObserverEntry[]) => {
+        const {
+            observer,
+        } = this;
+        for (let entry of entries) {
+            if (entry.isIntersecting) {
+                const { iid } = (entry.target as HTMLElement).dataset;
+                console.log(iid);
+                if (iid) {
+                    if (observer) {
+                        observer.unobserve(entry.target);
+                    }
+                    UserActions.registerView(iid);
+                }
+            }
+        }
+    };
+
     private editPhoto(iid: string) {
         UserActions.displayPhotoEdit(iid);
     }
@@ -89,7 +119,9 @@ export class PhotoList extends ListeningComponent<IProps, IState> {
                     showComs={this.state.commentsDisplayed}
                     toggleComments={this._toggleComments}
                     vote={UserActions.vote}
-                    deletePhoto={UserActions.deletePhoto}/>
+                    deletePhoto={UserActions.deletePhoto}
+                    observer={this.observer}
+                />
             )}
             <EditPhotoDialog />
         </div>

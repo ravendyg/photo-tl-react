@@ -38,6 +38,7 @@ export declare type TAction = {
         deletedComment?: TComment,
         date?: string,
         dataChange?: IImageExtended,
+        newViews?: TView;
     };
 };
 
@@ -56,6 +57,7 @@ export interface IImage {
     uploaded: number;
     changed: number;
     uploadedBy: TUser;
+    haveSeen: boolean;
 }
 
 export interface IImageExtended extends IImage {
@@ -75,3 +77,8 @@ export declare type TComment = {
     date: number;
     text: string;
 };
+
+export declare type TView = {
+    iid: string;
+    count: number;
+}

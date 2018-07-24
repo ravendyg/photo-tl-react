@@ -5,19 +5,20 @@ import {
 import { IUtils } from '../../../typings/interfaces';
 
 interface IProps {
-    photo: IImageExtended,
-    user: TUser,
-    vote: (vote: number, iid: string) => void,
-    deletePhoto: (iid: string) => void,
-    showComs: string,
-    toggleComments: (_id: string) => void,
+    photo: IImageExtended;
+    user: TUser;
+    vote: (vote: number, iid: string) => void;
+    deletePhoto: (iid: string) => void;
+    showComs: string;
+    toggleComments: (_id: string) => void;
     editPhoto: (iid: string) => void;
+    observer: IntersectionObserver;
 }
 
 interface IState {
     displayCard: string,
     displayPreloader: string,
-    displayComments: string
+    displayComments: string,
 }
 
 import * as React from 'react';
@@ -36,31 +37,45 @@ import * as CardTitle from 'material-ui/lib/card/card-title';
 import * as FlatButton from 'material-ui/lib/flat-button';
 import * as Badge from 'material-ui/lib/badge';
 
-
 export class PhotoCard extends React.Component<IProps, IState> {
     protected oldState: IState;
+    private item: HTMLElement;
 
-    constructor(props){
+    constructor(props: IProps){
         super(props);
 
         this.state = {
             displayCard: 'none',
             displayPreloader: 'block',
-            displayComments: 'none'
+            displayComments: 'none',
         };
         this.oldState = {
             displayCard: 'none',
             displayPreloader: 'block',
-            displayComments: 'none'
+            displayComments: 'none',
         };
     }
 
-    private _showCard (): void {
+    private _showCard = (): void => {
         this.setState({
             displayCard: 'block',
             displayPreloader: 'none',
         });
-    }
+        const {
+            item,
+            props: {
+                photo: {
+                    haveSeen,
+                    uploadedBy,
+                },
+                observer,
+                user,
+            }
+        } = this;
+        if (user.uid !== uploadedBy.uid && item && observer && !haveSeen) {
+            observer.observe(item);
+        }
+    };
 
     private _vote = (voteValue: number, _id: string) => {
         this.props.vote(voteValue, _id);
@@ -109,7 +124,7 @@ export class PhotoCard extends React.Component<IProps, IState> {
             brr = <br />;
         }
 
-        const {photo} = this.props;
+        const { photo } = this.props;
         const {
             iid,
             comments,
@@ -117,18 +132,22 @@ export class PhotoCard extends React.Component<IProps, IState> {
             description,
             uploaded,
             uploadedBy,
-            title
+            title,
         } = photo;
 
         return (
-            <div style={cardStyle}>
+            <div
+                style={cardStyle}
+                ref={item => this.item = item}
+                data-iid={iid}
+            >
                 <Preloader show={this.state.displayPreloader} />
                 <Card style={{display: this.state.displayCard}}>
                     <CardMedia
                         overlay={<CardTitle title={title} />} >
                         <img
                             src={'users_data/images/' + iid + '.png'}
-                            onLoad={() => { this._showCard(); }}/>
+                            onLoad={this._showCard}/>
                     </CardMedia>
 
                     <div style={{textAlign: 'right', marginTop: '10px'}}>

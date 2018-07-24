@@ -2,8 +2,8 @@ import {
     TComment,
     TDeleteDTO,
     IImage,
-    IImageExtended,
-    TRating
+    TRating,
+    TView
 } from '../../typings/types';
 import {
     IActionCreators,
@@ -30,10 +30,12 @@ class SocketServiceClass implements ISocketService {
     private _connectRetry: boolean;
     private _retryTimeout: number;
     private _pingInterval: number;
+    private _messageQueu: ISocketMessage[] = [];
 
     public connect = () => {
         this._connectRetry = false;
         this._socket = new WebSocket(`${config('url')}${config('port')}/socket`.replace(/^http/, 'ws'));
+        this._socket.addEventListener('open', this._handleOpen);
         this._socket.addEventListener('message', this._listen);
         this._socket.addEventListener('close', this._handleDisconnect);
         clearInterval(this._pingInterval);
@@ -103,6 +105,13 @@ class SocketServiceClass implements ISocketService {
         });
     }
 
+    public registerView(iid: string) {
+        this._sendMessage({
+            action: Actions.REGISTER_VIEW,
+            iid,
+        });
+    }
+
     private _handleDisconnect = () => {
         this._socket = null;
         if (this._connectRetry) {
@@ -113,6 +122,14 @@ class SocketServiceClass implements ISocketService {
         } else {
             this.connect();
             this._connectRetry = true;
+        }
+    };
+
+    private _handleOpen = () => {
+        this._socket.removeEventListener('open', this._handleOpen);
+        while (this._messageQueu.length > 0) {
+            const message = this._messageQueu.pop();
+            this._sendMessage(message);
         }
     };
 
@@ -160,6 +177,14 @@ class SocketServiceClass implements ISocketService {
                         );
                     }
                 }
+
+                case Actions.ADD_VIEWS: {
+                    if (payload) {
+                        return store.dispatch(
+                            actionCreators.addViews(payload as TView)
+                        );
+                    }
+                }
             }
         } catch (err) {
             console.error(err);
@@ -168,9 +193,13 @@ class SocketServiceClass implements ISocketService {
 
     private _sendMessage(message?: ISocketMessage) {
         if (this._socket) {
-            this._socket.send(
-                message ? JSON.stringify(message) : ''
-            );
+            if (this._socket.readyState === 1) {
+                this._socket.send(
+                    message ? JSON.stringify(message) : ''
+                );
+            } else {
+                this._messageQueu.push(message);
+            }
         }
     }
 }

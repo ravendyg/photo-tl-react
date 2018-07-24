@@ -88,6 +88,13 @@ const photo = (state: IImageExtended, action: TAction): IImageExtended => {
             };
         }
 
+        case Actions.ADD_VIEWS: {
+            return {
+                ...state,
+                views: state.views + (action.payload.newViews.count || 0),
+            };
+        }
+
         default:
             return state;
     }
@@ -154,6 +161,16 @@ const photos = (state: IImageExtended[] = [], action: TAction): IImageExtended[]
                     return image;
                 }
             });
+        }
+
+        case Actions.ADD_VIEWS: {
+            const {
+                newViews: {
+                    iid,
+                    count,
+                },
+            } = action.payload;
+            return transferHelper(state, iid, action);
         }
 
         default:

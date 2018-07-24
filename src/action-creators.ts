@@ -2,7 +2,8 @@ import {
     IImageExtended,
     TComment,
     TUser,
-    TRating
+    TRating,
+    TView,
 } from '../typings/types';
 import { IActionCreators } from '../typings/interfaces';
 
@@ -18,6 +19,8 @@ export const Actions = {
     ADD_PHOTOS: 'ADD_PHOTOS',
     DELETE_PHOTO: 'DELETE_PHOTO',
     EDIT_PHOTO: 'EDIT_PHOTO',
+    REGISTER_VIEW: 'REGISTER_VIEW',
+    ADD_VIEWS: 'ADD_VIEWS',
     VOTE: 'VOTE',
     POST_COMMENT: 'POST_COMMENT',
     DELETE_COMMENT: 'DELETE_COMMENT',
@@ -91,6 +94,12 @@ export const ActionCreators: IActionCreators = {
         return {
             type: Actions.DELETE_PHOTO,
             payload: { id }
+        }
+    },
+    addViews(newViews: TView) {
+        return {
+            type: Actions.ADD_VIEWS,
+            payload: { newViews },
         }
     },
     editPhoto(dataChange: IImageExtended) {
