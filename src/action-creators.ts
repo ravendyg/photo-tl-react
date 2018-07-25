@@ -3,7 +3,7 @@ import {
     TComment,
     TUser,
     TRating,
-    TView,
+    TNewViews,
 } from '../typings/types';
 import { IActionCreators } from '../typings/interfaces';
 
@@ -96,7 +96,7 @@ export const ActionCreators: IActionCreators = {
             payload: { id }
         }
     },
-    addViews(newViews: TView) {
+    addViews(newViews: TNewViews) {
         return {
             type: Actions.ADD_VIEWS,
             payload: { newViews },

@@ -3,7 +3,7 @@ import {
     TDeleteDTO,
     IImage,
     TRating,
-    TView
+    TNewViews,
 } from '../../typings/types';
 import {
     IActionCreators,
@@ -181,7 +181,7 @@ class SocketServiceClass implements ISocketService {
                 case Actions.ADD_VIEWS: {
                     if (payload) {
                         return store.dispatch(
-                            actionCreators.addViews(payload as TView)
+                            actionCreators.addViews(payload as TNewViews)
                         );
                     }
                 }

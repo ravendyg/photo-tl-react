@@ -7,7 +7,7 @@ import {
     TRating,
     TComment,
     TUserRequest,
-    TView,
+    TNewViews,
 } from './types';
 
 interface IStore {
@@ -38,7 +38,7 @@ interface IActionCreators {
     deletePhoto(id: string): TAction;
     editPhoto(dataChange: IImage): TAction;
     deleteComment(deletedComment: TComment): TAction;
-    addViews(newViews: TView): TAction;
+    addViews(newViews: TNewViews): TAction;
 
     votePhoto (newRating: TRating): TAction;
     postComment(comment: TComment): TAction;

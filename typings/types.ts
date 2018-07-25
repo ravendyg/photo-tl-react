@@ -38,7 +38,7 @@ export declare type TAction = {
         deletedComment?: TComment,
         date?: string,
         dataChange?: IImageExtended,
-        newViews?: TView;
+        newViews?: TNewViews;
     };
 };
 
@@ -78,7 +78,6 @@ export declare type TComment = {
     text: string;
 };
 
-export declare type TView = {
-    iid: string;
-    count: number;
-}
+export declare type TNewViews = {
+    iids: string[];
+};
