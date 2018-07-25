@@ -11,7 +11,7 @@ import * as Popover from 'material-ui/lib/popover/popover';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-import {menuItems} from './menu-items';
+import {MenuItems} from './menu-items';
 
 interface IProps {
     title: string;
@@ -27,7 +27,7 @@ interface IState {
     }
 }
 export class UserToolbarDesktop extends React.Component<IProps, IState> {
-
+    private _menuItems: MenuItems;
     private displayedButton: any;
 
     constructor(props) {
@@ -39,6 +39,7 @@ export class UserToolbarDesktop extends React.Component<IProps, IState> {
                 anchorEl: null
             }
         }
+        this._menuItems = new MenuItems(this._closeUserMenu, UserActions.signout);
     }
 
     private _openUserMenu (event) {
@@ -50,18 +51,14 @@ export class UserToolbarDesktop extends React.Component<IProps, IState> {
         });
     }
 
-    private _closeUserMenu () {
+    private _closeUserMenu = () => {
         this.setState({
             userMenu: {
                 open: false,
                 anchorEl: null
             }
         });
-    }
-
-    private _signout() {
-        UserActions.signout();
-    }
+    };
 
     render() {
         let title = this.props.title;
@@ -101,12 +98,14 @@ export class UserToolbarDesktop extends React.Component<IProps, IState> {
                         onRequestClose={event => this._closeUserMenu()}
                     >
                         <div style={{padding: `20px`}}>
-                            {menuItems.filter(e => filter * e.disp <= 0).map( e =>
-                                <MenuItem
-                                    key={e.key}
-                                    primaryText={e.text}
-                                    onClick={e.click}
-                             />
+                            {this._menuItems.items
+                                .filter(e => filter * e.disp <= 0)
+                                .map( e =>
+                                    <MenuItem
+                                        key={e.key}
+                                        primaryText={e.text}
+                                        onClick={e.click}
+                                />
                             )}
                         </div>
                     </Popover>

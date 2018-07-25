@@ -11,7 +11,7 @@ import * as Popover from 'material-ui/lib/popover/popover';
 
 const UserActions: IUserActions = require('./../../user-actions.ts').UserActions;
 
-import {menuItems} from './menu-items';
+import {MenuItems} from './menu-items';
 
 interface IProps {
     title: string;
@@ -26,6 +26,8 @@ interface IState {
     }
 }
 export class UserToolbarMobile extends React.Component<IProps, IState> {
+    private _menuItems: MenuItems;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -34,6 +36,7 @@ export class UserToolbarMobile extends React.Component<IProps, IState> {
                 anchorEl: null
             }
         }
+        this._menuItems = new MenuItems(this._closeUserMenu, UserActions.signout);
     }
 
     private _openUserMenu (event) {
@@ -45,18 +48,14 @@ export class UserToolbarMobile extends React.Component<IProps, IState> {
         });
     }
 
-    private _closeUserMenu () {
+    private _closeUserMenu = () => {
         this.setState({
             userMenu: {
                 open: false,
                 anchorEl: null
             }
         });
-    }
-
-    private _signout() {
-        UserActions.signout();
-    }
+    };
 
     render() {
         let title = this.props.title;
@@ -82,12 +81,14 @@ export class UserToolbarMobile extends React.Component<IProps, IState> {
                         onRequestClose={event => this._closeUserMenu()}
                     >
                         <div style={{padding: `20px`}}>
-                            {menuItems.filter(e => !e.text.toLowerCase().match(title.toLowerCase())).map( e =>
-                                <MenuItem
-                                    key={e.key}
-                                    primaryText={e.text}
-                                    onClick={e.click}
-                             />
+                            {this._menuItems.items
+                                .filter(e => !e.text.toLowerCase().match(title.toLowerCase()))
+                                .map(e =>
+                                    <MenuItem
+                                        key={e.key}
+                                        primaryText={e.text}
+                                        onClick={e.click}
+                                />
                             )}
                         </div>
                     </Popover>
