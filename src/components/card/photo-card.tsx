@@ -133,6 +133,7 @@ export class PhotoCard extends React.Component<IProps, IState> {
             uploaded,
             uploadedBy,
             title,
+            views = 0,
         } = photo;
 
         return (
@@ -151,6 +152,10 @@ export class PhotoCard extends React.Component<IProps, IState> {
                     </CardMedia>
 
                     <div style={{textAlign: 'right', marginTop: '10px'}}>
+                        <span>
+                            <i className="fa fa-eye" style={{marginRight: '5px'}}></i>
+                            <span style={{marginRight: '20px'}}>{views}</span>
+                        </span>
                         <Rating
                             photo={photo}
                             title={'Rating: '}/>
