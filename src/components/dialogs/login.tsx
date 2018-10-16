@@ -206,7 +206,7 @@ export class LoginDialog extends ListeningComponent<{}, IState> {
                 <Toggle
                     label="Remember"
                     defaultToggled={this._user.rem}
-                    onChange={this.handleRememberChange}
+                    onToggle={this.handleRememberChange}
                 /><br />
                 <FlatButton
                     style={{float: 'left', marginLeft: '15px'}}

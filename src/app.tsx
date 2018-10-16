@@ -11,6 +11,18 @@ import {AllPhotos} from './components/loggedin/all-photos';
 import {MyPhotos} from './components/loggedin/my-photos';
 import {UserData} from './components/loggedin/user-data';
 
+import {setServer} from './config';
+
+
+location.search
+    .replace('?', '')
+    .split('&')
+    .map(item => item.split('='))
+    .forEach(([key, val]) => {
+        if (key === 's') {
+            setServer(val);
+        }
+    });
 var css = require("./style.css");
 
 var username = ``;

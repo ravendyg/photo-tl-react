@@ -7,9 +7,9 @@ import {
     IPromise,
     IUserService
 } from '../../typings/interfaces';
+import {getApiUrl} from '../config';
 
 import * as aja from 'aja';
-const config: (query: any) => string = require('./../config.ts');
 
 const SocketService: ISocketService = require('./socket-service.ts').SocketService;
 const ImageService: IImageService = require('./image-service.ts').ImageService;
@@ -24,6 +24,7 @@ class UserServiceClass implements IUserService {
         var promise: IPromise = new Promise ( (resolve, reject) => {
             aja()
                 .method(options.method)
+                .header('Content-Type', 'application/json')
                 .url(options.url)
                 .data(userRequest)
                 .on(`200`, user => {
@@ -44,25 +45,30 @@ class UserServiceClass implements IUserService {
     }
 
     public signin(userRequest: TUserRequest) {
-        var q = this._signUpIn(userRequest, {
-                    method: 'GET',
-                    url: config('url') + config('port') + config('userDriver') + '/sign-in'
-                });
-        return q;
+        return this._signUpIn(
+            userRequest,
+            {
+                method: 'POST',
+                url: getApiUrl('/session')
+            }
+        );
     }
 
     public signup (userRequest: TUserRequest) {
-        return this._signUpIn(userRequest, {
-                    method: 'POST',
-                    url: config('url') + config('port') + config('userDriver') + '/new-user'
-                });
+        return this._signUpIn(
+            userRequest,
+            {
+                method: 'POST',
+                url: getApiUrl('/user')
+            }
+        );
     }
 
     // remove cookie
     public signout(): void {
         aja()
             .method(`DELETE`)
-            .url(config('url') + config('port') + config('userDriver'))
+            .url(getApiUrl('/session'))
             .on(`20*`, resp => {
                 store.dispatch(actionCreators.signOutUser());
             })
