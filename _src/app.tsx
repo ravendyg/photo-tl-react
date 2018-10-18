@@ -23,7 +23,7 @@ location.search
             setServer(val);
         }
     });
-var css = require("./style.css");
+import './style.css';
 
 var username = ``;
 

@@ -1,12 +1,14 @@
 {
-    "compilerOptions":
-    {
+    "compilerOptions": {
         "jsx": "react",
-        "sourceMap": true,
-        "target": "es5"
+        "experimentalDecorators": true,
+        "baseUrl": "./",
+        "target": "esnext"
     },
+    "include": [
+        "src"
+    ],
     "exclude": [
-        "node_modules",
-        "node_modules_old"
+        "node_modules"
     ]
 }
