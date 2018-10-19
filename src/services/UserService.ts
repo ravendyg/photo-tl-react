@@ -23,5 +23,5 @@ export class UserService implements IUserService {
         this.request.post<IUser>(`${this.config.apiUrl}/session`, body)
 
     signUp = (body: ISignArgs) =>
-        this.request.post<IUser>(`${this.config.apiUrl}/session`, body)
+        this.request.post<IUser>(`${this.config.apiUrl}/user`, body)
 }

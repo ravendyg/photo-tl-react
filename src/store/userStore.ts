@@ -1,5 +1,5 @@
 import {observable} from 'mobx';
-import {ISignArgs, IUser} from '../types';
+import {ISignArgs, IUser, IResponseContainer} from '../types';
 import {TStatus} from './loadingStatus';
 import {IUserService} from '../services/UserService';
 import {ICommonState} from './commonStore';
@@ -10,6 +10,7 @@ export interface IUserState {
     loading: boolean;
     load: () => void;
     signIn: (args: ISignArgs) => void;
+    signUp: (args: ISignArgs) => void;
 }
 
 export class UserStore implements IUserState {
@@ -42,11 +43,14 @@ export class UserStore implements IUserState {
             });
     }
 
-    signIn(args: ISignArgs) {
+    private sign(
+        action: (args: ISignArgs) => Promise<IResponseContainer<IUser>>,
+        args: ISignArgs
+    ) {
         const self = this;
         self.loading = true;
         self.error = '';
-        self.userService.signIn(args)
+        action(args)
             .then(userContainer => {
                 if (userContainer.status === 200) {
                     self.user = userContainer.payload;
@@ -61,6 +65,14 @@ export class UserStore implements IUserState {
             .then(() => {
                 self.loading = false;
             });
+    }
+
+    signIn(args: ISignArgs) {
+        this.sign(this.userService.signIn, args);
+    }
+
+    signUp(args: ISignArgs) {
+        this.sign(this.userService.signUp, args);
     }
 
 }

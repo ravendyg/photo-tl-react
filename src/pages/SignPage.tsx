@@ -53,11 +53,16 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
         userStore.signIn({
             login,
             pas,
-        })
+        });
     }
 
     signUp = () => {
-
+        const {store: {userStore}} = this.props;
+        const {login, pas} = this.state;
+        userStore.signUp({
+            login,
+            pas,
+        });
     }
 
     render() {
