@@ -12,3 +12,8 @@ export interface IResponseContainer<T> {
 export interface IConfig {
     apiUrl: string;
 }
+
+export interface ISignArgs {
+    login: string;
+    pas: string;
+}

@@ -1,34 +1,66 @@
 import {observable} from 'mobx';
-import {IUser} from '../types';
+import {ISignArgs, IUser} from '../types';
 import {TStatus} from './loadingStatus';
 import {IUserService} from '../services/UserService';
+import {ICommonState} from './commonStore';
 
 export interface IUserState {
     error: any;
     user: IUser | null;
-    status: TStatus;
+    loading: boolean;
     load: () => void;
+    signIn: (args: ISignArgs) => void;
 }
 
 export class UserStore implements IUserState {
     @observable error: any = null;
     @observable user: IUser | null = null;
-    @observable status: TStatus = 'idle';
+    @observable loading: boolean = false;
 
-    constructor(private userService: IUserService) {}
+    constructor(
+        private userService: IUserService,
+        private commonState: ICommonState,
+    ) {}
 
     load() {
         const self = this;
-        self.status = 'loading';
+        self.loading = true;
+        self.error = '';
         self.userService.getUser()
-            .then(user => {
-                self.user = user;
+            .then(userContainer => {
+                if (userContainer.status === 200) {
+                    self.user = userContainer.payload;
+                }
+                // don't handle errors
             })
             .catch(err => {
-                self.error = err.message || 'Smth went wrong';
+                const error = err.message || 'Smth went wrong';
+                this.commonState.setError(error);
             })
             .then(() => {
-                self.status = 'idle';
+                self.loading = false;
             });
     }
+
+    signIn(args: ISignArgs) {
+        const self = this;
+        self.loading = true;
+        self.error = '';
+        self.userService.signIn(args)
+            .then(userContainer => {
+                if (userContainer.status === 200) {
+                    self.user = userContainer.payload;
+                } else {
+                    self.error = userContainer.error
+                }
+            })
+            .catch(err => {
+                const error = err.message || 'Smth went wrong';
+                this.commonState.setError(error);
+            })
+            .then(() => {
+                self.loading = false;
+            });
+    }
+
 }

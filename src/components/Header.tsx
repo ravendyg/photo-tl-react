@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {IAppState} from '../store/state';
+import {IAppStore} from '../store/store';
 
 const headerStyle = {
     width: '100%',
@@ -8,18 +8,22 @@ const headerStyle = {
 };
 
 interface IHeaderProps {
-    state: IAppState;
+    store: IAppStore;
 }
 
 @observer
 export class Header extends React.Component<IHeaderProps, {}> {
     render() {
-        const {state} = this.props;
-        const {userState: {user}} = state;
+        const {store} = this.props;
+        const {userStore: {user, status}} = store;
+
+        if (!Boolean(user)) {
+            return null;
+        }
 
         return (
             <div style={headerStyle}>
-                {`Header - ${Boolean(user) ? 'user info' : 'sign up'}`}
+                {'Header - user info'}
             </div>
         );
     }

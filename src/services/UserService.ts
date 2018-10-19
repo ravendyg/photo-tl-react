@@ -1,9 +1,13 @@
 import {IUser, IResponseContainer} from '../types';
 import {IHttp} from './http';
-import {IConfig} from '../types';
+import {IConfig, ISignArgs} from '../types';
 
 export interface IUserService {
-    getUser: () => Promise<IUser>;
+    getUser: () => Promise<IResponseContainer<IUser>>;
+
+    signIn: (ISignArgs) => Promise<IResponseContainer<IUser>>;
+
+    signUp: (ISignArgs) => Promise<IResponseContainer<IUser>>;
 }
 
 export class UserService implements IUserService {
@@ -12,6 +16,12 @@ export class UserService implements IUserService {
         private config: IConfig,
     ) {}
 
-    getUser: () => Promise<IUser> =
-        () => this.request.get(`${this.config.apiUrl}/user`)
+    getUser = () =>
+        this.request.get<IUser>(`${this.config.apiUrl}/user`)
+
+    signIn = (body: ISignArgs) =>
+        this.request.post<IUser>(`${this.config.apiUrl}/session`, body)
+
+    signUp = (body: ISignArgs) =>
+        this.request.post<IUser>(`${this.config.apiUrl}/session`, body)
 }

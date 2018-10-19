@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {render} from 'react-dom';
-import {createState} from './store/state';
+import {createStore} from './store/store';
 import {UserService} from './services/UserService';
 import {Http} from './services/http';
 import {createConfig} from './getConfig';
-import {App} from './components/App';
+import {App} from './App';
 
 let serverType: string = '';
 location.search
@@ -20,9 +20,9 @@ location.search
 const config = createConfig(serverType);
 const http = new Http();
 const userService = new UserService(http, config);
-const state = createState({userService});
+const store = createStore({userService});
 
 render(
-    <App state={state}/>,
+    <App store={store}/>,
     document.getElementById('root'),
 );

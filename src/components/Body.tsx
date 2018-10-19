@@ -1,25 +1,31 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {IAppState} from '../store/state';
-
-const bodyStyle = {
-    flexGrow: 1,
-}
+import {IAppStore} from '../store/store';
+import {ErrorPage} from '../pages/ErrorPage';
+import {SignPage} from '../pages/SignPage';
 
 interface IBodyProps {
-    state: IAppState;
+    store: IAppStore;
 }
 
 @observer
 export class Body extends React.Component<IBodyProps, {}> {
-    render() {
-        const {state} = this.props;
-        const {userState: {user}} = state;
+    closeError = console.log
 
-        return (
-            <div style={bodyStyle}>
-                {`Body - ${Boolean(user) ? 'user info' : 'sign up'}`}
-            </div>
-        );
+    render() {
+        const {store} = this.props;
+        const {commonStore, userStore} = store;
+
+        let content;
+        if (commonStore.error) {
+            return <ErrorPage
+                error={commonStore.error}
+                close={this.closeError}
+            />;
+        } else {
+            return <SignPage
+                store={store}
+            />;
+        }
     }
 }
