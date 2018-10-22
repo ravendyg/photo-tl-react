@@ -3,6 +3,7 @@ import {observer} from 'mobx-react';
 import {IAppStore} from '../store/store';
 import {ErrorPage} from '../pages/ErrorPage';
 import {SignPage} from '../pages/SignPage';
+import {PholoListPage} from '../pages/PhotoListPage';
 
 interface IBodyProps {
     store: IAppStore;
@@ -21,6 +22,10 @@ export class Body extends React.Component<IBodyProps, {}> {
             return <ErrorPage
                 error={commonStore.error}
                 close={this.closeError}
+            />;
+        } else if (userStore.user) {
+            return <PholoListPage
+                store={store}
             />;
         } else {
             return <SignPage

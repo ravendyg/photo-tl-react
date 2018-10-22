@@ -1,4 +1,4 @@
-import {IResponseContainer} from 'src/types';
+import {IResponseContainer} from '../types';
 
 // superagent does not ant to work with parcel :(
 

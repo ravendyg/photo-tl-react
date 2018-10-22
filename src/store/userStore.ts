@@ -1,10 +1,9 @@
 import {observable} from 'mobx';
 import {ISignArgs, IUser, IResponseContainer} from '../types';
-import {TStatus} from './loadingStatus';
 import {IUserService} from '../services/UserService';
-import {ICommonState} from './commonStore';
+import {ICommonStore} from './commonStore';
 
-export interface IUserState {
+export interface IUserStore {
     error: any;
     user: IUser | null;
     loading: boolean;
@@ -13,14 +12,14 @@ export interface IUserState {
     signUp: (args: ISignArgs) => void;
 }
 
-export class UserStore implements IUserState {
+export class UserStore implements IUserStore {
     @observable error: any = null;
     @observable user: IUser | null = null;
     @observable loading: boolean = false;
 
     constructor(
         private userService: IUserService,
-        private commonState: ICommonState,
+        private commonState: ICommonStore,
     ) {}
 
     load() {

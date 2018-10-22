@@ -1,12 +1,12 @@
 import {observable} from 'mobx';
 
-export interface ICommonState {
+export interface ICommonStore {
     error: string;
     setError: (error: string) => void;
     clearError: () => void;
 }
 
-export class CommonStore implements ICommonState {
+export class CommonStore implements ICommonStore {
     @observable error: string = '';
 
     setError(error: string) {

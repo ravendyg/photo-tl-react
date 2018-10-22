@@ -1,10 +1,12 @@
-import {ICommonState, CommonStore} from './commonStore';
-import {IUserState, UserStore} from './userStore';
+import {ICommonStore, CommonStore} from './commonStore';
+import {IUserStore, UserStore} from './userStore';
+import {IPhotoStore, PhotoStore} from './photoStore';
 import {IUserService} from '../services/UserService';
 
 export interface IAppStore {
-    commonStore: ICommonState;
-    userStore: IUserState;
+    commonStore: ICommonStore;
+    photoStore: IPhotoStore;
+    userStore: IUserStore;
 }
 
 interface ICreateStoreArgs {
@@ -15,10 +17,13 @@ export function createStore({
     userService,
 }: ICreateStoreArgs): IAppStore {
     const commonStore = new CommonStore();
+    const photoStore = new PhotoStore();
+    const userStore = new UserStore(userService, commonStore);
 
     const store: IAppStore = {
         commonStore,
-        userStore: new UserStore(userService, commonStore),
+        photoStore,
+        userStore,
     };
 
     return store;
