@@ -15,7 +15,7 @@ interface IHeaderProps {
 export class Header extends React.Component<IHeaderProps, {}> {
     render() {
         const {store} = this.props;
-        const {userStore: {user, status}} = store;
+        const {userStore: {user}, photoStore} = store;
 
         if (!Boolean(user)) {
             return null;
@@ -23,7 +23,12 @@ export class Header extends React.Component<IHeaderProps, {}> {
 
         return (
             <div style={headerStyle}>
-                {'Header - user info'}
+                <div>
+                    {`Status: ${photoStore.state}`}
+                </div>
+                <div>
+                    {user.name}
+                </div>
             </div>
         );
     }

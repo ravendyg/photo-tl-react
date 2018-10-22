@@ -5,6 +5,7 @@ import {EInputType} from '../components/Input';
 import {pageStyle} from '../styles';
 import {IAppStore} from '../store/store';
 import {observer} from 'mobx-react';
+import {ISignArgs} from '../types';
 
 const signPageStyle = {
     ...pageStyle,
@@ -47,22 +48,27 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
         this.setState({pas});
     }
 
-    signIn = () => {
-        const {store: {userStore}} = this.props;
+    sign = (action: (args: ISignArgs) => Promise<void>) => {
+        const {store: {userStore, photoStore}} = this.props;
         const {login, pas} = this.state;
-        userStore.signIn({
+        action({
             login,
             pas,
-        });
+        }).then(() => {
+            if (userStore.user) {
+                photoStore.connect(userStore.user);
+            }
+        }).catch(console.error);
+    }
+
+    signIn = () => {
+        const {store: {userStore}} = this.props;
+        this.sign(userStore.signIn);
     }
 
     signUp = () => {
         const {store: {userStore}} = this.props;
-        const {login, pas} = this.state;
-        userStore.signUp({
-            login,
-            pas,
-        });
+        this.sign(userStore.signUp);
     }
 
     render() {

@@ -2,7 +2,8 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import {createStore} from './store/store';
 import {UserService} from './services/UserService';
-import {Http} from './services/http';
+import {Http} from './services/Http';
+import {WebSocketService} from './services/WebSocketService'
 import {createConfig} from './getConfig';
 import {App} from './App';
 
@@ -20,7 +21,8 @@ location.search
 const config = createConfig(serverType);
 const http = new Http();
 const userService = new UserService(http, config);
-const store = createStore({userService});
+const webSocketService = new WebSocketService(config.apiUrl, http);
+const store = createStore({userService, webSocketService});
 
 render(
     <App store={store}/>,

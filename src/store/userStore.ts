@@ -7,9 +7,9 @@ export interface IUserStore {
     error: any;
     user: IUser | null;
     loading: boolean;
-    load: () => void;
-    signIn: (args: ISignArgs) => void;
-    signUp: (args: ISignArgs) => void;
+    load: () => Promise<void>;
+    signIn: (args: ISignArgs) => Promise<void>;
+    signUp: (args: ISignArgs) => Promise<void>;
 }
 
 export class UserStore implements IUserStore {
@@ -26,7 +26,7 @@ export class UserStore implements IUserStore {
         const self = this;
         self.loading = true;
         self.error = '';
-        self.userService.getUser()
+        return self.userService.getUser()
             .then(userContainer => {
                 if (userContainer.status === 200) {
                     self.user = userContainer.payload;
@@ -49,7 +49,7 @@ export class UserStore implements IUserStore {
         const self = this;
         self.loading = true;
         self.error = '';
-        action(args)
+        return action(args)
             .then(userContainer => {
                 if (userContainer.status === 200) {
                     self.user = userContainer.payload;
@@ -66,12 +66,12 @@ export class UserStore implements IUserStore {
             });
     }
 
-    signIn(args: ISignArgs) {
-        this.sign(this.userService.signIn, args);
+    signIn = (args: ISignArgs) => {
+        return this.sign(this.userService.signIn, args);
     }
 
-    signUp(args: ISignArgs) {
-        this.sign(this.userService.signUp, args);
+    signUp = (args: ISignArgs) => {
+        return this.sign(this.userService.signUp, args);
     }
 
 }

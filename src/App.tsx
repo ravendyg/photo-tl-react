@@ -17,8 +17,13 @@ interface IAppProps {
 
 export class App extends React.PureComponent<IAppProps, {}> {
     componentWillMount() {
-        const {store: {userStore}} = this.props;
-        userStore.load();
+        const {store: {userStore, photoStore}} = this.props;
+        userStore.load()
+            .then(() => {
+                if (userStore.user) {
+                    photoStore.connect(userStore.user);
+                }
+            }).catch(console.error);
     }
 
     render() {

@@ -1,5 +1,5 @@
 import {IUser, IResponseContainer} from '../types';
-import {IHttp} from './http';
+import {IHttp} from './Http';
 import {IConfig, ISignArgs} from '../types';
 
 export interface IUserService {

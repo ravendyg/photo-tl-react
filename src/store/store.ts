@@ -2,6 +2,7 @@ import {ICommonStore, CommonStore} from './commonStore';
 import {IUserStore, UserStore} from './userStore';
 import {IPhotoStore, PhotoStore} from './photoStore';
 import {IUserService} from '../services/UserService';
+import {IWebSocketService} from '../services/WebSocketService';
 
 export interface IAppStore {
     commonStore: ICommonStore;
@@ -10,15 +11,17 @@ export interface IAppStore {
 }
 
 interface ICreateStoreArgs {
-    userService: IUserService,
+    userService: IUserService;
+    webSocketService: IWebSocketService;
 }
 
 export function createStore({
     userService,
+    webSocketService,
 }: ICreateStoreArgs): IAppStore {
     const commonStore = new CommonStore();
-    const photoStore = new PhotoStore();
     const userStore = new UserStore(userService, commonStore);
+    const photoStore = new PhotoStore(webSocketService);
 
     const store: IAppStore = {
         commonStore,
