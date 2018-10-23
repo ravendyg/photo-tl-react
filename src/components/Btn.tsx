@@ -6,7 +6,13 @@ export enum EBtnType {
     SECONDARY,
 }
 
-function createStyle(type: EBtnType) {
+export enum EBtnSize {
+    BIG,
+    MEDIUM,
+    SMALL,
+}
+
+function createStyle(type: EBtnType, size: EBtnSize) {
     let backgroundColor = 'lightblue';
     switch (type) {
         case EBtnType.WARNING: {
@@ -18,9 +24,24 @@ function createStyle(type: EBtnType) {
             break;
         }
     }
+    let width = '10rem';
+    let height = '2rem';
+    switch (size) {
+        case EBtnSize.MEDIUM: {
+            width = '6rem';
+            height = '2rem';
+            break;
+        }
+        case EBtnSize.SMALL: {
+            width = '4rem';
+            height = '1.5rem';
+            break;
+        }
+    }
+
     return {
-        width: '10rem',
-        height: '2rem',
+        width,
+        height,
         backgroundColor,
     };
 }
@@ -28,6 +49,7 @@ function createStyle(type: EBtnType) {
 interface IBtnProps {
     disabled?: boolean;
     type?: EBtnType;
+    size?: EBtnSize;
     label: string;
     action: () => void;
 }
@@ -38,9 +60,10 @@ export class Btn extends React.PureComponent<IBtnProps, {}> {
             action,
             disabled,
             label,
-            type
+            size = EBtnSize.BIG,
+            type = EBtnType.DEFAUL,
         } = this.props;
-        const style = createStyle(type);
+        const style = createStyle(type, size);
 
         return (
             <button
