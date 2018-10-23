@@ -18,6 +18,12 @@ export interface ISignArgs {
     pas: string;
 }
 
+export interface IComment {
+    cid: string;
+    date: number;
+    text: string;
+}
+
 export interface IPhoto {
     iid: string;
     description: string;
@@ -25,4 +31,9 @@ export interface IPhoto {
     uploadedBy: IUser;
     uploaded: number;
     changed: number;
+    commentCount: number;
+    averageRating: number;
+    ratingCount: number
+    userRating: number;
+    views: number;
 }
