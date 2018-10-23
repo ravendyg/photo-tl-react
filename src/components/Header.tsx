@@ -24,7 +24,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
         return (
             <div style={headerStyle}>
                 <div>
-                    {`Status: ${photoStore.state}`}
+                    {`Status: ${photoStore.statusMessage}`}
                 </div>
                 <div>
                     {user.name}

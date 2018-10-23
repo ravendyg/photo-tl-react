@@ -1,11 +1,11 @@
 import {IHttp} from './Http';
 
-export const errorAction = -1;
-
 export interface ISocketMessage {
     action: number
     payload: Object;
 };
+
+export type TAction = 'connect' | 'error' | 'disconnect' | 'message';
 
 export interface IWebSocketService {
     connect: () => void;
@@ -14,7 +14,7 @@ export interface IWebSocketService {
 
     sendMessage: (message: ISocketMessage) => void;
 
-    subscribe: <T>(action: number, cb: (payload: T) => void) => () => void;
+    subscribe: <T>(action: TAction, cb: (payload: T) => void) => () => void;
 }
 
 export class WebSocketService implements WebSocketService {
@@ -22,7 +22,7 @@ export class WebSocketService implements WebSocketService {
     static PING_PERIOD = 30 * 1000;
 
     private listeners: {
-        [action: number]: ((payload: Object) => void)[];
+        [action: string]: ((payload?: Object) => void)[];
     } = {};
 
     private socket: WebSocket;
@@ -48,7 +48,7 @@ export class WebSocketService implements WebSocketService {
 
     }
 
-    subscribe<T>(action: number, cb: (payload: T) => void) {
+    subscribe<T>(action: string, cb: (payload: T) => void) {
         if (!Boolean(this.listeners[action])) {
             this.listeners[action] = [];
         }
@@ -93,7 +93,8 @@ export class WebSocketService implements WebSocketService {
     }
 
     private handleOpen = () => {
-
+        const connectListeners = this.listeners.connect || [];
+        connectListeners.forEach(listener => listener());
     }
 
     private listen = ({ data }: MessageEvent) => {
@@ -107,7 +108,7 @@ export class WebSocketService implements WebSocketService {
         } else if (this.lpAttemptsLeft > 1) {
             this.retryTimeout = setTimeout(this.connectLp, WebSocketService.RETRY_AFTER) as any as number;
         } else {
-            const errorListeners = this.listeners[errorAction] || [];
+            const errorListeners = this.listeners.error || [];
             errorListeners.forEach(listener => listener({ message: 'Cannot connect' }));
         }
     }

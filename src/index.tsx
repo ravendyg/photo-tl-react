@@ -6,6 +6,7 @@ import {Http} from './services/Http';
 import {WebSocketService} from './services/WebSocketService'
 import {createConfig} from './getConfig';
 import {App} from './App';
+import {PhotoService} from './services/PhotoService';
 
 let serverType: string = '';
 location.search
@@ -20,9 +21,10 @@ location.search
 
 const config = createConfig(serverType);
 const http = new Http();
+const photoService = new PhotoService(http, config);
 const userService = new UserService(http, config);
 const webSocketService = new WebSocketService(config.apiUrl, http);
-const store = createStore({userService, webSocketService});
+const store = createStore({userService, webSocketService, photoService});
 
 render(
     <App store={store}/>,

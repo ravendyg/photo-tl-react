@@ -17,3 +17,12 @@ export interface ISignArgs {
     login: string;
     pas: string;
 }
+
+export interface IPhoto {
+    iid: string;
+    description: string;
+    title: string;
+    uploadedBy: IUser;
+    uploaded: number;
+    changed: number;
+}
