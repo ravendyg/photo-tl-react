@@ -9,7 +9,6 @@ const photoListPageStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
 }
 
 interface IPhotoListPageProps {
