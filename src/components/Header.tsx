@@ -73,7 +73,8 @@ interface IHeaderProps {
 @observer
 export class Header extends React.Component<IHeaderProps, {}> {
     signOut = () => {
-        console.log('sign out');
+        const {store: {userStore}} = this.props;
+        userStore.signOut();
     }
 
     render() {

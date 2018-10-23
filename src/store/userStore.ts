@@ -10,6 +10,7 @@ export interface IUserStore {
     load: () => Promise<void>;
     signIn: (args: ISignArgs) => Promise<void>;
     signUp: (args: ISignArgs) => Promise<void>;
+    signOut: () => Promise<void>;
 }
 
 export class UserStore implements IUserStore {
@@ -74,4 +75,19 @@ export class UserStore implements IUserStore {
         return this.sign(this.userService.signUp, args);
     }
 
+    signOut = () => {
+        const self = this;
+        self.loading = true;
+        return this.userService.signOut()
+            .then(() => {
+                self.user = null;
+            })
+            .catch(err => {
+                const error = err.message || 'Smth went wrong';
+                this.commonState.setError(error);
+            })
+            .then(() => {
+                self.loading = false;
+            });
+        }
 }

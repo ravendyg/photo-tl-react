@@ -6,6 +6,8 @@ export interface IHttp  {
     get<T>(url: string): Promise<IResponseContainer<T>>;
 
     post<T>(url: string, body?: Object): Promise<IResponseContainer<T>>;
+
+    delete(url: string): Promise<IResponseContainer<void>>;
 }
 
 type THttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -64,5 +66,9 @@ export class Http implements IHttp {
 
     post<T>(url: string, body?: Object) {
         return this.createRequest<T>('POST', url, body);
+    }
+
+    delete(url: string) {
+        return this.createRequest<void>('DELETE', url);
     }
 }

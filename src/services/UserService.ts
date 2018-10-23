@@ -8,6 +8,8 @@ export interface IUserService {
     signIn: (ISignArgs) => Promise<IResponseContainer<IUser>>;
 
     signUp: (ISignArgs) => Promise<IResponseContainer<IUser>>;
+
+    signOut: () => Promise<IResponseContainer<void>>;
 }
 
 export class UserService implements IUserService {
@@ -24,4 +26,7 @@ export class UserService implements IUserService {
 
     signUp = (body: ISignArgs) =>
         this.request.post<IUser>(`${this.config.apiUrl}/user`, body)
+
+    signOut = () =>
+        this.request.delete(`${this.config.apiUrl}/session`)
 }
