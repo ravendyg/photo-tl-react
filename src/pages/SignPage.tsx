@@ -48,21 +48,9 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
     }
 
     sign = (action: (args: ISignArgs) => Promise<void>) => {
-        const {
-            deps: {
-                photoStore,
-                userStore,
-            },
-        } = this.props;
-        const {login, pas} = this.state;
-        action({
-            login,
-            pas,
-        }).then(() => {
-            if (userStore.user) {
-                photoStore.connect(userStore.user);
-            }
-        }).catch(console.error);
+        // in case there will be more props in the state
+        const {login, pas,} = this.state;
+        action({login, pas,});
     }
 
     signIn = () => {

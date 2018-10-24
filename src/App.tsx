@@ -24,12 +24,7 @@ export class App extends React.PureComponent<IAppProps, {}> {
                 userStore,
             },
         } = this.props;
-        userActions.load()
-            .then(() => {
-                if (userStore.user) {
-                    photoStore.connect(userStore.user);
-                }
-            }).catch(console.error);
+        userActions.load();
     }
 
     render() {

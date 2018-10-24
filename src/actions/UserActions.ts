@@ -2,6 +2,7 @@ import {ISignArgs, IUser, IResponseContainer} from '../types';
 import {IUserStore} from '../store/userStore';
 import {IUserService} from '../services/UserService';
 import {ICommonStore} from '../store/commonStore';
+import {IConnectionActions} from './ConnectionActions';
 
 export interface IUserActions {
     load: () => Promise<void>;
@@ -12,9 +13,10 @@ export interface IUserActions {
 
 export class UserActions implements IUserActions {
     constructor(
+        private commonStore: ICommonStore,
+        private connectionActions: IConnectionActions,
         private userService: IUserService,
         private userStore: IUserStore,
-        private commonStore: ICommonStore,
     ) {}
 
     load = () => {
@@ -22,7 +24,9 @@ export class UserActions implements IUserActions {
         return this.userService.getUser()
             .then(userContainer => {
                 if (userContainer.status === 200) {
-                    this.userStore.setUser(userContainer.payload);
+                    const user = userContainer.payload;
+                    this.connectionActions.connect(user)
+                    this.userStore.setUser(user);
                 }
                 // don't handle errors
             })
@@ -46,6 +50,7 @@ export class UserActions implements IUserActions {
         this.userStore.startLoading()
         return this.userService.signOut()
             .then(() => {
+                this.connectionActions.disconnect();
                 this.userStore.setUser(null);
             })
             .catch(err => {
@@ -65,7 +70,9 @@ export class UserActions implements IUserActions {
         return action(args)
             .then(userContainer => {
                 if (userContainer.status === 200) {
-                    this.userStore.setUser(userContainer.payload);
+                    const user = userContainer.payload;
+                    this.userStore.setUser(user);
+                    this.connectionActions.connect(user)
                 } else {
                     this.userStore.setError(userContainer.error);
                 }

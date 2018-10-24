@@ -84,7 +84,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
     render() {
         const {
             deps: {
-                photoStore,
+                connectionStore,
                 userStore: {
                     user,
                 },
@@ -95,7 +95,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
             return null;
         }
 
-        const connectionIndicatorStyle = creteConnectionIndicatorStyle(photoStore.status);
+        const connectionIndicatorStyle = creteConnectionIndicatorStyle(connectionStore.status);
 
         return (
             <div style={headerStyle}>
@@ -107,7 +107,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
                     </div>
                     <div style={statusRowStyle}>
                         <span style={connectionIndicatorStyle}></span>
-                        <span style={{marginLeft: '1rem'}}>{photoStore.statusMessage}</span>
+                        <span style={{marginLeft: '1rem'}}>{connectionStore.statusMessage}</span>
                     </div>
                 </div>
                 <div style={signOutStyle}>

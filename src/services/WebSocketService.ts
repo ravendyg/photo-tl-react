@@ -8,7 +8,10 @@ export interface ISocketMessage {
 export type TAction = 'connect' | 'error' | 'disconnect' | 'message';
 
 export interface IWebSocketService {
-    connect: () => void;
+    connect: (
+        handleConnect: () => void,
+        handleError: (message: string) => void,
+    ) => void;
 
     disconnect: () => void;
 
@@ -33,9 +36,15 @@ export class WebSocketService implements WebSocketService {
     // private _pingInterval: number;
     // private _messageQueue: ISocketMessage[] = [];
 
+    private connectHandlers: (() => void)[] = [];
+    private disconnectHandlers: ((message: string) => void)[] = [];
+
     constructor(private url: string, private http: IHttp) { }
 
-    connect() {
+    connect(handleConnect, handleDisconnect) {
+        this.connectHandlers.push(handleConnect);
+        this.disconnectHandlers.push(handleDisconnect);
+
         this.reset();
         this.connectWs();
     }
@@ -93,8 +102,7 @@ export class WebSocketService implements WebSocketService {
     }
 
     private handleOpen = () => {
-        const connectListeners = this.listeners.connect || [];
-        connectListeners.forEach(listener => listener());
+        this.connectHandlers.forEach(handler => handler());
     }
 
     private listen = ({ data }: MessageEvent) => {
@@ -108,8 +116,7 @@ export class WebSocketService implements WebSocketService {
         } else if (this.lpAttemptsLeft > 1) {
             this.retryTimeout = setTimeout(this.connectLp, WebSocketService.RETRY_AFTER) as any as number;
         } else {
-            const errorListeners = this.listeners.error || [];
-            errorListeners.forEach(listener => listener({ message: 'Cannot connect' }));
+            this.disconnectHandlers.forEach(handler => handler('Cannot connect'));
         }
     }
 }

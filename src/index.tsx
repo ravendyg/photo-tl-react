@@ -12,6 +12,8 @@ import {PhotoService} from './services/PhotoService';
 import {UserActions} from './actions/UserActions';
 import {IDeps} from './types';
 import {PhotoActions} from './actions/PhotoActions';
+import {ConnectionStore} from './store/connectionStore';
+import {ConnectionActions} from './actions/ConnectionActions';
 
 let serverType: string = '';
 location.search
@@ -32,13 +34,29 @@ const webSocketService = new WebSocketService(config.apiUrl, http);
 
 const userStore = new UserStore();
 const commonStore = new CommonStore();
-const photoStore = new PhotoStore(webSocketService, photoService);
+const photoStore = new PhotoStore(photoService);
+const connectionStore = new ConnectionStore();
 
-const photoActions = new PhotoActions(commonStore, photoStore, photoService);
-const userActions = new UserActions(userService, userStore, commonStore)
+const connectionActions = new ConnectionActions(
+    connectionStore,
+    webSocketService,
+);
+const photoActions = new PhotoActions(
+    commonStore,
+    connectionActions,
+    photoStore,
+    photoService,
+);
+const userActions = new UserActions(
+    commonStore,
+    connectionActions,
+    userService,
+    userStore,
+);
 
 const deps: IDeps = {
     commonStore,
+    connectionStore,
     photoActions,
     photoStore,
     userActions,

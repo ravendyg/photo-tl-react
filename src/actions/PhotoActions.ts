@@ -1,6 +1,7 @@
 import {IPhotoService} from '../services/PhotoService';
 import {IPhotoStore} from '../store/photoStore';
 import {ICommonStore} from '../store/commonStore';
+import {IConnectionActions} from './ConnectionActions';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
@@ -9,6 +10,7 @@ export interface IPhotoActions {
 export class PhotoActions implements IPhotoActions {
     constructor(
         private commonStore: ICommonStore,
+        private connectionActions: IConnectionActions,
         private photoStore: IPhotoStore,
         private photoService: IPhotoService,
     ) {}
