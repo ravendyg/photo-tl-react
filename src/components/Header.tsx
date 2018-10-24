@@ -91,7 +91,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
             },
         } = this.props;
 
-        if (!Boolean(user)) {
+        if (!user) {
             return null;
         }
 

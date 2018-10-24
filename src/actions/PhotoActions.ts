@@ -22,7 +22,7 @@ export class PhotoActions implements IPhotoActions {
         this.photoService.getPhotoList()
             .then(photosWrapper => {
                 if (photosWrapper.status === 200) {
-                    this.photoStore.setPhotos(photosWrapper.payload);
+                    this.photoStore.setPhotos(photosWrapper.payload || []);
                 } else {
                     this.photoStore.setError(photosWrapper.error);
                 }

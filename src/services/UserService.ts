@@ -3,13 +3,13 @@ import {IHttp} from './Http';
 import {IConfig, ISignArgs} from '../types';
 
 export interface IUserService {
-    getUser: () => Promise<IResponseContainer<IUser>>;
+    getUser: () => Promise<IResponseContainer<IUser | null>>;
 
-    signIn: (ISignArgs) => Promise<IResponseContainer<IUser>>;
+    signIn: (args: ISignArgs) => Promise<IResponseContainer<IUser | null>>;
 
-    signUp: (ISignArgs) => Promise<IResponseContainer<IUser>>;
+    signUp: (args: ISignArgs) => Promise<IResponseContainer<IUser | null>>;
 
-    signOut: () => Promise<IResponseContainer<void>>;
+    signOut: () => Promise<IResponseContainer<null>>;
 }
 
 export class UserService implements IUserService {

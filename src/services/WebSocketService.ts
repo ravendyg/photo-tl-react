@@ -7,6 +7,9 @@ export interface ISocketMessage {
 
 export type TAction = 'connect' | 'error' | 'disconnect' | 'message';
 
+type TTransport = 'ws' | 'lp';
+type TStatus = 'disconnected' | 'connected';
+
 export interface IWebSocketService {
     connect: (
         handleConnect: () => void,
@@ -26,16 +29,14 @@ export class WebSocketService implements IWebSocketService {
     static RETRY_ATTEMPTS = 3;
 
     private listeners: {
-        [action: string]: ((payload?: Object) => void)[];
+        [action: string]: ((payload?: any) => void)[];
     } = {};
 
-    // 'ws' or 'lp'
-    private type: string;
-    // 'disconnected' or 'connected'
-    private status: string;
-    private socket: WebSocket;
-    private wsAttemptsLeft: number;
-    private lpAttemptsLeft: number;
+    private transportType: TTransport = 'ws';
+    private status: TStatus = 'disconnected';
+    private socket: WebSocket | null = null;
+    private wsAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
+    private lpAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
     private retryTimeout = -1;
     private wsPingInterval = -1;
     private messageQueue: ISocketMessage[] = [];
@@ -46,7 +47,10 @@ export class WebSocketService implements IWebSocketService {
 
     constructor(private url: string, private http: IHttp) { }
 
-    connect(handleConnect, handleDisconnect) {
+    connect(
+        handleConnect: () => void,
+        handleDisconnect: (msg: string) => void,
+    ) {
         this.reset(true);
         this.connectHandlers.push(handleConnect);
         this.disconnectHandlers.push(handleDisconnect);
@@ -76,9 +80,11 @@ export class WebSocketService implements IWebSocketService {
     sendMessage(message: ISocketMessage) {
         if (this.status !== 'connected') {
             this.messageQueue.push(message);
-        } else if (this.type === 'ws') {
+        } else if (this.transportType === 'ws') {
             // TODO: check this.socket.readyState === 1
-            this.socket.send(JSON.stringify(message));
+            if (this.socket) {
+                this.socket.send(JSON.stringify(message));
+            }
         } else {
             this.messageQueue.push(message);
             this.startSendingOverHttp();
@@ -99,7 +105,7 @@ export class WebSocketService implements IWebSocketService {
         this.wsAttemptsLeft--;
         this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`);
         this.socket.addEventListener('open', () => {
-            this.type = 'ws';
+            this.transportType = 'ws';
             this.handleOpen();
         });
         this.socket.addEventListener('message', this.listen);
@@ -113,7 +119,7 @@ export class WebSocketService implements IWebSocketService {
                 if (status !== 200) {
                     this.handleDisconnect();
                 } else {
-                    this.type = 'lp';
+                    this.transportType = 'lp';
                     this.handleOpen();
                 }
             })
@@ -122,7 +128,7 @@ export class WebSocketService implements IWebSocketService {
 
     private handleOpen = () => {
         this.status = 'connected';
-        if (this.type === 'ws') {
+        if (this.transportType === 'ws') {
             this.wsPingInterval = setInterval(this.heartBeet, WebSocketService.PING_PERIOD) as any as number;
             // TODO: send every message in the queue
         } else {
@@ -155,8 +161,10 @@ export class WebSocketService implements IWebSocketService {
 
     private heartBeet = () => {
         // do not send heart beet over http or if not connected
-        if (this.type === 'ws' && this.status === 'connected') {
-            this.socket.send('');
+        if (this.transportType === 'ws' && this.status === 'connected') {
+            if (this.socket) {
+                this.socket.send('');
+            }
         }
     }
 

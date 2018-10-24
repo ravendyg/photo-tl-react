@@ -3,18 +3,18 @@ import {IResponseContainer} from '../types';
 // superagent does not ant to work with parcel :(
 
 export interface IHttp  {
-    get<T>(url: string): Promise<IResponseContainer<T>>;
+    get<T>(url: string): Promise<IResponseContainer<T | null>>;
 
-    post<T>(url: string, body?: Object): Promise<IResponseContainer<T>>;
+    post<T>(url: string, body?: Object): Promise<IResponseContainer<T | null>>;
 
-    delete(url: string): Promise<IResponseContainer<void>>;
+    delete(url: string): Promise<IResponseContainer<null>>;
 }
 
 type THttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export class Http implements IHttp {
     createRequest<T>(method: THttpMethod, url: string, body?: Object)
-        : Promise<IResponseContainer<T>> {
+        : Promise<IResponseContainer<T | null>> {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
 
@@ -69,6 +69,6 @@ export class Http implements IHttp {
     }
 
     delete(url: string) {
-        return this.createRequest<void>('DELETE', url);
+        return this.createRequest<null>('DELETE', url);
     }
 }

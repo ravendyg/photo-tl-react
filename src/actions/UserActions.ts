@@ -25,8 +25,12 @@ export class UserActions implements IUserActions {
             .then(userContainer => {
                 if (userContainer.status === 200) {
                     const user = userContainer.payload;
-                    this.connectionActions.connect(user)
-                    this.userStore.setUser(user);
+                    if (user) {
+                        this.connectionActions.connect(user)
+                        this.userStore.setUser(user);
+                    } else {
+                        throw new Error('User is null');
+                    }
                 }
                 // don't handle errors
             })
@@ -63,7 +67,7 @@ export class UserActions implements IUserActions {
 
 
     private sign(
-        action: (args: ISignArgs) => Promise<IResponseContainer<IUser>>,
+        action: (args: ISignArgs) => Promise<IResponseContainer<IUser | null>>,
         args: ISignArgs
     ) {
         this.userStore.startLoading();
@@ -71,8 +75,12 @@ export class UserActions implements IUserActions {
             .then(userContainer => {
                 if (userContainer.status === 200) {
                     const user = userContainer.payload;
-                    this.userStore.setUser(user);
-                    this.connectionActions.connect(user)
+                    if (user) {
+                        this.userStore.setUser(user);
+                        this.connectionActions.connect(user)
+                    } else {
+                        throw new Error('User is null');
+                    }
                 } else {
                     this.userStore.setError(userContainer.error);
                 }

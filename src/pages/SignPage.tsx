@@ -31,7 +31,7 @@ interface ISignState {
 
 @observer
 export class SignPage extends React.Component<ISignPageProps, ISignState> {
-    constructor(props) {
+    constructor(props: ISignPageProps) {
         super(props);
         this.state = {
             login: '',
@@ -39,11 +39,11 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
         };
     }
 
-    changeLogin = (login) => {
+    changeLogin = (login: string) => {
         this.setState({login});
     }
 
-    changePassword = (pas) => {
+    changePassword = (pas: string) => {
         this.setState({pas});
     }
 

@@ -6,7 +6,7 @@ import {
 } from '../types';
 
 export interface IPhotoService {
-    getPhotoList: () => Promise<IResponseContainer<IPhoto[]>>;
+    getPhotoList: () => Promise<IResponseContainer<IPhoto[] | null>>;
 }
 
 export class PhotoService implements IPhotoService {
