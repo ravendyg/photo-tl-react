@@ -14,6 +14,7 @@ import {IDeps} from './types';
 import {PhotoActions} from './actions/PhotoActions';
 import {ConnectionStore} from './store/connectionStore';
 import {ConnectionActions} from './actions/ConnectionActions';
+import {CommonActions} from './actions/CommonActions';
 
 let serverType: string = '';
 location.search
@@ -37,13 +38,13 @@ const commonStore = new CommonStore();
 const photoStore = new PhotoStore(photoService);
 const connectionStore = new ConnectionStore();
 
+const commonActions = new CommonActions(commonStore);
 const connectionActions = new ConnectionActions(
     connectionStore,
     webSocketService,
 );
 const photoActions = new PhotoActions(
     commonStore,
-    connectionActions,
     photoStore,
     photoService,
 );
@@ -55,6 +56,7 @@ const userActions = new UserActions(
 );
 
 const deps: IDeps = {
+    commonActions,
     commonStore,
     connectionStore,
     photoActions,

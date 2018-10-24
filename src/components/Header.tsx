@@ -5,6 +5,11 @@ import {IDeps} from 'src/types';
 
 const filterPartStyle = {
     flexGrow: 1,
+    padding: '2rem',
+};
+
+const actionBtnWrapperStyle = {
+    marginRight: '2rem',
 };
 
 const userInfoStyle = {
@@ -72,6 +77,15 @@ interface IHeaderProps {
 
 @observer
 export class Header extends React.Component<IHeaderProps, {}> {
+    addPhoto = () => {
+        const {
+            deps: {
+                commonActions,
+            },
+        } = this.props;
+        commonActions.displayAddPhotoModal();
+    }
+
     signOut = () => {
         const {
             deps: {
@@ -100,6 +114,14 @@ export class Header extends React.Component<IHeaderProps, {}> {
         return (
             <div style={headerStyle}>
                 <div style={filterPartStyle}>
+                    <div style={actionBtnWrapperStyle}>
+                        <Btn
+                            action={this.addPhoto}
+                            label='Add photo'
+                            size={EBtnSize.MEDIUM}
+                            type={EBtnType.SECONDARY}
+                        />
+                    </div>
                 </div>
                 <div style={userInfoStyle}>
                     <div style={userInfoRowStyle}>

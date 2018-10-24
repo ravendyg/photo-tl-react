@@ -4,6 +4,7 @@ import {ICommonStore} from './store/commonStore';
 import {IPhotoStore} from './store/photoStore';
 import {IPhotoActions} from './actions/PhotoActions';
 import {IConnectionStore} from './store/connectionStore';
+import {ICommonActions} from './actions/CommonActions';
 
 export interface IUser {
     uid: string;
@@ -46,6 +47,7 @@ export interface IPhoto {
 }
 
 export interface IDeps {
+    commonActions: ICommonActions;
     commonStore: ICommonStore;
     connectionStore: IConnectionStore;
     photoActions: IPhotoActions;

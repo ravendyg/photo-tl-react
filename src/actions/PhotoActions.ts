@@ -1,18 +1,14 @@
 import {IPhotoService} from '../services/PhotoService';
 import {IPhotoStore} from '../store/photoStore';
 import {ICommonStore} from '../store/commonStore';
-import {IConnectionActions} from './ConnectionActions';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
-
-    displayAddPhotoModal: () => void;
 }
 
 export class PhotoActions implements IPhotoActions {
     constructor(
         private commonStore: ICommonStore,
-        private connectionActions: IConnectionActions,
         private photoStore: IPhotoStore,
         private photoService: IPhotoService,
     ) {}
@@ -31,9 +27,5 @@ export class PhotoActions implements IPhotoActions {
                 this.photoStore.stopLoading();
                 this.commonStore.setError(err);
             });
-    }
-
-    displayAddPhotoModal = () => {
-        this.commonStore.setModal('add');
     }
 }
