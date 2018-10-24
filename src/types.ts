@@ -1,5 +1,6 @@
 import {IUserStore} from './store/userStore';
 import {IUserActions} from './actions/UserActions';
+import {ICommonStore} from './store/commonStore';
 
 export interface IUser {
     uid: string;
@@ -44,4 +45,5 @@ export interface IPhoto {
 export interface IDeps {
     userActions: IUserActions;
     userStore: IUserStore;
+    commonStore: ICommonStore;
 }

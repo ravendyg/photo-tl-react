@@ -30,9 +30,10 @@ const userService = new UserService(http, config);
 const webSocketService = new WebSocketService(config.apiUrl, http);
 const userStore = new UserStore();
 const commonStore = new CommonStore();
-const store = createStore({userStore, webSocketService, photoService, commonStore});
+const store = createStore({webSocketService, photoService});
 const userActions = new UserActions(userService, userStore, commonStore)
 const deps: IDeps = {
+    commonStore,
     userActions,
     userStore,
 };

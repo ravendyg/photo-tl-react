@@ -21,9 +21,9 @@ export class Body extends React.Component<IBodyProps, {}> {
             store,
         } = this.props;
         const {
+            commonStore,
             userStore,
         } = deps;
-        const {commonStore} = store;
 
         let content;
         if (commonStore.error) {
