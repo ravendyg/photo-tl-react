@@ -10,6 +10,7 @@ const cardStyle = {
     display: 'flex',
     flexDirection: 'column',
     margin: '2rem',
+    boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12)',
 };
 
 const imageStyle = {
@@ -42,13 +43,16 @@ const btnGroupStyle = {
 }
 
 const actionItemStyle = {
-
+    display: 'flex',
+    alignItems: 'center',
 };
 
 const ratingWrapperStyle = {
     flexGrow: 1,
-    textAlign: 'right',
     margingRight: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
 };
 
 interface IPhotoCardProps {
@@ -82,7 +86,9 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                     <div style={btnGroupStyle}>
                         <div style={actionItemStyle}>
                             <CommentIcon size={1.5}/>
-                            {photo.commentCount}
+                            <span style={{marginLeft: '1rem'}}>
+                                {photo.commentCount}
+                            </span>
                         </div>
                         <div style={actionItemStyle}>
                             <EditIcon size={1.5}/>
