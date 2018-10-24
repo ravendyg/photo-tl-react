@@ -9,7 +9,7 @@ export interface ICommonStore {
 export class CommonStore implements ICommonStore {
     @observable error: string = '';
 
-    setError(error: string) {
+    setError(error: string = 'Smth went wrong') {
         this.error = error;
     }
 

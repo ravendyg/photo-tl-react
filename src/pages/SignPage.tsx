@@ -5,7 +5,7 @@ import {EInputType} from '../components/Input';
 import {pageStyle} from '../styles';
 import {IAppStore} from '../store/store';
 import {observer} from 'mobx-react';
-import {ISignArgs} from '../types';
+import {ISignArgs, IDeps} from '../types';
 
 const signPageStyle = {
     ...pageStyle,
@@ -23,6 +23,7 @@ const btnWrapperStyle = {
 
 interface ISignPageProps {
     store: IAppStore;
+    deps: IDeps;
 }
 
 interface ISignState {
@@ -49,7 +50,11 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
     }
 
     sign = (action: (args: ISignArgs) => Promise<void>) => {
-        const {store: {userStore, photoStore}} = this.props;
+        const {
+            deps: {
+                userStore,
+            },
+            store: {photoStore}} = this.props;
         const {login, pas} = this.state;
         action({
             login,
@@ -62,17 +67,29 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
     }
 
     signIn = () => {
-        const {store: {userStore}} = this.props;
-        this.sign(userStore.signIn);
+        const {
+            deps: {
+                userActions,
+            },
+        } = this.props;
+        this.sign(userActions.signIn);
     }
 
     signUp = () => {
-        const {store: {userStore}} = this.props;
-        this.sign(userStore.signUp);
+        const {
+            deps: {
+                userActions,
+            },
+        } = this.props;
+        this.sign(userActions.signUp);
     }
 
     render() {
-        const {store: {userStore}} = this.props;
+        const {
+            deps: {
+                userStore,
+            },
+        } = this.props;
         const {login, pas} = this.state;
         const disabled = login.length < 2 || pas.length < 2;
         const error = userStore.error;

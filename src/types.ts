@@ -1,3 +1,6 @@
+import {IUserStore} from './store/userStore';
+import {IUserActions} from './actions/UserActions';
+
 export interface IUser {
     uid: string;
     name: string;
@@ -36,4 +39,9 @@ export interface IPhoto {
     ratingCount: number
     userRating: number;
     views: number;
+}
+
+export interface IDeps {
+    userActions: IUserActions;
+    userStore: IUserStore;
 }

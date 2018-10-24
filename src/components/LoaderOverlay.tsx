@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {IAppStore} from '../store/store';
+import {IDeps} from '../types';
 
 const loaderOverlayStyle = {
     position: 'absolute',
@@ -13,14 +13,14 @@ const loaderOverlayStyle = {
 }
 
 interface ILoaderOverlay {
-    store: IAppStore;
+    deps: IDeps;
 }
 
 @observer
 export class LoaderOverlay extends React.Component<ILoaderOverlay, {}> {
     render() {
         const {
-            store: {
+            deps: {
                 userStore
             },
         } = this.props;

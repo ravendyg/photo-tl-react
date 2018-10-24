@@ -3,6 +3,7 @@ import {pageStyle} from '../styles';
 import {IAppStore} from '../store/store';
 import {observer} from 'mobx-react';
 import {PhotoCard} from '../components/PhotoCard';
+import {IDeps} from '../types';
 
 const photoListPageStyle = {
     ...pageStyle,
@@ -13,6 +14,7 @@ const photoListPageStyle = {
 
 interface IPhotoListPageProps {
     store: IAppStore;
+    deps: IDeps;
 }
 
 interface IPhotoListPageState {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {IAppStore} from '../store/store';
 import {Btn, EBtnType, EBtnSize} from './Btn';
+import {IDeps} from 'src/types';
 
 const filterPartStyle = {
     flexGrow: 1,
@@ -68,18 +69,30 @@ const headerStyle = {
 
 interface IHeaderProps {
     store: IAppStore;
+    deps: IDeps;
 }
 
 @observer
 export class Header extends React.Component<IHeaderProps, {}> {
     signOut = () => {
-        const {store: {userStore}} = this.props;
-        userStore.signOut();
+        const {
+            deps: {
+                userActions,
+            },
+        } = this.props;
+        userActions.signOut();
     }
 
     render() {
-        const {store} = this.props;
-        const {userStore: {user}, photoStore} = store;
+        const {
+            deps: {
+                userStore: {
+                    user,
+                },
+            },
+            store,
+        } = this.props;
+        const {photoStore} = store;
 
         if (!Boolean(user)) {
             return null;

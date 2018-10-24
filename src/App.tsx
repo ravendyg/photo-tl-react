@@ -3,6 +3,7 @@ import {IAppStore} from './store/store';
 import {Body} from './components/Body';
 import {Header} from './components/Header';
 import {LoaderOverlay} from './components/LoaderOverlay';
+import {IDeps} from './types';
 
 const pageStyle = {
     height: '100%',
@@ -12,13 +13,22 @@ const pageStyle = {
 }
 
 interface IAppProps {
-    store: IAppStore
+    store: IAppStore;
+    deps: IDeps;
 }
 
 export class App extends React.PureComponent<IAppProps, {}> {
     componentWillMount() {
-        const {store: {userStore, photoStore}} = this.props;
-        userStore.load()
+        const {
+            deps: {
+                userActions,
+                userStore,
+            },
+            store: {
+                photoStore,
+            }
+        } = this.props;
+        userActions.load()
             .then(() => {
                 if (userStore.user) {
                     photoStore.connect(userStore.user);
@@ -27,13 +37,13 @@ export class App extends React.PureComponent<IAppProps, {}> {
     }
 
     render() {
-        const {store} = this.props;
+        const {deps, store} = this.props;
 
         return (
             <div style={pageStyle}>
-                <Header store={store}/>
-                <Body store={store}/>
-                <LoaderOverlay store={store}/>
+                <Header store={store} deps={deps}/>
+                <Body store={store} deps={deps}/>
+                <LoaderOverlay deps={deps}/>
             </div>
         );
     }
