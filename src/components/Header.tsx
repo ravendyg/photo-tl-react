@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {IAppStore} from '../store/store';
 import {Btn, EBtnType, EBtnSize} from './Btn';
 import {IDeps} from 'src/types';
 
@@ -68,7 +67,6 @@ const headerStyle = {
 };
 
 interface IHeaderProps {
-    store: IAppStore;
     deps: IDeps;
 }
 
@@ -86,13 +84,12 @@ export class Header extends React.Component<IHeaderProps, {}> {
     render() {
         const {
             deps: {
+                photoStore,
                 userStore: {
                     user,
                 },
             },
-            store,
         } = this.props;
-        const {photoStore} = store;
 
         if (!Boolean(user)) {
             return null;

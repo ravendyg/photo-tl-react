@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {IAppStore} from './store/store';
 import {Body} from './components/Body';
 import {Header} from './components/Header';
 import {LoaderOverlay} from './components/LoaderOverlay';
@@ -13,7 +12,6 @@ const pageStyle = {
 }
 
 interface IAppProps {
-    store: IAppStore;
     deps: IDeps;
 }
 
@@ -21,12 +19,10 @@ export class App extends React.PureComponent<IAppProps, {}> {
     componentWillMount() {
         const {
             deps: {
+                photoStore,
                 userActions,
                 userStore,
             },
-            store: {
-                photoStore,
-            }
         } = this.props;
         userActions.load()
             .then(() => {
@@ -37,12 +33,12 @@ export class App extends React.PureComponent<IAppProps, {}> {
     }
 
     render() {
-        const {deps, store} = this.props;
+        const {deps} = this.props;
 
         return (
             <div style={pageStyle}>
-                <Header store={store} deps={deps}/>
-                <Body store={store} deps={deps}/>
+                <Header deps={deps}/>
+                <Body deps={deps}/>
                 <LoaderOverlay deps={deps}/>
             </div>
         );

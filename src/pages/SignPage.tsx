@@ -3,7 +3,6 @@ import {FormItem} from '../components/FormItem';
 import {Btn, EBtnType} from '../components/Btn';
 import {EInputType} from '../components/Input';
 import {pageStyle} from '../styles';
-import {IAppStore} from '../store/store';
 import {observer} from 'mobx-react';
 import {ISignArgs, IDeps} from '../types';
 
@@ -22,7 +21,6 @@ const btnWrapperStyle = {
 };
 
 interface ISignPageProps {
-    store: IAppStore;
     deps: IDeps;
 }
 
@@ -52,9 +50,10 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
     sign = (action: (args: ISignArgs) => Promise<void>) => {
         const {
             deps: {
+                photoStore,
                 userStore,
             },
-            store: {photoStore}} = this.props;
+        } = this.props;
         const {login, pas} = this.state;
         action({
             login,

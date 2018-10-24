@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {pageStyle} from '../styles';
-import {IAppStore} from '../store/store';
 import {observer} from 'mobx-react';
 import {PhotoCard} from '../components/PhotoCard';
 import {IDeps} from '../types';
@@ -13,7 +12,6 @@ const photoListPageStyle = {
 }
 
 interface IPhotoListPageProps {
-    store: IAppStore;
     deps: IDeps;
 }
 
@@ -24,12 +22,20 @@ interface IPhotoListPageState {
 @observer
 export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoListPageState> {
     componentWillMount() {
-        const {store: {photoStore}} = this.props;
-        photoStore.loadPhotos();
+        const {
+            deps: {
+                photoActions,
+            },
+        } = this.props;
+        photoActions.loadPhotos();
     }
 
     render() {
-        const { store: { photoStore } } = this.props;
+        const {
+            deps: {
+                photoStore,
+            },
+        } = this.props;
 
         return (
             <div style={photoListPageStyle}>

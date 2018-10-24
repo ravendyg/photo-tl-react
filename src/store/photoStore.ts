@@ -11,14 +11,19 @@ export interface IPhotoStore {
     statusMessage: string;
     photos: IPhoto[];
 
-    connect: (user: IUser) => void;
+    startLoading: () => void;
+    setPhotos: (data: IPhoto[]) => void;
+    setError: (error: string) => void;
+    stopLoading: () => void;
 
-    loadPhotos: () => void;
+    connect: (user: IUser) => void;
 }
 
 export class PhotoStore implements IPhotoStore {
+    // TODO: Extract WS part into a separate store/service?
     @observable status = 'disconnected';
     @observable statusMessage = 'Disconnected';
+
     @observable photoStatus = 'idle';
     @observable photoError = '';
     @observable photos: IPhoto[] = [];
@@ -27,6 +32,25 @@ export class PhotoStore implements IPhotoStore {
         private webSocketService: IWebSocketService,
         private photoService: IPhotoService,
     ) { }
+
+    startLoading() {
+        this.photoStatus = 'loading';
+        this.photoError = '';
+    }
+
+    setPhotos(data: IPhoto[]) {
+        this.photoStatus = 'idle';
+        this.photos = data;
+    }
+
+    setError(error: string) {
+        this.photoStatus = 'idle';
+        this.photoError = error;
+    }
+
+    stopLoading() {
+        this.photoStatus = 'idle';
+    }
 
     connect(user: IUser) {
         this.status = 'connecting';
@@ -45,24 +69,5 @@ export class PhotoStore implements IPhotoStore {
             console.log(message);
         });
         this.webSocketService.connect();
-    }
-
-    loadPhotos() {
-        const self = this;
-        self.photoStatus = 'loading';
-        self.photoService.getPhotoList()
-            .then(photosWrapper => {
-                if (photosWrapper.status === 200) {
-                    self.photos = photosWrapper.payload;
-                } else {
-                    self.photoError = photosWrapper.error;
-                }
-            })
-            .catch(err => {
-
-            })
-            .then(() => {
-                self.photoStatus = 'idle';
-            });
     }
 }
