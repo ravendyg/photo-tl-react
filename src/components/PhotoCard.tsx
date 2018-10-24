@@ -13,7 +13,7 @@ const cardStyle = {
 };
 
 const imageStyle = {
-    maxWidth: '100%',
+    width: '100%',
 };
 
 const titleStyle = {

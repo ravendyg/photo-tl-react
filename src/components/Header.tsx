@@ -5,7 +5,7 @@ import {IDeps} from 'src/types';
 
 const filterPartStyle = {
     flexGrow: 1,
-    padding: '2rem',
+    padding: '2rem 0',
 };
 
 const actionBtnWrapperStyle = {
@@ -62,13 +62,15 @@ function creteConnectionIndicatorStyle(status: string) {
 
 const signOutStyle = {
     width: '6rem',
-    padding: '2rem',
+    padding: '2rem 0',
 };
 
 const headerStyle = {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
+    maxWidth: '800px',
+    minWidth: '400px',
 };
 
 interface IHeaderProps {

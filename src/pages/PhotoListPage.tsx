@@ -9,7 +9,9 @@ const photoListPageStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: '600px',
+    maxWidth: '800px',
+    minWidth: '400px',
+    width: '100%',
 }
 
 interface IPhotoListPageProps {

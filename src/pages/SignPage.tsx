@@ -12,6 +12,8 @@ const signPageStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    maxWidth: '800px',
+    minWidth: '400px',
 }
 
 // TODO: move to form?
