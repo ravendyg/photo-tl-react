@@ -2,7 +2,7 @@ import {IHttp} from './Http';
 
 export interface ISocketMessage {
     action: number
-    payload: Object;
+    payload: any;
 };
 
 export type TAction = 'connect' | 'error' | 'disconnect' | 'message';
@@ -20,21 +20,26 @@ export interface IWebSocketService {
     subscribe: <T>(action: TAction, cb: (payload: T) => void) => () => void;
 }
 
-export class WebSocketService implements WebSocketService {
+export class WebSocketService implements IWebSocketService {
     static RETRY_AFTER = 1 * 1000;
     static PING_PERIOD = 30 * 1000;
+    static RETRY_ATTEMPTS = 3;
 
     private listeners: {
         [action: string]: ((payload?: Object) => void)[];
     } = {};
 
+    // 'ws' or 'lp'
+    private type: string;
+    // 'disconnected' or 'connected'
+    private status: string;
     private socket: WebSocket;
     private wsAttemptsLeft: number;
     private lpAttemptsLeft: number;
-    private connectRetry: boolean;
-    private retryTimeout: number;
-    // private _pingInterval: number;
-    // private _messageQueue: ISocketMessage[] = [];
+    private retryTimeout = -1;
+    private wsPingInterval = -1;
+    private messageQueue: ISocketMessage[] = [];
+    private sendingOverHttp = false;
 
     private connectHandlers: (() => void)[] = [];
     private disconnectHandlers: ((message: string) => void)[] = [];
@@ -42,18 +47,18 @@ export class WebSocketService implements WebSocketService {
     constructor(private url: string, private http: IHttp) { }
 
     connect(handleConnect, handleDisconnect) {
+        this.reset(true);
         this.connectHandlers.push(handleConnect);
         this.disconnectHandlers.push(handleDisconnect);
 
-        this.reset();
-        this.connectWs();
+        if (this.status === 'disconnected') {
+            clearInterval(this.wsPingInterval);
+            this.reset(true);
+            this.connectWs();
+        }
     }
 
     disconnect() {
-
-    }
-
-    sendMessage(message: ISocketMessage) {
 
     }
 
@@ -68,33 +73,47 @@ export class WebSocketService implements WebSocketService {
         };
     }
 
-    private reset() {
-        this.wsAttemptsLeft = 3;
-        this.lpAttemptsLeft = 3;
+    sendMessage(message: ISocketMessage) {
+        if (this.status !== 'connected') {
+            this.messageQueue.push(message);
+        } else if (this.type === 'ws') {
+            // TODO: check this.socket.readyState === 1
+            this.socket.send(JSON.stringify(message));
+        } else {
+            this.messageQueue.push(message);
+            this.startSendingOverHttp();
+        }
+    }
+
+    private reset(resetCounters: boolean) {
+        if (resetCounters) {
+            this.wsAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
+            this.lpAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
+        }
+        clearInterval(this.wsPingInterval);
         clearTimeout(this.retryTimeout);
-        this.retryTimeout = -1;
+        this.status = 'disconnected';
     }
 
     private connectWs = () => {
         this.wsAttemptsLeft--;
         this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`);
-        this.socket.addEventListener('open', this.handleOpen);
+        this.socket.addEventListener('open', () => {
+            this.type = 'ws';
+            this.handleOpen();
+        });
         this.socket.addEventListener('message', this.listen);
         this.socket.addEventListener('close', this.handleDisconnect);
-        // clearInterval(this._pingInterval);
-        // this._pingInterval = setInterval(() => {
-        //     this._sendMessage()
-        // }, SocketServiceClass.PING_PERIOD);
-
     }
 
     private connectLp = () => {
         this.lpAttemptsLeft--;
         this.http.get(`${this.url}/lp`)
-            .then(({ status }) => {
+            .then(({ status, payload }) => {
                 if (status !== 200) {
                     this.handleDisconnect();
                 } else {
+                    this.type = 'lp';
                     this.handleOpen();
                 }
             })
@@ -102,6 +121,13 @@ export class WebSocketService implements WebSocketService {
     }
 
     private handleOpen = () => {
+        this.status = 'connected';
+        if (this.type === 'ws') {
+            this.wsPingInterval = setInterval(this.heartBeet, WebSocketService.PING_PERIOD) as any as number;
+            // TODO: send every message in the queue
+        } else {
+
+        }
         this.connectHandlers.forEach(handler => handler());
     }
 
@@ -110,13 +136,41 @@ export class WebSocketService implements WebSocketService {
     }
 
     private handleDisconnect = () => {
-        clearTimeout(this.retryTimeout);
+        if (this.status === 'connected') {
+            // established connection closed
+            this.reset(true);
+        } else {
+            // another unsuccessfull attempt to connect
+            this.reset(false);
+        }
+
         if (this.wsAttemptsLeft > 1) {
             this.retryTimeout = setTimeout(this.connectWs, WebSocketService.RETRY_AFTER) as any as number;
         } else if (this.lpAttemptsLeft > 1) {
             this.retryTimeout = setTimeout(this.connectLp, WebSocketService.RETRY_AFTER) as any as number;
         } else {
             this.disconnectHandlers.forEach(handler => handler('Cannot connect'));
+        }
+    }
+
+    private heartBeet = () => {
+        // do not send heart beet over http or if not connected
+        if (this.type === 'ws' && this.status === 'connected') {
+            this.socket.send('');
+        }
+    }
+
+    private startSendingOverHttp() {
+        // https://github.com/parcel-bundler/parcel/issues/954
+        let pm: Promise<any> = Promise.resolve();
+        if (!this.sendingOverHttp) {
+            while (this.messageQueue.length > 0) {
+                    const message = this.messageQueue.shift();
+                    this.sendingOverHttp = true;
+                    pm = pm
+                        .then(() => this.http.post(`${this.url}/lp`, message))
+                        .catch(console.error);
+            }
         }
     }
 }
@@ -152,7 +206,7 @@ export class WebSocketService implements WebSocketService {
 //     private _socket: WebSocket;
 //     private _connectRetry: boolean;
 //     private _retryTimeout: number;
-//     private _pingInterval: number;
+//     private _wsPingInterval: number;
 //     private _messageQueu: ISocketMessage[] = [];
 
 //     public connect = () => {
@@ -161,15 +215,15 @@ export class WebSocketService implements WebSocketService {
 //         this._socket.addEventListener('open', this._handleOpen);
 //         this._socket.addEventListener('message', this._listen);
 //         this._socket.addEventListener('close', this._handleDisconnect);
-//         clearInterval(this._pingInterval);
-//         this._pingInterval = setInterval(() => {
+//         clearInterval(this._wsPingInterval);
+//         this._wsPingInterval = setInterval(() => {
 //             this._sendMessage()
 //         }, SocketServiceClass.PING_PERIOD);
 //     };
 
 //     public disconnect () {
 //         clearTimeout(this._retryTimeout);
-//         clearInterval(this._pingInterval);
+//         clearInterval(this._wsPingInterval);
 //         this._socket.removeEventListener('message', this._listen);
 //         this._socket.removeEventListener('close', this._handleDisconnect);
 //         this._socket.close();
