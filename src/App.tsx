@@ -6,7 +6,6 @@ import {ModalWrapper} from './components/ModalWrapper';
 import {IDeps} from './types';
 
 const pageStyle = {
-    height: '100%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
