@@ -5,6 +5,8 @@ import {IConnectionActions} from './ConnectionActions';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
+
+    displayAddPhotoModal: () => void;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -15,7 +17,7 @@ export class PhotoActions implements IPhotoActions {
         private photoService: IPhotoService,
     ) {}
 
-    loadPhotos() {
+    loadPhotos = () => {
         this.photoStore.startLoading();
         this.photoService.getPhotoList()
             .then(photosWrapper => {
@@ -29,5 +31,9 @@ export class PhotoActions implements IPhotoActions {
                 this.photoStore.stopLoading();
                 this.commonStore.setError(err);
             });
+    }
+
+    displayAddPhotoModal = () => {
+        this.commonStore.setModal('add');
     }
 }

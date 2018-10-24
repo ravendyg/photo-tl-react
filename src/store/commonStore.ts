@@ -1,12 +1,18 @@
 import {observable} from 'mobx';
 
+declare type TModal = 'add' | null;
+
 export interface ICommonStore {
+    modal: TModal;
     error: string;
+
     setError: (error: string) => void;
     clearError: () => void;
+    setModal: (modal: TModal) => void;
 }
 
 export class CommonStore implements ICommonStore {
+    @observable modal: TModal = null;
     @observable error: string = '';
 
     setError(error: string = 'Smth went wrong') {
@@ -15,5 +21,9 @@ export class CommonStore implements ICommonStore {
 
     clearError() {
         this.error = '';
+    }
+
+    setModal(modal: TModal) {
+        this.modal = modal;
     }
 }

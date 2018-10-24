@@ -5,7 +5,6 @@ import {EditIcon} from './Icons/EditIcon';
 import {Rating} from './Rating';
 
 const cardStyle = {
-    maxWidth: '600px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
