@@ -10,6 +10,7 @@ const inputWrapperStyle = {
 };
 
 interface IFormItemProps {
+    expand?: boolean;
     label?: string;
     type: EInputType,
     value: string,
@@ -23,6 +24,7 @@ interface IFormItemState {
 export class FormItem extends React.PureComponent<IFormItemProps, IFormItemState> {
     render() {
         const {
+            expand,
             label,
             type,
             value,
@@ -32,6 +34,7 @@ export class FormItem extends React.PureComponent<IFormItemProps, IFormItemState
         const input =
             <div style={inputWrapperStyle}>
                 <Input
+                    expand={expand}
                     type={type}
                     value={value}
                     onChange={onChange}

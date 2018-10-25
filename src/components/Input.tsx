@@ -1,7 +1,10 @@
 import * as React from 'react';
 
-const inputStyle = {
-    lineHeight: '1.5rem',
+function createInputStyle(expand?: boolean) {
+    return {
+        lineHeight: '1.5rem',
+        width: expand ? 'calc(100% - 4px)' : 'initial',
+    };
 }
 
 export enum EInputType {
@@ -10,6 +13,7 @@ export enum EInputType {
 }
 
 interface IInputProps {
+    expand?: boolean;
     type: EInputType,
     value: string,
     onChange: (value: string) => void;
@@ -25,6 +29,7 @@ export class Input extends React.PureComponent<IInputProps, {}> {
 
     render() {
         const {
+            expand,
             type,
             value,
         } = this.props;
@@ -46,7 +51,7 @@ export class Input extends React.PureComponent<IInputProps, {}> {
                 type={inputType}
                 value={value}
                 onChange={this.handleChange}
-                style={inputStyle}
+                style={createInputStyle(expand)}
             />
         );
     }
