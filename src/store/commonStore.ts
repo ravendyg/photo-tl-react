@@ -1,6 +1,6 @@
 import {observable} from 'mobx';
 
-declare type TModal = 'add' | null;
+declare type TModal = 'edit-photo' | null;
 
 export interface ICommonStore {
     modal: TModal;

@@ -1,6 +1,6 @@
 import {IConnectionStore} from '../store/connectionStore';
 import {IUser} from '../types';
-import {IWebSocketService} from 'src/services/WebSocketService';
+import {IWebSocketService} from '../services/WebSocketService';
 
 export interface IConnectionActions {
     connect: (user: IUser) => void;

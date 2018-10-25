@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Btn, EBtnType, EBtnSize} from './Btn';
-import {IDeps} from 'src/types';
+import {IDeps} from '../types';
 
 const filterPartStyle = {
     flexGrow: 1,
@@ -82,10 +82,10 @@ export class Header extends React.Component<IHeaderProps, {}> {
     addPhoto = () => {
         const {
             deps: {
-                commonActions,
+                photoActions,
             },
         } = this.props;
-        commonActions.displayAddPhotoModal();
+        photoActions.editPhoto(null);
     }
 
     signOut = () => {

@@ -7,6 +7,7 @@ import {IDeps} from '../types';
 
 interface IBodyProps {
     deps: IDeps;
+    header: JSX.Element;
 }
 
 @observer
@@ -14,20 +15,31 @@ export class Body extends React.Component<IBodyProps, {}> {
     closeError = console.log
 
     render() {
-        const {deps} = this.props;
+        const {
+            deps,
+            header,
+        } = this.props;
         const {
             commonStore,
             userStore,
         } = deps;
+        let pageStyle: any = {};
+        if (commonStore.modal) {
+            pageStyle.overflow = 'hidden';
+        }
 
-        let content;
         if (commonStore.error) {
             return <ErrorPage
                 error={commonStore.error}
                 close={this.closeError}
             />;
         } else if (userStore.user) {
-            return <PholoListPage deps={deps}/>;
+            return (
+                <div style={pageStyle}>
+                    {header}
+                    <PholoListPage deps={deps}/>;
+                </div>
+            )
         } else {
             return <SignPage deps={deps} />;
         }

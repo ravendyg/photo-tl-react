@@ -1,9 +1,14 @@
 import {IPhotoService} from '../services/PhotoService';
 import {IPhotoStore} from '../store/photoStore';
 import {ICommonStore} from '../store/commonStore';
+import {IPhoto} from '../types';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
+
+    editPhoto: (photo: IPhoto | null) => void;
+
+    stopEditPhoto: () => void;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -27,5 +32,15 @@ export class PhotoActions implements IPhotoActions {
                 this.photoStore.stopLoading();
                 this.commonStore.setError(err);
             });
+    }
+
+    editPhoto = (photo: IPhoto | null) => {
+        this.photoStore.setEdited(photo);
+        this.commonStore.setModal('edit-photo');
+    }
+
+    stopEditPhoto = () => {
+        this.photoStore.setEdited(null);
+        this.commonStore.setModal(null);
     }
 }

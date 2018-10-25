@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {IDeps} from '../types';
-import {AddPhotoModal} from './modals/AddPhoto';
+import {EditPhotoModal} from './modals/EditPhoto';
 
 const wrapperStyle = {
 
@@ -14,11 +14,8 @@ interface IModalWrapper {
 @observer
 export class ModalWrapper extends React.Component<IModalWrapper, {}> {
     render() {
-        const {
-            deps: {
-                commonStore,
-            },
-        } = this.props;
+        const {deps} = this.props;
+        const {commonStore} = deps;
 
         if (commonStore.modal === null) {
             return null;
@@ -27,8 +24,8 @@ export class ModalWrapper extends React.Component<IModalWrapper, {}> {
         let content: JSX.Element | null = null;
 
         switch (commonStore.modal) {
-            case "add": {
-                content = <AddPhotoModal/>;
+            case 'edit-photo': {
+                content = <EditPhotoModal deps={deps}/>;
                 break;
             }
 

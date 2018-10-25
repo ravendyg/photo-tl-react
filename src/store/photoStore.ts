@@ -1,24 +1,26 @@
 import {observable} from 'mobx';
 import {IWebSocketService} from '../services/WebSocketService';
-import {
-    IPhoto,
-    IUser,
-} from '../types';
+import {IPhoto} from '../types';
 import {IPhotoService} from '../services/PhotoService';
 
 export interface IPhotoStore {
+    status: string;
+    error: string;
     photos: IPhoto[];
+    editedPhoto: IPhoto | null;
 
     startLoading: () => void;
     setPhotos: (data: IPhoto[]) => void;
     setError: (error: string) => void;
     stopLoading: () => void;
+    setEdited: (editedPhoto: IPhoto | null) => void;
 }
 
 export class PhotoStore implements IPhotoStore {
     @observable status = 'idle';
     @observable error = '';
     @observable photos: IPhoto[] = [];
+    @observable editedPhoto: IPhoto | null = null;
 
     constructor(
         private photoService: IPhotoService,
@@ -41,5 +43,9 @@ export class PhotoStore implements IPhotoStore {
 
     stopLoading() {
         this.status = 'idle';
+    }
+
+    setEdited(editedPhoto: IPhoto | null) {
+        this.editedPhoto = editedPhoto;
     }
 }

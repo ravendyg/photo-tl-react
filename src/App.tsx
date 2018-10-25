@@ -2,12 +2,13 @@ import * as React from 'react';
 import {Body} from './components/Body';
 import {Header} from './components/Header';
 import {LoaderOverlay} from './components/LoaderOverlay';
-import {ModalWrapper} from './components/ModalWrapper';
+import {Modal} from './components/modals/Modal';
 import {IDeps} from './types';
 
-const pageStyle = {
-    width: '100%',
-    minHeight: '100%',
+const pageStyleWrapper = {
+    width: '100vw',
+    height: '100vh',
+    overflow: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -31,14 +32,18 @@ export class App extends React.PureComponent<IAppProps, {}> {
 
     render() {
         const {deps} = this.props;
+        const header = <Header deps={deps}/>;
 
         return (
-            <div style={pageStyle}>
-                <Header deps={deps}/>
-                <Body deps={deps}/>
+            <div style={pageStyleWrapper}>
+                <Body
+                    deps={deps}
+                    header={header}
+                />
                 <LoaderOverlay deps={deps}/>
-                <ModalWrapper deps={deps}/>
+                <Modal deps={deps}/>
             </div>
         );
     }
 }
+
