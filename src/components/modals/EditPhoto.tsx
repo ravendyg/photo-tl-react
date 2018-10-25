@@ -20,19 +20,22 @@ interface IEditPhotoModalProps {
 
 interface IEditPhotoModalState {
     description: string;
+    error: string;
     file: File | null;
     title: string;
+    uploading: boolean;
 }
 
 @observer
 export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditPhotoModalState> {
     constructor(props: IEditPhotoModalProps) {
         super(props);
-        // TODO: handle edit itself
         this.state = {
             description: '',
+            error: '',
             file: null,
             title: '',
+            uploading: false,
         };
     }
 
@@ -58,12 +61,33 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
     }
 
     handleSave = () => {
-        console.log('save');
+        const {
+            deps: {
+                photoActions,
+            },
+        } = this.props;
+        const {
+            description,
+            file,
+            title,
+        } = this.state;
+        if (description && file && title) {
+            this.setState({ uploading: true });
+            photoActions.uploadPhoto(title, description, file)
+            .catch(err => {
+                this.setState({
+                    error: err.message,
+                    uploading: false,
+                });
+            })
+        }
+
     }
 
     render() {
         const {
             description,
+            error,
             file,
             title,
         } = this.state;
@@ -83,7 +107,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                 label: 'Cancel',
                 type: EBtnType.SECONDARY,
             }, {
-                action: this.handleCancel,
+                action: this.handleSave,
                 disabled: blockSave,
                 label: 'Save',
                 type: EBtnType.DEFAUL,
@@ -112,6 +136,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                         onChange={this.handleFileChange}
                         url=''
                     />
+                    {error}
                 </div>
                 <ModalFooter actions={actions}/>
             </ModalWrapper>

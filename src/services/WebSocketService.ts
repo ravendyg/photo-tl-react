@@ -176,7 +176,7 @@ export class WebSocketService implements IWebSocketService {
                     const message = this.messageQueue.shift();
                     this.sendingOverHttp = true;
                     pm = pm
-                        .then(() => this.http.post(`${this.url}/lp`, message))
+                        .then(() => this.http.post(`${this.url}/lp`, {body: message}))
                         .catch(console.error);
             }
         }

@@ -47,7 +47,7 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
                         key={photo.iid}
                         photo={photo}
                     />
-                ))};
+                ))}
             </div>
         );
     }

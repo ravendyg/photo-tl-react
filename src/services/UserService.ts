@@ -22,10 +22,10 @@ export class UserService implements IUserService {
         this.request.get<IUser>(`${this.config.apiUrl}/user`)
 
     signIn = (body: ISignArgs) =>
-        this.request.post<IUser>(`${this.config.apiUrl}/session`, body)
+        this.request.post<IUser>(`${this.config.apiUrl}/session`, {body})
 
     signUp = (body: ISignArgs) =>
-        this.request.post<IUser>(`${this.config.apiUrl}/user`, body)
+        this.request.post<IUser>(`${this.config.apiUrl}/user`, {body})
 
     signOut = () =>
         this.request.delete(`${this.config.apiUrl}/session`)

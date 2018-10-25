@@ -37,7 +37,7 @@ export class Body extends React.Component<IBodyProps, {}> {
             return (
                 <div style={pageStyle}>
                     {header}
-                    <PholoListPage deps={deps}/>;
+                    <PholoListPage deps={deps}/>
                 </div>
             )
         } else {

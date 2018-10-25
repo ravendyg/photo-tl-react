@@ -1,11 +1,18 @@
 import {IResponseContainer} from '../types';
 
-// superagent does not ant to work with parcel :(
+// superagent does not want to work with parcel :(
+
+export interface IHttpInfo {
+    body?: any;
+    headers?: {
+        [key: string]: string;
+    };
+}
 
 export interface IHttp  {
     get<T>(url: string): Promise<IResponseContainer<T | null>>;
 
-    post<T>(url: string, body?: Object): Promise<IResponseContainer<T | null>>;
+    post<T>(url: string, info?: IHttpInfo): Promise<IResponseContainer<T | null>>;
 
     delete(url: string): Promise<IResponseContainer<null>>;
 }
@@ -13,7 +20,7 @@ export interface IHttp  {
 type THttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export class Http implements IHttp {
-    createRequest<T>(method: THttpMethod, url: string, body?: Object)
+    createRequest<T>(method: THttpMethod, url: string, info: IHttpInfo = {})
         : Promise<IResponseContainer<T | null>> {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
@@ -51,9 +58,23 @@ export class Http implements IHttp {
             });
 
             request.open(method, url);
+            const {
+                body,
+                headers = {},
+            } = info;
+            Object.keys(headers).forEach(key => {
+                request.setRequestHeader(key, headers[key]);
+            });
             if (Boolean(body)) {
-                request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-                request.send(JSON.stringify(body));
+                if (body && body.constructor && body.constructor.name === 'ArrayBuffer') {
+                    if (headers.type) {
+                        request.setRequestHeader('Content-Type', `${headers.type};charset=UTF-8`);
+                        request.send(body);
+                    }
+                } else {
+                    request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                    request.send(JSON.stringify(body));
+                }
             } else {
                 request.send();
             }
@@ -64,8 +85,8 @@ export class Http implements IHttp {
         return this.createRequest<T>('GET', url);
     }
 
-    post<T>(url: string, body?: Object) {
-        return this.createRequest<T>('POST', url, body);
+    post<T>(url: string, info?: IHttpInfo) {
+        return this.createRequest<T>('POST', url, info);
     }
 
     delete(url: string) {

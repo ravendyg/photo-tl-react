@@ -1,4 +1,4 @@
-import {IPhotoService} from '../services/PhotoService';
+import {IPhotoService, IUploadFile} from '../services/PhotoService';
 import {IPhotoStore} from '../store/photoStore';
 import {ICommonStore} from '../store/commonStore';
 import {IPhoto} from '../types';
@@ -9,6 +9,8 @@ export interface IPhotoActions {
     editPhoto: (photo: IPhoto | null) => void;
 
     stopEditPhoto: () => void;
+
+    uploadPhoto: (title: string, description: string, file: File) => Promise<void>;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -42,5 +44,37 @@ export class PhotoActions implements IPhotoActions {
     stopEditPhoto = () => {
         this.photoStore.setEdited(null);
         this.commonStore.setModal(null);
+    }
+
+    uploadPhoto = (title: string, description: string, file: File): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = reject;
+            reader.onload = ({target} : any) => {
+                if (target && target.result) {
+                    const data: IUploadFile = {
+                        body: target.result,
+                        description,
+                        title,
+                        type: file.type,
+                    };
+                    return resolve(
+                        this.photoService.uploadPhoto(data)
+                            .then(result => {
+                                if (result.status === 200) {
+                                    this.stopEditPhoto();
+                                    this.commonStore.setModal(null);
+                                    resolve();
+                                } else {
+                                    return reject({ message: result.error });
+                                }
+                            })
+                    );
+                } else {
+                    return reject({ message: 'Could not upload the file' });
+                }
+            }
+            reader.readAsArrayBuffer(file);
+        });
     }
 }
