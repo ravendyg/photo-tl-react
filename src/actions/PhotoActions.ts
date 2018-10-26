@@ -58,18 +58,17 @@ export class PhotoActions implements IPhotoActions {
                         title,
                         type: file.type,
                     };
-                    return resolve(
-                        this.photoService.uploadPhoto(data)
-                            .then(result => {
-                                if (result.status === 200) {
-                                    this.stopEditPhoto();
-                                    this.commonStore.setModal(null);
-                                    resolve();
-                                } else {
-                                    return reject({ message: result.error });
-                                }
-                            })
-                    );
+                    this.photoService.uploadPhoto(data)
+                    .then(result => {
+                        if (result.status === 200) {
+                            this.stopEditPhoto();
+                            this.commonStore.setModal(null);
+                            resolve();
+                        } else {
+                            return reject({ message: result.error });
+                        }
+                    })
+                    .catch(reject)
                 } else {
                     return reject({ message: 'Could not upload the file' });
                 }
