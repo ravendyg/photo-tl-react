@@ -72,7 +72,7 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
         return (
             <div style={cardStyle}>
                 <img
-                    src={`/users_data/images/${photo.iid}.png`}
+                    src={`/users_data/images/${photo.iid}.${photo.extension}`}
                     style={imageStyle}
                 />
                 <div style={titleStyle}>

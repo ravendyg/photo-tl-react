@@ -35,6 +35,7 @@ export interface IComment {
 export interface IPhoto {
     iid: string;
     description: string;
+    extension: string;
     title: string;
     uploadedBy: IUser;
     uploaded: number;
