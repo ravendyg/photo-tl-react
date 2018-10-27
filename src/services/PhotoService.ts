@@ -1,7 +1,7 @@
 import {
     IHttp,
     IHttpInfo,
-} from './http';
+} from './Http';
 import {
     IResponseContainer,
     IPhoto,
@@ -9,10 +9,10 @@ import {
 } from '../types';
 
 export interface IUploadFile {
-        body: string;
-        title: string;
-        description: string;
-        type: string;
+    body: string;
+    title: string;
+    description: string;
+    type: string;
 }
 
 export interface IPhotoService {
@@ -22,7 +22,7 @@ export interface IPhotoService {
 }
 
 export class PhotoService implements IPhotoService {
-    constructor(private request: IHttp, private config: IConfig) {}
+    constructor (private request: IHttp, private config: IConfig) { }
 
     getPhotoList = () =>
         this.request.get<IPhoto[]>(`${this.config.apiUrl}/photo`)
