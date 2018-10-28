@@ -1,10 +1,10 @@
-import {IUserStore} from './store/userStore';
-import {IUserActions} from './actions/UserActions';
-import {ICommonStore} from './store/commonStore';
-import {IPhotoStore} from './store/photoStore';
-import {IPhotoActions} from './actions/PhotoActions';
-import {IConnectionStore} from './store/connectionStore';
-import {ICommonActions} from './actions/CommonActions';
+import { IUserStore } from './store/userStore';
+import { IUserActions } from './actions/UserActions';
+import { ICommonStore } from './store/commonStore';
+import { IPhotoStore } from './store/photoStore';
+import { IPhotoActions } from './actions/PhotoActions';
+import { IConnectionStore } from './store/connectionStore';
+import { ICommonActions } from './actions/CommonActions';
 
 export interface IUser {
     uid: string;

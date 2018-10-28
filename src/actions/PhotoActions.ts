@@ -1,7 +1,8 @@
-import {IPhotoService, IUploadFile} from '../services/PhotoService';
-import {IPhotoStore} from '../store/photoStore';
-import {ICommonStore} from '../store/commonStore';
-import {IPhoto} from '../types';
+import { IPhotoService, IUploadFile } from '../services/PhotoService';
+import { IPhotoStore } from '../store/photoStore';
+import { ICommonStore } from '../store/commonStore';
+import { IPhoto } from '../types';
+import { IConnectionActions, EWSAction } from './ConnectionActions';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
@@ -14,11 +15,14 @@ export interface IPhotoActions {
 }
 
 export class PhotoActions implements IPhotoActions {
-    constructor(
+    constructor (
+        private connectionAction: IConnectionActions,
         private commonStore: ICommonStore,
         private photoStore: IPhotoStore,
         private photoService: IPhotoService,
-    ) {}
+    ) {
+        connectionAction.subscribe(EWSAction.NEW_PHOTO, this.onNewPhoto)
+    }
 
     loadPhotos = () => {
         this.photoStore.startLoading();
@@ -50,7 +54,7 @@ export class PhotoActions implements IPhotoActions {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onerror = reject;
-            reader.onload = ({target} : any) => {
+            reader.onload = ({ target }: any) => {
                 if (target && target.result) {
                     const data: IUploadFile = {
                         body: target.result,
@@ -59,21 +63,25 @@ export class PhotoActions implements IPhotoActions {
                         type: file.type,
                     };
                     this.photoService.uploadPhoto(data)
-                    .then(result => {
-                        if (result.status === 200) {
-                            this.stopEditPhoto();
-                            this.commonStore.setModal(null);
-                            resolve();
-                        } else {
-                            return reject({ message: result.error });
-                        }
-                    })
-                    .catch(reject)
+                        .then(result => {
+                            if (result.status === 200) {
+                                this.stopEditPhoto();
+                                this.commonStore.setModal(null);
+                                resolve();
+                            } else {
+                                return reject({ message: result.error });
+                            }
+                        })
+                        .catch(reject)
                 } else {
                     return reject({ message: 'Could not upload the file' });
                 }
             }
             reader.readAsArrayBuffer(file);
         });
+    }
+
+    private onNewPhoto = (photo: IPhoto) => {
+        this.photoStore.addPhoto(photo);
     }
 }

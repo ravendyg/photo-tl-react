@@ -1,20 +1,20 @@
 import * as React from 'react';
-import {render} from 'react-dom';
-import {PhotoStore} from './store/photoStore';
-import {UserService} from './services/UserService';
-import {UserStore} from './store/userStore';
-import {CommonStore} from './store/commonStore';
-import {Http} from './services/Http';
-import {WebSocketService} from './services/WebSocketService'
-import {createConfig} from './getConfig';
-import {App} from './App';
-import {PhotoService} from './services/PhotoService';
-import {UserActions} from './actions/UserActions';
-import {IDeps} from './types';
-import {PhotoActions} from './actions/PhotoActions';
-import {ConnectionStore} from './store/connectionStore';
-import {ConnectionActions} from './actions/ConnectionActions';
-import {CommonActions} from './actions/CommonActions';
+import { render } from 'react-dom';
+import { PhotoStore } from './store/photoStore';
+import { UserService } from './services/UserService';
+import { UserStore } from './store/userStore';
+import { CommonStore } from './store/commonStore';
+import { Http } from './services/Http';
+import { WebSocketService } from './services/WebSocketService'
+import { createConfig } from './getConfig';
+import { App } from './App';
+import { PhotoService } from './services/PhotoService';
+import { UserActions } from './actions/UserActions';
+import { IDeps } from './types';
+import { PhotoActions } from './actions/PhotoActions';
+import { ConnectionStore } from './store/connectionStore';
+import { ConnectionActions } from './actions/ConnectionActions';
+import { CommonActions } from './actions/CommonActions';
 
 let serverType: string = '';
 location.search
@@ -44,6 +44,7 @@ const connectionActions = new ConnectionActions(
     webSocketService,
 );
 const photoActions = new PhotoActions(
+    connectionActions,
     commonStore,
     photoStore,
     photoService,
@@ -66,6 +67,6 @@ const deps: IDeps = {
 };
 
 render(
-    <App deps={deps}/>,
+    <App deps={deps} />,
     document.getElementById('root'),
 );
