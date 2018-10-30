@@ -6,6 +6,7 @@ import {
     IResponseContainer,
     IPhoto,
     IConfig,
+    IRating,
 } from '../types';
 
 export interface IUploadFile {
@@ -19,6 +20,8 @@ export interface IPhotoService {
     getPhotoList: () => Promise<IResponseContainer<IPhoto[] | null>>;
 
     uploadPhoto: (data: IUploadFile) => Promise<IResponseContainer<null>>;
+
+    chageRating: (iid: string, rating: number) => void;
 }
 
 export class PhotoService implements IPhotoService {
@@ -43,5 +46,15 @@ export class PhotoService implements IPhotoService {
             body,
         };
         return this.request.post<null>(`${this.config.apiUrl}/photo`, info);
+    }
+
+    chageRating = (iid: string, rating: number) => {
+        const info: IHttpInfo = {
+            body: {
+                iid,
+                rating,
+            },
+        };
+        return this.request.post<null>(`${this.config.apiUrl}/photo/rating`, info);
     }
 }

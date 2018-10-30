@@ -3,6 +3,7 @@ import {IPhoto} from '../types';
 import {CommentIcon} from './Icons/CommentIcon';
 import {EditIcon} from './Icons/EditIcon';
 import {Rating} from './Rating';
+import {IDeps} from '../types';
 
 const cardStyle = {
     width: '100%',
@@ -55,11 +56,27 @@ const ratingWrapperStyle = {
 };
 
 interface IPhotoCardProps {
+    deps: IDeps;
     photo: IPhoto;
 }
 
 
 export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
+    handleRatingChange = (newRating: number) => {
+        const {
+            deps: {
+                photoActions,
+            },
+            photo: {
+                iid,
+                userRating,
+            },
+        } = this.props;
+        if (userRating !== newRating) {
+            photoActions.changeRating(iid, newRating);
+        };
+    }
+
     render() {
         const {photo} = this.props;
 
@@ -88,7 +105,11 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                         </div>
                     </div>
                     <div style={ratingWrapperStyle}>
-                        <Rating/>
+                        <Rating
+                            onRatingChange={this.handleRatingChange}
+                            rating={photo.userRating}
+                            average={photo.averageRating}
+                        />
                     </div>
                 </div>
             </div>

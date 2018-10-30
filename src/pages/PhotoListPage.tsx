@@ -34,17 +34,15 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
     }
 
     render() {
-        const {
-            deps: {
-                photoStore,
-            },
-        } = this.props;
+        const {deps} = this.props;
+        const {photoStore} = deps;
 
         return (
             <div style={photoListPageStyle}>
                 {photoStore.photos.map(photo => (
                     <PhotoCard
                         key={photo.iid}
+                        deps={deps}
                         photo={photo}
                     />
                 ))}
