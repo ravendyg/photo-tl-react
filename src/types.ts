@@ -59,3 +59,9 @@ export interface IDeps {
     userActions: IUserActions;
     userStore: IUserStore;
 }
+
+export interface IRating {
+    uid: string;
+    iid: string;
+    value: number;
+}

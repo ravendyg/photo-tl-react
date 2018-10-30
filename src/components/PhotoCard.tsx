@@ -64,6 +64,21 @@ interface IPhotoCardProps {
 
 
 export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
+    handleRatingChange = (newRating: number) => {
+        const {
+            deps: {
+                photoActions,
+            },
+            photo: {
+                iid,
+                userRating,
+            },
+        } = this.props;
+        if (userRating !== newRating) {
+            photoActions.changeRating(iid, newRating);
+        };
+    }
+
     render() {
         const {
             deps,
@@ -109,7 +124,11 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                         </div>
                     </div>
                     <div style={ratingWrapperStyle}>
-                        <Rating />
+                        <Rating
+                            onRatingChange={this.handleRatingChange}
+                            rating={photo.userRating}
+                            average={photo.averageRating}
+                        />
                     </div>
                 </div>
                 {showComments && <CommentList

@@ -1,8 +1,9 @@
 import { IPhotoService, IUploadFile } from '../services/PhotoService';
 import { IPhotoStore } from '../store/photoStore';
 import { ICommonStore } from '../store/commonStore';
-import { IPhoto } from '../types';
+import { IPhoto, IRating } from '../types';
 import { IConnectionActions, EWSAction } from './ConnectionActions';
+import { IUserStore } from '../store/userStore';
 
 export interface IPhotoActions {
     loadPhotos: () => void;
@@ -12,6 +13,8 @@ export interface IPhotoActions {
     stopEditPhoto: () => void;
 
     uploadPhoto: (title: string, description: string, file: File) => Promise<void>;
+
+    changeRating: (iid: string, rating: number) => void;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -81,6 +84,8 @@ export class PhotoActions implements IPhotoActions {
             reader.readAsArrayBuffer(file);
         });
     }
+
+    changeRating = this.photoService.chageRating;
 
     private onNewPhoto = (photo: IPhoto) => {
         this.photoStore.addPhoto(photo);
