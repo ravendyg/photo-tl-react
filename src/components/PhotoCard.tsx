@@ -89,6 +89,8 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                 iid,
                 title,
                 views,
+                averageRating,
+                userRating,
             },
             showComments,
         } = this.props;
@@ -126,8 +128,8 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                     <div style={ratingWrapperStyle}>
                         <Rating
                             onRatingChange={this.handleRatingChange}
-                            rating={photo.userRating}
-                            average={photo.averageRating}
+                            rating={userRating}
+                            average={averageRating}
                         />
                     </div>
                 </div>
