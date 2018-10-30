@@ -17,6 +17,7 @@ import { PhotoActions } from './actions/PhotoActions';
 import { ConnectionStore } from './store/connectionStore';
 import { ConnectionActions } from './actions/ConnectionActions';
 import { CommonActions } from './actions/CommonActions';
+import { CommentActions } from './actions/CommentActions';
 
 let serverType: string = '';
 location.search
@@ -38,9 +39,10 @@ const webSocketService = new WebSocketService(config.apiUrl, http);
 
 const userStore = new UserStore();
 const commonStore = new CommonStore();
-const photoStore = new PhotoStore(photoService);
+const photoStore = new PhotoStore();
 const connectionStore = new ConnectionStore();
 const commentStore = new CommentStore(commentService);
+const commentActions = new CommentActions(commentStore);
 
 const commonActions = new CommonActions(commonStore);
 const connectionActions = new ConnectionActions(
