@@ -44,6 +44,7 @@ export class PhotoActions implements IPhotoActions {
     }
 
     editPhoto = (photo: IPhoto | null) => {
+        // TODO: move to common actions
         this.photoStore.setEdited(photo);
         this.commonStore.setModal('edit-photo');
     }

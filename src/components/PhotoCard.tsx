@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {IPhoto} from '../types';
-import {CommentIcon} from './Icons/CommentIcon';
-import {EditIcon} from './Icons/EditIcon';
-import {Rating} from './Rating';
-import {IDeps} from '../types';
+import { IDeps, IPhoto } from '../types';
+import { CommentIcon } from './Icons/CommentIcon';
+import { EditIcon } from './Icons/EditIcon';
+import { EyeIcon } from './Icons/EyeIcon';
+import { CommentList } from '../components/Comments';
+import { Rating } from './Rating';
 
 const cardStyle = {
     width: '100%',
@@ -58,6 +59,7 @@ const ratingWrapperStyle = {
 interface IPhotoCardProps {
     deps: IDeps;
     photo: IPhoto;
+    showComments: boolean;
 }
 
 
@@ -78,30 +80,47 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
     }
 
     render() {
-        const {photo} = this.props;
+        const {
+            deps,
+            photo: {
+                commentCount,
+                description,
+                extension,
+                iid,
+                title,
+                views,
+            },
+            showComments,
+        } = this.props;
 
         return (
             <div style={cardStyle}>
                 <img
-                    src={`/users_data/images/${photo.iid}.${photo.extension}`}
+                    src={`/users_data/images/${iid}.${extension}`}
                     style={imageStyle}
                 />
                 <div style={titleStyle}>
-                    {photo.title}
+                    {title}
                 </div>
                 <div style={descriptionStyle}>
-                    {photo.description}
+                    {description}
                 </div>
                 <div style={actionPanelStyle}>
                     <div style={btnGroupStyle}>
                         <div style={actionItemStyle}>
-                            <CommentIcon size={1.5}/>
-                            <span style={{marginLeft: '1rem'}}>
-                                {photo.commentCount}
+                            <CommentIcon size={1.5} />
+                            <span style={{ marginLeft: '1rem' }}>
+                                {commentCount}
                             </span>
                         </div>
                         <div style={actionItemStyle}>
-                            <EditIcon size={1.5}/>
+                            <EditIcon size={1.5} />
+                        </div>
+                        <div style={{ ...actionItemStyle, marginLeft: '0.5rem' }}>
+                            <EyeIcon size={1.5} />
+                            <span style={{ marginLeft: '0.5rem' }}>
+                                {views}
+                            </span>
                         </div>
                     </div>
                     <div style={ratingWrapperStyle}>
@@ -112,6 +131,10 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                         />
                     </div>
                 </div>
+                {showComments && <CommentList
+                    deps={deps}
+                    iid={iid}
+                />}
             </div>
         );
     }

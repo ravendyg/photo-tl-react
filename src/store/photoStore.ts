@@ -1,5 +1,4 @@
 import { observable } from 'mobx';
-import { IWebSocketService } from '../services/WebSocketService';
 import { IPhoto } from '../types';
 import { IPhotoService } from '../services/PhotoService';
 
@@ -24,7 +23,6 @@ export class PhotoStore implements IPhotoStore {
     @observable editedPhoto: IPhoto | null = null;
 
     constructor (
-        private photoService: IPhotoService,
     ) { }
 
     startLoading() {

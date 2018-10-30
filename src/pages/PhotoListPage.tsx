@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {pageStyle} from '../styles';
-import {observer} from 'mobx-react';
-import {PhotoCard} from '../components/PhotoCard';
-import {IDeps} from '../types';
+import { pageStyle } from '../styles';
+import { observer } from 'mobx-react';
+import { PhotoCard } from '../components/PhotoCard';
+import { IDeps } from '../types';
 
 const photoListPageStyle = {
     ...pageStyle,
@@ -34,18 +34,25 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
     }
 
     render() {
-        const {deps} = this.props;
-        const {photoStore} = deps;
+        const { deps } = this.props;
+        const {
+            photoStore,
+            commonStore: {
+                commentsDisplayedFor,
+            },
+        } = deps;
 
         return (
             <div style={photoListPageStyle}>
-                {photoStore.photos.map(photo => (
-                    <PhotoCard
+                {photoStore.photos.map(photo => {
+                    const showComments = photo.iid === commentsDisplayedFor;
+                    return <PhotoCard
                         key={photo.iid}
                         deps={deps}
                         photo={photo}
-                    />
-                ))}
+                        showComments={showComments}
+                    />;
+                })}
             </div>
         );
     }

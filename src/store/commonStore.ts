@@ -1,4 +1,4 @@
-import {observable} from 'mobx';
+import { observable } from 'mobx';
 
 declare type TModal = 'edit-photo' | null;
 
@@ -11,6 +11,7 @@ export interface ICommonStore {
     setModal: (modal: TModal) => void;
 }
 
+// TODO: rename - e.g. UiStore
 export class CommonStore implements ICommonStore {
     @observable modal: TModal = null;
     @observable error: string = '';

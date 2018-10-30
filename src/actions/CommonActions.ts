@@ -1,10 +1,13 @@
-import {ICommonStore} from '../store/commonStore';
+import { ICommonStore } from '../store/commonStore';
 
 export interface ICommonActions {
+
 }
 
 export class CommonActions implements ICommonActions {
-    constructor(
+    constructor (
         private commonStore: ICommonStore,
-    ) {}
+    ) { }
+
+
 }
