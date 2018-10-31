@@ -68,4 +68,6 @@ export interface IRating {
     uid: string;
     iid: string;
     value: number;
+    count: number;
+    averageRating: number;
 }

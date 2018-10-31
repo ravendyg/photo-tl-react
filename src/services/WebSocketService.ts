@@ -13,7 +13,7 @@ type TStatus = 'disconnected' | 'connected';
 export interface IWebSocketService {
     connect: (
         handleConnect: () => void,
-        handleMessage: (message: string | ArrayBuffer) => void,
+        handleMessage: (message: any) => void,
         handleError: (status: string, message: string) => void,
     ) => void;
 
@@ -160,12 +160,8 @@ export class WebSocketService implements IWebSocketService {
         if (err && err.code === 1006) {
             this.wsAttemptsLeft = 0;
         }
-        // timeout, it's OK for LP
-        if (err && err.status === 504) {
-            this.lpAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
-        }
-
-        if (this.connectionIsStable) {
+        if (err && err.status === 504 || this.connectionIsStable) {
+            // timeout, it's OK for LP
             this.reset(true);
         } else {
             // another unsuccessfull attempt to connect
