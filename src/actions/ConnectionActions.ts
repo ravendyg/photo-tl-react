@@ -57,21 +57,19 @@ export class ConnectionActions implements IConnectionActions {
         this.connectionStore.setStatus('connected', 'Connected');
     }
 
-    private handleMessage = (message: string | ArrayBuffer) => {
-        if (typeof message === 'string') {
-            try {
-                const container: IWSContainer = JSON.parse(message);
-                const listeners = this.listeners[container.action];
-                if (listeners) {
-                    listeners.forEach(listener => listener(container.payload));
-                }
-            } catch (err) { }
-        } else {
-            console.error(message, 'array buffer handler is not implemented');
+    private handleMessage = (message: IWSContainer) => {
+        const {
+            action,
+            payload,
+        } = message;
+        // TODO: implement ArrayBuffer deserialisation
+        const listeners = this.listeners[action];
+        if (listeners) {
+            listeners.forEach(listener => listener(payload));
         }
     }
 
-    private handleDisconnect = (message: string) => {
-        this.connectionStore.setStatus('disconnected', message);
+    private handleDisconnect = (status: string, message: string) => {
+        this.connectionStore.setStatus(status, message);
     }
 }

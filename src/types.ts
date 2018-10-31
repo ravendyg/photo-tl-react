@@ -48,6 +48,10 @@ export interface IPhoto {
     views: number;
 }
 
+export interface ICommentAction {
+
+}
+
 export interface IDeps {
     commonActions: ICommonActions;
     commonStore: ICommonStore;

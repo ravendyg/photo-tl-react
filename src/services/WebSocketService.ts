@@ -14,7 +14,7 @@ export interface IWebSocketService {
     connect: (
         handleConnect: () => void,
         handleMessage: (message: string | ArrayBuffer) => void,
-        handleError: (message: string) => void,
+        handleError: (status: string, message: string) => void,
     ) => void;
 
     disconnect: () => void;
@@ -26,6 +26,7 @@ export interface IWebSocketService {
 
 export class WebSocketService implements IWebSocketService {
     static RETRY_AFTER = 1 * 1000;
+    static WAIT_BEFORE_STATUS_CHANGE = 300;
     static RETRY_ATTEMPTS = 3;
 
     private listeners: {
@@ -34,6 +35,8 @@ export class WebSocketService implements IWebSocketService {
 
     private transportType: TTransport = 'ws';
     private status: TStatus = 'disconnected';
+    // set after first successfully received message
+    private connectionIsStable: boolean = false;
     private socket: WebSocket | null = null;
     private wsAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
     private lpAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
@@ -43,14 +46,14 @@ export class WebSocketService implements IWebSocketService {
 
     private connectHandler: (() => void) | null = null;
     private handleMessage: ((message: string | ArrayBuffer) => void) | null = null;
-    private disconnectHandler: ((message: string) => void) | null = null;
+    private disconnectHandler: ((status: string, message: string) => void) | null = null;
 
     constructor (private url: string, private http: IHttp) { }
 
     connect(
         handleConnect: () => void,
         handleMessage: (message: string | ArrayBuffer) => void,
-        handleDisconnect: (msg: string) => void,
+        handleDisconnect: (status: string, msg: string) => void,
     ) {
         this.reset(true);
         this.connectHandler = handleConnect;
@@ -93,6 +96,7 @@ export class WebSocketService implements IWebSocketService {
     }
 
     private reset(resetCounters: boolean) {
+        this.connectionIsStable = false;
         if (resetCounters) {
             this.wsAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
             this.lpAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
@@ -108,52 +112,69 @@ export class WebSocketService implements IWebSocketService {
             this.transportType = 'ws';
             this.handleOpen();
         });
-        this.socket.addEventListener('message', this.listen);
+        this.socket.addEventListener('message', this.listenWs);
         this.socket.addEventListener('close', this.handleDisconnect);
     }
 
     private connectLp = () => {
         this.lpAttemptsLeft--;
-        this.http.get(`${this.url}/lp`)
+        this.transportType = 'lp';
+        this.handleOpen();
+        this.http.get<string | ArrayBuffer>(`${this.url}/lp`)
             .then(({ status, payload }) => {
                 if (status !== 200) {
                     this.handleDisconnect();
                 } else {
-                    this.transportType = 'lp';
-                    this.handleOpen();
+                    // message
+                    if (payload) {
+                        this.processMessage(payload);
+                    }
+                    this.connectLp();
                 }
             })
             .catch(this.handleDisconnect);
     }
 
     private handleOpen = () => {
-        this.status = 'connected';
         if (this.connectHandler) {
             this.connectHandler();
         }
     }
 
-    private listen = ({ data }: MessageEvent) => {
+    private listenWs = ({ data }: MessageEvent) => {
+        if (data) {
+            this.processMessage(data);
+        }
+    }
+
+    private processMessage = (message: any) => {
+        this.connectionIsStable = true;
         if (this.handleMessage) {
-            this.handleMessage(data);
+            this.handleMessage(message);
         }
     }
 
     private handleDisconnect = () => {
-        if (this.status === 'connected') {
-            // established connection closed
+        if (this.connectionIsStable) {
             this.reset(true);
         } else {
             // another unsuccessfull attempt to connect
             this.reset(false);
         }
 
-        if (this.wsAttemptsLeft > 1) {
+        let status = 'connecting';
+        let message = 'Connecting...';
+
+        if (this.wsAttemptsLeft > 0) {
             this.retryTimeout = setTimeout(this.connectWs, WebSocketService.RETRY_AFTER) as any as number;
-        } else if (this.lpAttemptsLeft > 1) {
+        } else if (this.lpAttemptsLeft > 0) {
             this.retryTimeout = setTimeout(this.connectLp, WebSocketService.RETRY_AFTER) as any as number;
-        } else if (this.disconnectHandler) {
-            this.disconnectHandler('Cannot connect');
+        } else {
+            status = 'disconnected';
+            message = 'Cannot connect';
+        }
+        if (this.disconnectHandler) {
+            this.disconnectHandler(status, message);
         }
     }
 
