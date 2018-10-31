@@ -45,7 +45,7 @@ export class WebSocketService implements IWebSocketService {
     private sendingOverHttp = false;
 
     private connectHandler: (() => void) | null = null;
-    private handleMessage: ((message: string | ArrayBuffer) => void) | null = null;
+    private handleMessage: ((message: any) => void) | null = null;
     private disconnectHandler: ((status: string, message: string) => void) | null = null;
 
     constructor (private url: string, private http: IHttp) { }
@@ -121,9 +121,10 @@ export class WebSocketService implements IWebSocketService {
         this.transportType = 'lp';
         this.handleOpen();
         this.http.get<string | ArrayBuffer>(`${this.url}/lp`)
-            .then(({ status, payload }) => {
+            .then(res => {
+                const { status, payload } = res;
                 if (status !== 200) {
-                    this.handleDisconnect();
+                    this.handleDisconnect(res);
                 } else {
                     // message
                     if (payload) {
@@ -154,7 +155,16 @@ export class WebSocketService implements IWebSocketService {
         }
     }
 
-    private handleDisconnect = () => {
+    private handleDisconnect = (err: any) => {
+        // fallback to LP
+        if (err && err.code === 1006) {
+            this.wsAttemptsLeft = 0;
+        }
+        // timeout, it's OK for LP
+        if (err && err.status === 504) {
+            this.lpAttemptsLeft = WebSocketService.RETRY_ATTEMPTS;
+        }
+
         if (this.connectionIsStable) {
             this.reset(true);
         } else {
