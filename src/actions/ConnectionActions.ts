@@ -4,6 +4,7 @@ import { IWebSocketService } from '../services/WebSocketService';
 
 export enum EWSAction {
     NEW_PHOTO = 1,
+    RATING_UPDATE = 2,
 }
 
 interface IWSContainer {

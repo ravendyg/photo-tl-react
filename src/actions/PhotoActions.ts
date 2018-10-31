@@ -23,8 +23,10 @@ export class PhotoActions implements IPhotoActions {
         private commonStore: ICommonStore,
         private photoStore: IPhotoStore,
         private photoService: IPhotoService,
+        private userStore: IUserStore,
     ) {
-        connectionAction.subscribe(EWSAction.NEW_PHOTO, this.onNewPhoto)
+        this.connectionAction.subscribe(EWSAction.NEW_PHOTO, this.onNewPhoto);
+        this.connectionAction.subscribe(EWSAction.RATING_UPDATE, this.onRatingUpdate);
     }
 
     loadPhotos = () => {
@@ -89,5 +91,12 @@ export class PhotoActions implements IPhotoActions {
 
     private onNewPhoto = (photo: IPhoto) => {
         this.photoStore.addPhoto(photo);
+    }
+
+    private onRatingUpdate = (rating: IRating) => {
+        const { user } = this.userStore;
+        if (user) {
+            this.photoStore.updateRating(user, rating);
+        }
     }
 }

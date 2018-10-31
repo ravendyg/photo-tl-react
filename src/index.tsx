@@ -54,6 +54,7 @@ const photoActions = new PhotoActions(
     commonStore,
     photoStore,
     photoService,
+    userStore,
 );
 const userActions = new UserActions(
     commonStore,
