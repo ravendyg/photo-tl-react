@@ -51,13 +51,11 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
         return (
             <div style={photoListPageStyle}>
                 {photoStore.photos.map(photo => {
-                    const showComments = false;//photo.iid === commentsDisplayedFor;
                     return <PhotoCard
                         key={photo.iid}
                         deps={deps}
                         edit={this.editPhoto}
                         photo={photo}
-                        showComments={showComments}
                     />;
                 })}
             </div>

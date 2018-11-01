@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-declare type TModal = 'edit-photo' | null;
+declare type TModal = 'edit-photo' | 'comments' | null;
 
 export interface ICommonStore {
     modal: TModal;
@@ -8,7 +8,7 @@ export interface ICommonStore {
 
     setError: (error: string) => void;
     clearError: () => void;
-    setModal: (modal: TModal) => void;
+    setModal: (modal?: TModal) => void;
 }
 
 // TODO: rename - e.g. UiStore
@@ -20,11 +20,11 @@ export class CommonStore implements ICommonStore {
         this.error = error;
     }
 
-clearError() {
+    clearError() {
         this.error = '';
     }
 
-    setModal(modal: TModal) {
+    setModal(modal: TModal = null) {
         this.modal = modal;
     }
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {IDeps} from '../../types';
 import {EditPhotoModal} from './EditPhoto';
+import {CommentsModal} from './Comments';
 
 interface IModalProps {
     deps: IDeps;
@@ -18,8 +19,11 @@ export class Modal extends React.Component<IModalProps, {}> {
         } = deps;
 
         switch (modal) {
-            case "edit-photo":
+            case 'edit-photo':
                 return <EditPhotoModal deps={deps}/>;
+
+            case 'comments':
+                return <CommentsModal deps={deps}/>;
 
             default:
                 return null;

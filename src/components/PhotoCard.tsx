@@ -3,7 +3,6 @@ import { IDeps, IPhoto } from '../types';
 import { CommentIcon } from './Icons/CommentIcon';
 import { EditIcon } from './Icons/EditIcon';
 import { EyeIcon } from './Icons/EyeIcon';
-import { CommentList } from '../components/Comments';
 import { Rating } from './Rating';
 
 const cardStyle = {
@@ -66,7 +65,6 @@ interface IPhotoCardProps {
     deps: IDeps;
     edit: (photo: IPhoto) => void;
     photo: IPhoto;
-    showComments: boolean;
 }
 
 
@@ -94,6 +92,18 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
         };
     }
 
+    displayComments = () => {
+        const {
+            deps: {
+                commentActions,
+            },
+            photo: {
+                iid,
+            },
+        } = this.props;
+        commentActions.showComments(iid);
+    }
+
     render() {
         const {
             deps,
@@ -113,7 +123,6 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                 uploaded,
                 changed,
             },
-            showComments,
         } = this.props;
         const {
             userStore: {
@@ -136,7 +145,7 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                 </div>
                 <div style={actionPanelStyle}>
                     <div style={btnGroupStyle}>
-                        <div style={actionItemStyle}>
+                        <div style={actionItemStyle} onClick={this.displayComments}>
                             <CommentIcon size={1.5} />
                             <span style={{ marginLeft: '1rem' }}>
                                 {commentCount}
@@ -170,10 +179,6 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                         + (changed ? ` Changed at ${(new Date(changed)).toLocaleString()}.` : '')
                     }
                 </div>
-                {showComments && <CommentList
-                    deps={deps}
-                    iid={iid}
-                />}
             </div>
         );
     }

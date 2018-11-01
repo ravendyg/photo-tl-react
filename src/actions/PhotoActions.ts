@@ -59,7 +59,7 @@ export class PhotoActions implements IPhotoActions {
 
     stopEditPhoto = () => {
         this.photoStore.setEdited(null);
-        this.commonStore.setModal(null);
+        this.commonStore.setModal();
     }
 
     uploadPhoto = (title: string, description: string, file: File): Promise<void> => {
@@ -113,7 +113,7 @@ export class PhotoActions implements IPhotoActions {
     private handleActionNullResult = (result: IResponseContainer<null>) => {
         if (result.status === 200) {
             this.stopEditPhoto();
-            this.commonStore.setModal(null);
+            this.commonStore.setModal();
         } else {
             throw { message: result.error };
         }

@@ -1,5 +1,6 @@
 import { IUserStore } from './store/userStore';
 import { IUserActions } from './actions/UserActions';
+import { ICommentActions } from './actions/CommentActions';
 import { ICommonStore } from './store/commonStore';
 import { IPhotoStore } from './store/photoStore';
 import { IPhotoActions } from './actions/PhotoActions';
@@ -27,20 +28,14 @@ export interface ISignArgs {
     pas: string;
 }
 
-export interface IComment {
-    cid: string;
-    date: number;
-    text: string;
-}
-
 export interface IPhoto {
     iid: string;
     description: string;
     extension: string;
     title: string;
     uploadedBy: IUser;
-    uploaded: number;
-    changed: number;
+    uploaded: string;
+    changed: string;
     commentCount: number;
     averageRating: number;
     ratingCount: number
@@ -55,17 +50,13 @@ export interface IPhotoPatch {
     changed: number;
 }
 
-export interface ICommentAction {
-
-}
-
 export interface IDeps {
     commonActions: ICommonActions;
     commonStore: ICommonStore;
     connectionStore: IConnectionStore;
     photoActions: IPhotoActions;
     photoStore: IPhotoStore;
-    commentActions: ICommentAction;
+    commentActions: ICommentActions;
     commentStore: ICommentStore;
     userActions: IUserActions;
     userStore: IUserStore;
@@ -77,4 +68,12 @@ export interface IRating {
     value: number;
     count: number;
     averageRating: number;
+}
+
+export interface IComment {
+    cid: string;
+    iid: string;
+    uid: string;
+    date: string;
+    text: string;
 }

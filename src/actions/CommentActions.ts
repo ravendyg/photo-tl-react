@@ -1,27 +1,33 @@
-import { IPhotoService, IUploadFile } from '../services/PhotoService';
-import { IPhotoStore } from '../store/photoStore';
-import { ICommonStore } from '../store/commonStore';
-import { IPhoto } from '../types';
-import { IConnectionActions, EWSAction } from './ConnectionActions';
 import { ICommentStore } from '../store/commentStore';
+import { ICommentService } from '../services/CommentService';
+import { ICommonStore } from '../store/commonStore';
 
-export interface IPhotoActions {
+export interface ICommentActions {
     showComments: (iid: string) => void;
 
-    loadPhotos: () => void;
+    hideComments: () => void;
 }
 
-export class CommentActions implements IPhotoActions {
+export class CommentActions implements ICommentActions {
     constructor (
         private commentStore: ICommentStore,
+        private commonStore: ICommonStore,
+        private commentService: ICommentService,
     ) {
     }
 
-    showComments = (iid: string | null) => {
+    showComments = (iid: string) => {
         this.commentStore.displayComments(iid);
+        this.commonStore.setModal('comments');
     }
 
-    loadPhotos = () => {
+    hideComments = () => {
+        this.commentStore.displayComments();
+        this.commonStore.setModal();
+    }
+
+    getComments = (iid: string) => {
+        console.log(iid);
         // this.photoStore.startLoading();
         // this.photoService.getPhotoList()
         //     .then(photosWrapper => {

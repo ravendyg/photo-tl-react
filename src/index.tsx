@@ -41,9 +41,13 @@ const userStore = new UserStore();
 const commonStore = new CommonStore();
 const photoStore = new PhotoStore();
 const connectionStore = new ConnectionStore();
-const commentStore = new CommentStore(commentService);
-const commentActions = new CommentActions(commentStore);
+const commentStore = new CommentStore();
 
+const commentActions = new CommentActions(
+    commentStore,
+    commonStore,
+    commentService,
+);
 const commonActions = new CommonActions(commonStore);
 const connectionActions = new ConnectionActions(
     connectionStore,
