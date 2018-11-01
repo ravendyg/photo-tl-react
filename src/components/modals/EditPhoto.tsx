@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import {ModalWrapper} from './ModalWrapper';
 import {FormItem} from '../FormItem';
 import {EInputType} from '../Input';
-import {EBtnType} from '../Btn';
+import {EBtnType, Btn} from '../Btn';
 import {ModalHeader} from './ModalHeader';
 import {IFooterActionType, ModalFooter} from './ModalFooter';
 import {IDeps} from '../../types';
@@ -13,6 +13,11 @@ const modalBodyStyle = {
     padding: '0 0.5rem',
     minWidth: '400px',
 };
+
+const deleteWrapperStyle = {
+    textAlign: 'center',
+    marginBottom: '2rem',
+}
 
 interface IEditPhotoModalProps {
     deps: IDeps;
@@ -30,11 +35,19 @@ interface IEditPhotoModalState {
 export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditPhotoModalState> {
     constructor(props: IEditPhotoModalProps) {
         super(props);
+        const {
+            deps: {
+                photoStore: {
+                    editedPhoto,
+                },
+            }
+        } = this.props;
+
         this.state = {
-            description: '',
+            description: editedPhoto && editedPhoto.description || '',
             error: '',
             file: null,
-            title: '',
+            title: editedPhoto && editedPhoto.title || '',
             uploading: false,
         };
     }
@@ -79,9 +92,56 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                     error: err.message,
                     uploading: false,
                 });
-            })
+            });
         }
+    }
 
+    handleUpdate = () => {
+        const {
+            deps: {
+                photoActions,
+                photoStore: {
+                    editedPhoto,
+                },
+            },
+        } = this.props;
+        const {
+            description,
+            title,
+        } = this.state;
+        if (editedPhoto) {
+            const {iid} = editedPhoto;
+            this.setState({ uploading: true });
+            photoActions.patchPhoto(title, description, iid)
+            .catch(err => {
+                this.setState({
+                    error: err.message,
+                    uploading: false,
+                });
+            });
+        }
+    }
+
+    handleDelete = () => {
+        const {
+            deps: {
+                photoActions,
+                photoStore: {
+                    editedPhoto,
+                },
+            },
+        } = this.props;
+        if (editedPhoto) {
+            const {iid} = editedPhoto;
+            this.setState({ uploading: true });
+            photoActions.deletePhoto(iid)
+            .catch(err => {
+                this.setState({
+                    error: err.message,
+                    uploading: false,
+                });
+            });
+        }
     }
 
     render() {
@@ -98,7 +158,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                 },
             }
         } = this.props;
-        const blockSave = !description || !file || !title;
+        const blockSave = !description || !(file || Boolean(editedPhoto)) || !title;
         const headerText = (editedPhoto ? 'Edit ' : 'Add ') + 'Photo';
         const actions: IFooterActionType[] = [
             {
@@ -107,7 +167,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                 label: 'Cancel',
                 type: EBtnType.SECONDARY,
             }, {
-                action: this.handleSave,
+                action: editedPhoto ? this.handleUpdate : this.handleSave,
                 disabled: blockSave,
                 label: 'Save',
                 type: EBtnType.DEFAUL,
@@ -119,23 +179,32 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                 <ModalHeader text={headerText}/>
                 <div className="modal-body" style={modalBodyStyle}>
                     <FormItem
-                        label='Login'
+                        label='Title'
                         type={EInputType.TEXT}
                         value={title}
                         onChange={this.handleChangeTitle}
                         expand={true}
                     />
                     <FormItem
-                        label='Descrition'
+                        label='Description'
                         type={EInputType.TEXT}
                         value={description}
                         onChange={this.handleChangeDescription}
                         expand={true}
                     />
-                    <ImageLoader
+                    {!editedPhoto && <ImageLoader
                         onChange={this.handleFileChange}
                         url=''
-                    />
+                    />}
+                    {editedPhoto && (
+                        <div style={deleteWrapperStyle}>
+                            <Btn
+                                action={this.handleDelete}
+                                label={'Delete'}
+                                type={EBtnType.WARNING}
+                            />
+                        </div>
+                    )}
                     {error}
                 </div>
                 <ModalFooter actions={actions}/>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { pageStyle } from '../styles';
 import { observer } from 'mobx-react';
 import { PhotoCard } from '../components/PhotoCard';
-import { IDeps } from '../types';
+import { IDeps, IPhoto } from '../types';
 
 const photoListPageStyle = {
     ...pageStyle,
@@ -33,22 +33,29 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
         photoActions.loadPhotos();
     }
 
+    editPhoto = (photo: IPhoto) => {
+        const {
+            deps: {
+                photoActions,
+            },
+        } = this.props;
+        photoActions.editPhoto(photo);
+    }
+
     render() {
         const { deps } = this.props;
         const {
             photoStore,
-            commonStore: {
-                commentsDisplayedFor,
-            },
         } = deps;
 
         return (
             <div style={photoListPageStyle}>
                 {photoStore.photos.map(photo => {
-                    const showComments = photo.iid === commentsDisplayedFor;
+                    const showComments = false;//photo.iid === commentsDisplayedFor;
                     return <PhotoCard
                         key={photo.iid}
                         deps={deps}
+                        edit={this.editPhoto}
                         photo={photo}
                         showComments={showComments}
                     />;

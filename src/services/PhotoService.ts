@@ -1,6 +1,7 @@
 import {
     IHttp,
     IHttpInfo,
+    IHttpHeaders,
 } from './Http';
 import {
     IResponseContainer,
@@ -16,10 +17,20 @@ export interface IUploadFile {
     type: string;
 }
 
+export interface IPatchPhoto {
+    iid: string;
+    title: string;
+    description: string;
+}
+
 export interface IPhotoService {
     getPhotoList: () => Promise<IResponseContainer<IPhoto[] | null>>;
 
     uploadPhoto: (data: IUploadFile) => Promise<IResponseContainer<null>>;
+
+    patchPhoto: (data: IPatchPhoto) => Promise<IResponseContainer<null>>;
+
+    deletePhoto: (iid: string) => Promise<IResponseContainer<null>>;
 
     chageRating: (iid: string, rating: number) => void;
 }
@@ -46,6 +57,20 @@ export class PhotoService implements IPhotoService {
             body,
         };
         return this.request.post<null>(`${this.config.apiUrl}/photo`, info);
+    }
+
+    patchPhoto = (data: IPatchPhoto) => {
+        const info: IHttpInfo = {
+            headers: data as any,
+        };
+        return this.request.patch<null>(`${this.config.apiUrl}/photo`, info);
+    }
+
+    deletePhoto = (iid: string) => {
+        const info: IHttpHeaders = {
+            headers: { iid },
+        };
+        return this.request.delete(`${this.config.apiUrl}/photo`, info);
     }
 
     chageRating = (iid: string, rating: number) => {

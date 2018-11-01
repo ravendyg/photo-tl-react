@@ -1,7 +1,7 @@
 import { IPhotoService, IUploadFile } from '../services/PhotoService';
 import { IPhotoStore } from '../store/photoStore';
 import { ICommonStore } from '../store/commonStore';
-import { IPhoto, IRating } from '../types';
+import { IPhoto, IRating, IResponseContainer } from '../types';
 import { IConnectionActions, EWSAction } from './ConnectionActions';
 import { IUserStore } from '../store/userStore';
 
@@ -13,6 +13,10 @@ export interface IPhotoActions {
     stopEditPhoto: () => void;
 
     uploadPhoto: (title: string, description: string, file: File) => Promise<void>;
+
+    patchPhoto: (title: string, description: string, iid: string) => Promise<void>;
+
+    deletePhoto: (iid: string) => Promise<void>;
 
     changeRating: (iid: string, rating: number) => void;
 }
@@ -27,6 +31,8 @@ export class PhotoActions implements IPhotoActions {
     ) {
         this.connectionAction.subscribe(EWSAction.NEW_PHOTO, this.onNewPhoto);
         this.connectionAction.subscribe(EWSAction.RATING_UPDATE, this.onRatingUpdate);
+        this.connectionAction.subscribe(EWSAction.PATCH_PHOTO, this.onPatchPhoto);
+        this.connectionAction.subscribe(EWSAction.DELETE_PHOTO, this.onDeletePhoto);
     }
 
     loadPhotos = () => {
@@ -58,6 +64,7 @@ export class PhotoActions implements IPhotoActions {
 
     uploadPhoto = (title: string, description: string, file: File): Promise<void> => {
         return new Promise((resolve, reject) => {
+            // can upload without reading into memory?
             const reader = new FileReader();
             reader.onerror = reject;
             reader.onload = ({ target }: any) => {
@@ -68,17 +75,11 @@ export class PhotoActions implements IPhotoActions {
                         title,
                         type: file.type,
                     };
-                    this.photoService.uploadPhoto(data)
-                        .then(result => {
-                            if (result.status === 200) {
-                                this.stopEditPhoto();
-                                this.commonStore.setModal(null);
-                                resolve();
-                            } else {
-                                return reject({ message: result.error });
-                            }
-                        })
+                    return resolve(
+                        this.photoService.uploadPhoto(data)
+                        .then(this.handleActionNullResult)
                         .catch(reject)
+                    );
                 } else {
                     return reject({ message: 'Could not upload the file' });
                 }
@@ -87,16 +88,53 @@ export class PhotoActions implements IPhotoActions {
         });
     }
 
+    patchPhoto = (title: string, description: string, iid: string): Promise<void> => {
+        return this.photoService.patchPhoto({
+            description,
+            iid,
+            title
+        })
+        .then(this.handleActionNullResult)
+        .catch(() => {
+            throw { message: 'Could not edit' }
+        });
+    };
+
+    deletePhoto = (iid: string): Promise<void> => {
+        return this.photoService.deletePhoto(iid)
+        .then(this.handleActionNullResult)
+        .catch(() => {
+            throw { message: 'Could not edit' }
+        });
+    }
+
     changeRating = this.photoService.chageRating;
+
+    private handleActionNullResult = (result: IResponseContainer<null>) => {
+        if (result.status === 200) {
+            this.stopEditPhoto();
+            this.commonStore.setModal(null);
+        } else {
+            throw { message: result.error };
+        }
+    };
 
     private onNewPhoto = (photo: IPhoto) => {
         this.photoStore.addPhoto(photo);
-    }
+    };
 
     private onRatingUpdate = (rating: IRating) => {
         const { user } = this.userStore;
         if (user) {
             this.photoStore.updateRating(user, rating);
         }
+    };
+
+    private onPatchPhoto = (photo: IPhoto) => {
+        this.photoStore.patchPhoto(photo);
+    }
+
+    private onDeletePhoto = (iid: string) => {
+        this.photoStore.deletePhoto(iid);
     }
 }

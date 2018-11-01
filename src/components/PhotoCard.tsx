@@ -46,10 +46,16 @@ const btnGroupStyle = {
 const actionItemStyle = {
     display: 'flex',
     alignItems: 'center',
+    cursor: 'pointer',
+};
+
+const nameWrapperStyle = {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'center',
 };
 
 const ratingWrapperStyle = {
-    flexGrow: 1,
     margingRight: '0.5rem',
     display: 'flex',
     alignItems: 'center',
@@ -58,12 +64,21 @@ const ratingWrapperStyle = {
 
 interface IPhotoCardProps {
     deps: IDeps;
+    edit: (photo: IPhoto) => void;
     photo: IPhoto;
     showComments: boolean;
 }
 
 
 export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
+    edit = () => {
+        const {
+            edit,
+            photo,
+        } = this.props;
+        edit(photo);
+    }
+
     handleRatingChange = (newRating: number) => {
         const {
             deps: {
@@ -91,9 +106,19 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                 views,
                 averageRating,
                 userRating,
+                uploadedBy: {
+                    name,
+                    uid,
+                },
             },
             showComments,
         } = this.props;
+        const {
+            userStore: {
+                user,
+            },
+        } = deps;
+        const isCreator = user && user.uid === uid;
 
         return (
             <div style={cardStyle}>
@@ -115,15 +140,23 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                                 {commentCount}
                             </span>
                         </div>
-                        <div style={actionItemStyle}>
-                            <EditIcon size={1.5} />
-                        </div>
+                        {isCreator && (
+                            <div
+                                onClick={this.edit}
+                                style={actionItemStyle}
+                            >
+                                <EditIcon size={1.5} />
+                            </div>
+                        )}
                         <div style={{ ...actionItemStyle, marginLeft: '0.5rem' }}>
                             <EyeIcon size={1.5} />
                             <span style={{ marginLeft: '0.5rem' }}>
                                 {views}
                             </span>
                         </div>
+                    </div>
+                    <div style={nameWrapperStyle}>
+                        Published: {name}
                     </div>
                     <div style={ratingWrapperStyle}>
                         <Rating
