@@ -96,19 +96,18 @@ export class PhotoStore implements IPhotoStore {
     updateRating(user: IUser, rating: IRating) {
         const {
             averageRating,
-            count,
             iid,
             value,
-            uid,
         } = rating;
         for (let i = 0; i < this.photos.length; i++) {
             const photo = this.photos[i];
             if (photo.iid === iid) {
                 let newPhoto: IPhoto = {
                     ...photo,
-                    userRating: value,
                     averageRating,
-                    commentCount: count,
+                };
+                if (user.uid === rating.uid) {
+                    newPhoto.userRating = value;
                 };
                 this.photos[i] = newPhoto;
                 break;
