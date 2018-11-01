@@ -51,8 +51,8 @@ const actionItemStyle = {
 
 const nameWrapperStyle = {
     display: 'flex',
-    flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    padding: '1rem',
 };
 
 const ratingWrapperStyle = {
@@ -110,6 +110,8 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                     name,
                     uid,
                 },
+                uploaded,
+                changed,
             },
             showComments,
         } = this.props;
@@ -155,9 +157,6 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                             </span>
                         </div>
                     </div>
-                    <div style={nameWrapperStyle}>
-                        Published: {name}
-                    </div>
                     <div style={ratingWrapperStyle}>
                         <Rating
                             onRatingChange={this.handleRatingChange}
@@ -165,6 +164,11 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                             average={averageRating}
                         />
                     </div>
+                </div>
+                <div style={nameWrapperStyle}>
+                    {`Published by ${name} at ${(new Date(uploaded)).toLocaleString()}.`
+                        + (changed ? ` Changed at ${(new Date(changed)).toLocaleString()}.` : '')
+                    }
                 </div>
                 {showComments && <CommentList
                     deps={deps}
