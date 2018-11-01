@@ -2,22 +2,27 @@ import {IResponseContainer} from '../types';
 
 // superagent does not want to work with parcel :(
 
-export interface IHttpInfo {
-    body?: any;
+export interface IHttpHeaders {
     headers?: {
         [key: string]: string;
     };
 }
 
+export interface IHttpInfo extends IHttpHeaders {
+    body?: any;
+}
+
 export interface IHttp  {
-    get<T>(url: string): Promise<IResponseContainer<T | null>>;
+    get<T>(url: string, headers?: IHttpHeaders): Promise<IResponseContainer<T | null>>;
 
     post<T>(url: string, info?: IHttpInfo): Promise<IResponseContainer<T | null>>;
 
-    delete(url: string): Promise<IResponseContainer<null>>;
+    patch<T>(url: string, info?: IHttpInfo): Promise<IResponseContainer<T | null>>;
+
+    delete(url: string, headers?: IHttpHeaders): Promise<IResponseContainer<null>>;
 }
 
-type THttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type THttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export class Http implements IHttp {
     createRequest<T>(method: THttpMethod, url: string, info: IHttpInfo = {})
@@ -81,15 +86,19 @@ export class Http implements IHttp {
         });
     }
 
-    get<T>(url: string) {
-        return this.createRequest<T>('GET', url);
+    get<T>(url: string, info?: IHttpHeaders) {
+        return this.createRequest<T>('GET', url, info);
     }
 
     post<T>(url: string, info?: IHttpInfo) {
         return this.createRequest<T>('POST', url, info);
     }
 
-    delete(url: string) {
-        return this.createRequest<null>('DELETE', url);
+    patch<T>(url: string, info?: IHttpInfo) {
+        return this.createRequest<T>('PATCH', url, info);
+    }
+
+    delete(url: string, info?: IHttpHeaders) {
+        return this.createRequest<null>('DELETE', url, info);
     }
 }

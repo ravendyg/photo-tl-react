@@ -48,6 +48,13 @@ export interface IPhoto {
     views: number;
 }
 
+export interface IPhotoPatch {
+    iid: string;
+    description: string;
+    title: string;
+    changed: number;
+}
+
 export interface ICommentAction {
 
 }

@@ -3,6 +3,7 @@ import {
     IPhoto,
     IUser,
     IRating,
+    IPhotoPatch,
 } from '../types';
 import { IPhotoService } from '../services/PhotoService';
 
@@ -13,11 +14,21 @@ export interface IPhotoStore {
     editedPhoto: IPhoto | null;
 
     startLoading: () => void;
+
     setPhotos: (data: IPhoto[]) => void;
+
     setError: (error: string) => void;
+
     stopLoading: () => void;
+
     setEdited: (editedPhoto: IPhoto | null) => void;
+
     addPhoto: (photo: IPhoto) => void;
+
+    patchPhoto: (patch: IPhotoPatch) => void;
+
+    deletePhoto: (iid: string) => void;
+
     updateRating: (user: IUser, rating: IRating) => void;
 }
 
@@ -55,6 +66,31 @@ export class PhotoStore implements IPhotoStore {
 
     addPhoto(photo: IPhoto) {
         this.photos.unshift(photo);
+    }
+
+    patchPhoto(patch: IPhotoPatch) {
+        for (let i = 0; i < this.photos.length; i++) {
+            const photo = this.photos[i];
+            if (patch.iid === photo.iid) {
+                this.photos[i] = {
+                    ...photo,
+                    ...patch
+                };
+                break;
+            }
+        }
+    }
+
+    deletePhoto(iid: string) {
+        let position = -1;
+        this.photos.forEach((item, index) => {
+            if (item.iid === iid) {
+                position = index;
+            }
+        });
+        if (position > -1) {
+            this.photos.splice(position, 1);
+        }
     }
 
     updateRating(user: IUser, rating: IRating) {

@@ -20,7 +20,7 @@ export class CommonStore implements ICommonStore {
         this.error = error;
     }
 
-    clearError() {
+clearError() {
         this.error = '';
     }
 
