@@ -45,13 +45,13 @@ export class StartIcon extends React.PureComponent<IStartIconProps, {}> {
         }
         const style = {
             cursor: clickable ? 'pointer' : 'initial',
+            width: `${size}rem`,
+            height: `${size}rem`,
         };
 
         return (
             <svg
                 viewBox='0 0 510 510'
-                width={`${size}rem`}
-                height={`${size}rem`}
                 x="0px"
                 y="0px"
                 style={style}

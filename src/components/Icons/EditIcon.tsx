@@ -7,12 +7,15 @@ interface IEditIconProps {
 export class EditIcon extends React.PureComponent<IEditIconProps, {}> {
     render() {
         const { size } = this.props;
+        const style = {
+            width: `${size}rem`,
+            height: `${size}rem`,
+        };
 
         return (
             <svg
                 viewBox='0 0 34 34'
-                width={`${size}rem`}
-                height={`${size}rem`}
+                style={style}
             >
                 <polygon points='15.888,24.656 6.976,28 10.316,19.085 ' />
                 <rect

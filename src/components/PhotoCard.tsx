@@ -165,7 +165,7 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                                 cursor: 'initial',
                             }}
                         >
-                            <EyeIcon size={1.5} />
+                            <EyeIcon size={2} />
                             <span style={{ marginLeft: '0.5rem' }}>
                                 {views}
                             </span>
