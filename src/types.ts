@@ -78,3 +78,8 @@ export interface IComment {
     date: string;
     text: string;
 }
+
+export interface IDeletedComment {
+    cid: string;
+    iid: string;
+}

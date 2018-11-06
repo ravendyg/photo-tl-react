@@ -8,6 +8,7 @@ export enum EWSAction {
     PATCH_PHOTO = 3,
     DELETE_PHOTO = 4,
     NEW_COMMENT = 5,
+    DELET_COMMENT = 6,
 }
 
 interface IWSContainer {

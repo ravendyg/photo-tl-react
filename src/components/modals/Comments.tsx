@@ -13,8 +13,9 @@ import {IDeps} from '../../types';
 import {Comment} from '../Comment';
 
 const modalBodyStyle = {
-    padding: '0 0.5rem',
+    padding: '0 1.5rem',
     minWidth: '400px',
+    maxWidth: '400px',
 };
 
 const addCommentBlockStyle = {
@@ -65,12 +66,7 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
     }
 
     handleClose = () => {
-        const {
-            deps: {
-                commentActions,
-            },
-        } = this.props;
-        commentActions.hideComments();
+        this.props.deps.commentActions.hideComments();
     }
 
     handleAdd = () => {
@@ -91,7 +87,7 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
     }
 
     handleDelete = (cid: string) => {
-        console.log(cid);
+        this.props.deps.commentActions.deleteComment(cid);
     }
 
     render() {
@@ -100,6 +96,9 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
             deps: {
                 commentStore: {
                     comments,
+                },
+                userStore: {
+                    user,
                 },
             }
         } = this.props;
@@ -112,6 +111,10 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
                 type: EBtnType.SECONDARY,
             },
         ];
+
+        if (!user) {
+            return null;
+        }
 
         return (
             <ModalWrapper onOverlayClick={this.handleClose}>
@@ -136,7 +139,12 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
                         </div>
                     </div>
                     <div>
-                        {comments.map(comment => <Comment key={comment.cid}  content={comment}/>)}
+                        {comments.map(comment => <Comment
+                            key={comment.cid}
+                            content={comment}
+                            onDelete={this.handleDelete}
+                            user={user}
+                        />)}
                     </div>
                 </div>
                 <ModalFooter actions={actions}/>

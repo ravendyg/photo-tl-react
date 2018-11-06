@@ -12,6 +12,8 @@ export interface ICommentService {
     addComment: (iid: string, text: string) => Promise<void>;
 
     getComments: (iid: string) => Promise<IResponseContainer<IComment[] | null>>;
+
+    deleteComment: (cid: string) => Promise<void>;
 }
 
 export class CommentService implements ICommentService {
@@ -30,4 +32,8 @@ export class CommentService implements ICommentService {
 
     getComments = (iid: string) =>
         this.request.get<IComment[]>(`${this.config.apiUrl}/comment/${iid}`);
+
+    deleteComment = (cid: string) =>
+        this.request.delete(`${this.config.apiUrl}/comment/${cid}`)
+        .then(() => {});
 }

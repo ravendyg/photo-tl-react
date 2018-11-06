@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 const headerStyle = {
-    padding: '0 0.5rem',
+    padding: '0 1.5rem',
 };;
 
 interface IModalHeaderProps {

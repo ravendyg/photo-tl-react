@@ -8,9 +8,14 @@ export interface ICommentStore {
     comments: IComment[];
 
     displayComments: (iid?: string) => void;
+
     setComments: (iid: string, data: IComment[]) => void;
+
     setError: (error: string) => void;
+
     addComment: (comment: IComment) => void;
+
+    deleteComment: (cid: string) => void;
 }
 
 export class CommentStore implements ICommentStore {
@@ -38,6 +43,18 @@ export class CommentStore implements ICommentStore {
     addComment(comment: IComment) {
         if (this.commentsDisplayedFor === comment.iid) {
             this.comments.unshift(comment);
+        }
+    }
+
+    deleteComment(cid: string) {
+        let position = -1;
+        this.comments.forEach((item, index) => {
+            if (item.cid === cid) {
+                position = index;
+            }
+        });
+        if (position > -1) {
+            this.comments.splice(position, 1);
         }
     }
 }

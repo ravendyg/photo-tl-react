@@ -5,6 +5,7 @@ import { IConnectionActions, EWSAction } from './ConnectionActions';
 import {
     IComment,
     IResponseContainer,
+    IDeletedComment,
 } from '../types';
 import { IPhotoStore } from '../store/photoStore';
 
@@ -16,6 +17,8 @@ export interface ICommentActions {
     addComment: (iid: string, text: string) => Promise<void>;
 
     getComments: (iid: string) => void;
+
+    deleteComment: (cid: string) => void;
 }
 
 export class CommentActions implements ICommentActions {
@@ -27,6 +30,7 @@ export class CommentActions implements ICommentActions {
         private photoStore: IPhotoStore,
     ) {
         this.connectionAction.subscribe(EWSAction.NEW_COMMENT, this.onNewComment);
+        this.connectionAction.subscribe(EWSAction.DELET_COMMENT, this.onDeleteComment);
     }
 
     showComments = (iid: string) => {
@@ -39,7 +43,8 @@ export class CommentActions implements ICommentActions {
         this.commonStore.setModal();
     }
 
-    addComment = this.commentService.addComment;
+    addComment = (iid: string, text: string) =>
+        this.commentService.addComment(iid, text);
 
     getComments = (iid: string) => {
         this.commentService.getComments(iid)
@@ -49,10 +54,18 @@ export class CommentActions implements ICommentActions {
                 this.commentStore.setComments(iid, payload ? payload : []);
             }
         });
-    }
+    };
+
+    deleteComment = (cid: string) =>
+        this.commentService.deleteComment(cid);
 
     private onNewComment = (comment: IComment) => {
         this.commentStore.addComment(comment);
         this.photoStore.addComment(comment);
-    }
+    };
+
+    private onDeleteComment = ({cid, iid}: IDeletedComment) => {
+        this.commentStore.deleteComment(cid);
+        this.photoStore.deleteComment(iid);
+    };
 }
