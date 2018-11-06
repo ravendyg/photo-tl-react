@@ -7,12 +7,15 @@ interface ICommentIconProps {
 export class CommentIcon extends React.PureComponent<ICommentIconProps, {}> {
     render() {
         const {size} = this.props;
+        const style = {
+            width: `${size}rem`,
+            height: `${size}rem`,
+        };
 
         return (
             <svg
                 viewBox='0 -256 1850 1850'
-                width={`${size}rem`}
-                height={`${size}rem`}
+                style={style}
             >
                 <g transform='matrix(1,0,0,-1,22.779661,1183.966)'>
                     <path

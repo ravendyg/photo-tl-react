@@ -1,7 +1,12 @@
 import { IPhotoService, IUploadFile } from '../services/PhotoService';
 import { IPhotoStore } from '../store/photoStore';
 import { ICommonStore } from '../store/commonStore';
-import { IPhoto, IRating, IResponseContainer } from '../types';
+import {
+    IPhoto,
+    IRating,
+    IResponseContainer,
+    IPhotoPatch,
+} from '../types';
 import { IConnectionActions, EWSAction } from './ConnectionActions';
 import { IUserStore } from '../store/userStore';
 
@@ -59,7 +64,7 @@ export class PhotoActions implements IPhotoActions {
 
     stopEditPhoto = () => {
         this.photoStore.setEdited(null);
-        this.commonStore.setModal(null);
+        this.commonStore.setModal();
     }
 
     uploadPhoto = (title: string, description: string, file: File): Promise<void> => {
@@ -113,7 +118,7 @@ export class PhotoActions implements IPhotoActions {
     private handleActionNullResult = (result: IResponseContainer<null>) => {
         if (result.status === 200) {
             this.stopEditPhoto();
-            this.commonStore.setModal(null);
+            this.commonStore.setModal();
         } else {
             throw { message: result.error };
         }
@@ -130,7 +135,7 @@ export class PhotoActions implements IPhotoActions {
         }
     };
 
-    private onPatchPhoto = (photo: IPhoto) => {
+    private onPatchPhoto = (photo: IPhotoPatch) => {
         this.photoStore.patchPhoto(photo);
     }
 

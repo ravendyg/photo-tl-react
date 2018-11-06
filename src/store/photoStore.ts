@@ -1,5 +1,6 @@
 import { observable } from 'mobx';
 import {
+    IComment,
     IPhoto,
     IUser,
     IRating,
@@ -30,6 +31,10 @@ export interface IPhotoStore {
     deletePhoto: (iid: string) => void;
 
     updateRating: (user: IUser, rating: IRating) => void;
+
+    addComment: (comment: IComment) => void;
+
+    deleteComment: (iid: string) => void;
 }
 
 export class PhotoStore implements IPhotoStore {
@@ -110,6 +115,37 @@ export class PhotoStore implements IPhotoStore {
                     newPhoto.userRating = value;
                 };
                 this.photos[i] = newPhoto;
+                break;
+            }
+        }
+    }
+
+    addComment(comment: IComment) {
+        for (let i = 0; i < this.photos.length; i++) {
+            const photo = this.photos[i];
+            if (photo.iid === comment.iid) {
+                const newPhoto = {
+                    ...photo,
+                    commentCount: photo.commentCount + 1,
+                }
+                this.photos[i] = newPhoto;
+                break;
+            }
+        }
+    }
+
+    deleteComment(iid: string) {
+        for (let i = 0; i < this.photos.length; i++) {
+            const photo = this.photos[i];
+            if (photo.iid === iid) {
+                if (photo.commentCount > 0) {
+                    const commentCount = photo.commentCount - 1;
+                    const newPhoto = {
+                        ...photo,
+                        commentCount,
+                    }
+                    this.photos[i] = newPhoto;
+                }
                 break;
             }
         }

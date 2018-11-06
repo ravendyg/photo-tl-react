@@ -21,14 +21,17 @@ const content = 'M16,9 C7,9 3,16 3,16 C3,16 7,23.000001 16,23 C25,22.999999 '
 export class EyeIcon extends React.PureComponent<IEditIconProps, {}> {
     render() {
         const { size } = this.props;
+        const style = {
+            width: `${size}rem`,
+            height: `${size}rem`,
+        };
 
         return (
             <svg
-                height={`${size}rem`}
                 viewBox={`0 0 34 34`}
-                width={`${size}rem`}
                 version='1.1'
                 fillRule='evenodd'
+                style={style}
             >
                 <g>
                     <path d={content} />

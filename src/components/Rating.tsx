@@ -2,7 +2,9 @@ import * as React from 'react';
 import {EStarFill, StartIcon} from './Icons/StarIcon';
 
 const ratingStyle = {
-
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
 };
 
 const arr = [1, 2, 3, 4, 5];

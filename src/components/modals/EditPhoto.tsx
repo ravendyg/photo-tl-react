@@ -10,7 +10,7 @@ import {IDeps} from '../../types';
 import {ImageLoader} from '../ImageLoader';
 
 const modalBodyStyle = {
-    padding: '0 0.5rem',
+    padding: '0 1.5rem',
     minWidth: '400px',
 };
 
