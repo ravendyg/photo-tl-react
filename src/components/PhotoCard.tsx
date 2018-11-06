@@ -159,7 +159,12 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                                 <EditIcon size={1.5} />
                             </div>
                         )}
-                        <div style={{ ...actionItemStyle, marginLeft: '0.5rem' }}>
+                        <div style={{
+                                ...actionItemStyle,
+                                marginLeft: '0.5rem',
+                                cursor: 'initial',
+                            }}
+                        >
                             <EyeIcon size={1.5} />
                             <span style={{ marginLeft: '0.5rem' }}>
                                 {views}

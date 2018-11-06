@@ -47,7 +47,7 @@ export interface IPhotoPatch {
     iid: string;
     description: string;
     title: string;
-    changed: number;
+    changed: string;
 }
 
 export interface IDeps {
@@ -74,6 +74,7 @@ export interface IComment {
     cid: string;
     iid: string;
     uid: string;
+    userName: string;
     date: string;
     text: string;
 }

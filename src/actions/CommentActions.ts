@@ -1,11 +1,21 @@
 import { ICommentStore } from '../store/commentStore';
 import { ICommentService } from '../services/CommentService';
 import { ICommonStore } from '../store/commonStore';
+import { IConnectionActions, EWSAction } from './ConnectionActions';
+import {
+    IComment,
+    IResponseContainer,
+} from '../types';
+import { IPhotoStore } from '../store/photoStore';
 
 export interface ICommentActions {
     showComments: (iid: string) => void;
 
     hideComments: () => void;
+
+    addComment: (iid: string, text: string) => Promise<void>;
+
+    getComments: (iid: string) => void;
 }
 
 export class CommentActions implements ICommentActions {
@@ -13,7 +23,10 @@ export class CommentActions implements ICommentActions {
         private commentStore: ICommentStore,
         private commonStore: ICommonStore,
         private commentService: ICommentService,
+        private connectionAction: IConnectionActions,
+        private photoStore: IPhotoStore,
     ) {
+        this.connectionAction.subscribe(EWSAction.NEW_COMMENT, this.onNewComment);
     }
 
     showComments = (iid: string) => {
@@ -26,21 +39,20 @@ export class CommentActions implements ICommentActions {
         this.commonStore.setModal();
     }
 
+    addComment = this.commentService.addComment;
+
     getComments = (iid: string) => {
-        console.log(iid);
-        // this.photoStore.startLoading();
-        // this.photoService.getPhotoList()
-        //     .then(photosWrapper => {
-        //         if (photosWrapper.status === 200) {
-        //             this.photoStore.setPhotos(photosWrapper.payload || []);
-        //         } else {
-        //             this.photoStore.setError(photosWrapper.error);
-        //         }
-        //     })
-        //     .catch(err => {
-        //         this.photoStore.stopLoading();
-        //         this.commonStore.setError(err);
-        //     });
+        this.commentService.getComments(iid)
+        .then((commentsContainer: IResponseContainer<IComment[] | null>) => {
+            const { payload, status, } = commentsContainer;
+            if (status === 200) {
+                this.commentStore.setComments(iid, payload ? payload : []);
+            }
+        });
     }
 
+    private onNewComment = (comment: IComment) => {
+        this.commentStore.addComment(comment);
+        this.photoStore.addComment(comment);
+    }
 }

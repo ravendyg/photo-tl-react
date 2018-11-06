@@ -45,11 +45,15 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
         super(props);
         const {
             deps: {
-                photoStore: {
-                    editedPhoto,
+                commentActions,
+                commentStore: {
+                    commentsDisplayedFor,
                 },
             }
         } = this.props;
+        if (commentsDisplayedFor) {
+            commentActions.getComments(commentsDisplayedFor);
+        }
 
         this.state = {
             text: '',
@@ -71,28 +75,19 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
 
     handleAdd = () => {
         const { text } = this.state;
+        const {
+            deps: {
+                commentActions,
+                commentStore: {
+                    commentsDisplayedFor,
+                },
+            },
+        } = this.props;
 
-        console.log(text);
-        // const {
-        //     deps: {
-        //         photoActions,
-        //     },
-        // } = this.props;
-        // const {
-        //     description,
-        //     file,
-        //     title,
-        // } = this.state;
-        // if (description && file && title) {
-        //     this.setState({ uploading: true });
-        //     photoActions.uploadPhoto(title, description, file)
-        //     .catch(err => {
-        //         this.setState({
-        //             error: err.message,
-        //             uploading: false,
-        //         });
-        //     });
-        // }
+        if (commentsDisplayedFor && text) {
+            commentActions.addComment(commentsDisplayedFor, text);
+            this.handleChangeText('');
+        }
     }
 
     handleDelete = (cid: string) => {
@@ -103,8 +98,8 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
         const { text } = this.state;
         const {
             deps: {
-                photoStore: {
-                    editedPhoto,
+                commentStore: {
+                    comments,
                 },
             }
         } = this.props;
@@ -139,6 +134,9 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
                                 size={EBtnSize.SMALL}
                             />
                         </div>
+                    </div>
+                    <div>
+                        {comments.map(comment => <Comment key={comment.cid}  content={comment}/>)}
                     </div>
                 </div>
                 <ModalFooter actions={actions}/>

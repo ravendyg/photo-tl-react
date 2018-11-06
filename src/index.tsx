@@ -43,16 +43,18 @@ const photoStore = new PhotoStore();
 const connectionStore = new ConnectionStore();
 const commentStore = new CommentStore();
 
-const commentActions = new CommentActions(
-    commentStore,
-    commonStore,
-    commentService,
-);
-const commonActions = new CommonActions(commonStore);
 const connectionActions = new ConnectionActions(
     connectionStore,
     webSocketService,
 );
+const commentActions = new CommentActions(
+    commentStore,
+    commonStore,
+    commentService,
+    connectionActions,
+    photoStore,
+);
+const commonActions = new CommonActions(commonStore);
 const photoActions = new PhotoActions(
     connectionActions,
     commonStore,
