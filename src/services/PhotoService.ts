@@ -7,9 +7,8 @@ import {
     IResponseContainer,
     IPhoto,
     IConfig,
-    IRating,
 } from '../types';
-import {IAuthService} from './AuthService';
+import { IAuthService } from './AuthService';
 
 export interface IUploadFile {
     body: string;
@@ -64,21 +63,33 @@ export class PhotoService implements IPhotoService {
             },
             body,
         };
-        return this.request.post(`${this.config.apiUrl}/photo`, info);
+        return this.authService.callWithAuth(
+            this.request.post,
+            `${this.config.apiUrl}/photo`,
+            info,
+        );
     }
 
     patchPhoto = (data: IPatchPhoto) => {
         const info: IHttpInfo = {
             headers: data as any,
         };
-        return this.request.patch(`${this.config.apiUrl}/photo`, info);
+        return this.authService.callWithAuth(
+            this.request.patch,
+            `${this.config.apiUrl}/photo`,
+            info,
+        );
     }
 
     deletePhoto = (iid: string) => {
         const info: IHttpHeaders = {
             headers: { iid },
         };
-        return this.request.delete(`${this.config.apiUrl}/photo`, info);
+        return this.authService.callWithAuth(
+            this.request.delete,
+            `${this.config.apiUrl}/photo`,
+            info,
+        );
     }
 
     chageRating = (iid: string, rating: number) => {
@@ -88,6 +99,10 @@ export class PhotoService implements IPhotoService {
                 rating,
             },
         };
-        return this.request.post(`${this.config.apiUrl}/photo/rating`, info);
+        return this.authService.callWithAuth(
+            this.request.post,
+            `${this.config.apiUrl}/photo/rating`,
+            info,
+        );
     }
 }

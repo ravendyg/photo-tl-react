@@ -35,7 +35,7 @@ const config = createConfig(serverType);
 const http = new Http();
 const authService = new AuthService(localStorage);
 const photoService = new PhotoService(http, config, authService);
-const commentService = new CommentService(http, config);
+const commentService = new CommentService(http, config, authService);
 const userService = new UserService(authService, http, config);
 const webSocketService = new WebSocketService(config.apiUrl, http);
 

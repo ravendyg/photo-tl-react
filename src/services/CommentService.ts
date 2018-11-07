@@ -7,6 +7,7 @@ import {
     IComment,
     IConfig,
 } from '../types';
+import { IAuthService } from './AuthService';
 
 export interface ICommentService {
     addComment: (iid: string, text: string) => Promise<void>;
@@ -17,7 +18,11 @@ export interface ICommentService {
 }
 
 export class CommentService implements ICommentService {
-    constructor (private request: IHttp, private config: IConfig) { }
+    constructor (
+        private request: IHttp,
+        private config: IConfig,
+        private authService: IAuthService,
+    ) { }
 
     addComment = (iid: string, text: string): Promise<void> => {
         const info: IHttpInfo = {
@@ -26,14 +31,24 @@ export class CommentService implements ICommentService {
                 text,
             },
         };
-        return this.request.post(`${this.config.apiUrl}/comment`, info)
+        return this.authService.callWithAuth(
+            this.request.post,
+            `${this.config.apiUrl}/comment`,
+            info,
+        )
         .then(() => {});
     };
 
     getComments = (iid: string) =>
-        this.request.get(`${this.config.apiUrl}/comment/${iid}`);
+        this.authService.callWithAuth(
+            this.request.get,
+            `${this.config.apiUrl}/comment/${iid}`,
+        );
 
     deleteComment = (cid: string) =>
-        this.request.delete(`${this.config.apiUrl}/comment/${cid}`)
+        this.authService.callWithAuth(
+            this.request.delete,
+            `${this.config.apiUrl}/comment/${cid}`,
+        )
         .then(() => {});
 }

@@ -88,19 +88,15 @@ export class Http implements IHttp {
         });
     };
 
-    get = (url: string, info?: IHttpHeaders) => {
-        return this.createRequest('GET', url, info);
-    }
+    get = (url: string, info?: IHttpHeaders) =>
+        this.createRequest('GET', url, info);
 
-    post(url: string, info?: IHttpInfo) {
-        return this.createRequest('POST', url, info);
-    }
+    post = (url: string, info?: IHttpInfo) =>
+        this.createRequest('POST', url, info);
 
-    patch(url: string, info?: IHttpInfo) {
-        return this.createRequest('PATCH', url, info);
-    }
+    patch = (url: string, info?: IHttpInfo) =>
+        this.createRequest('PATCH', url, info);
 
-    delete(url: string, info?: IHttpHeaders) {
-        return this.createRequest('DELETE', url, info);
-    }
+    delete = (url: string, info?: IHttpHeaders) =>
+        this.createRequest('DELETE', url, info);
 }
