@@ -33,13 +33,13 @@ location.search
 
 const config = createConfig(serverType);
 const http = new Http();
-const authService = new AuthService(localStorage);
+const userStore = new UserStore();
+const authService = new AuthService(localStorage, userStore);
 const photoService = new PhotoService(http, config, authService);
 const commentService = new CommentService(http, config, authService);
 const userService = new UserService(authService, http, config);
 const webSocketService = new WebSocketService(config.apiUrl, http);
 
-const userStore = new UserStore();
 const commonStore = new CommonStore();
 const photoStore = new PhotoStore();
 const connectionStore = new ConnectionStore();

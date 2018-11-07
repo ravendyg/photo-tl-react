@@ -3,6 +3,7 @@ import {
     IResponseContainer,
     IUser,
 } from '../types';
+import { IUserStore } from '../store/userStore';
 
 export interface IAuthService {
     isAuthorized: () => boolean;
@@ -23,7 +24,7 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
     private token: string | null = null;
 
-    constructor(private storage: Storage) {
+    constructor(private storage: Storage, private userStore: IUserStore) {
         this.token = this.storage.getItem('token');
     }
 
@@ -44,12 +45,23 @@ export class AuthService implements IAuthService {
             }
             info.headers.token = this.token;
         }
-        return request(url, info);
+        return request(url, info)
+        .then((resp: IResponseContainer<any>) => {
+            if (resp && resp.status === 403) {
+                this.updateToken(null);
+                this.userStore.setUser(null);
+            }
+            return resp;
+        });
     };
 
-    updateToken = (token: string) => {
+    updateToken = (token: string | null) => {
         this.token = token;
-        this.storage.setItem('token', token);
+        if (token) {
+            this.storage.setItem('token', token);
+        } else {
+            this.storage.removeItem('token');
+        }
     }
 
     getUser = () => {
