@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "mkdir dist -p && cp assets dist/ -r",
+    "prepare": "mkdir dist && cp assets dist/ -r",
     "build": "parcel src/index.html",
     "build:prod": "./node_modules/.bin/webpack --env=prod"
   },

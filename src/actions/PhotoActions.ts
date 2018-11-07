@@ -24,6 +24,8 @@ export interface IPhotoActions {
     deletePhoto: (iid: string) => Promise<void>;
 
     changeRating: (iid: string, rating: number) => void;
+
+    registerView: (iid: string) => void;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -38,6 +40,7 @@ export class PhotoActions implements IPhotoActions {
         this.connectionAction.subscribe(EWSAction.RATING_UPDATE, this.onRatingUpdate);
         this.connectionAction.subscribe(EWSAction.PATCH_PHOTO, this.onPatchPhoto);
         this.connectionAction.subscribe(EWSAction.DELETE_PHOTO, this.onDeletePhoto);
+        this.connectionAction.subscribe(EWSAction.ADD_VIEW, this.onViewPhoto);
     }
 
     loadPhotos = () => {
@@ -115,6 +118,20 @@ export class PhotoActions implements IPhotoActions {
 
     changeRating = this.photoService.chageRating;
 
+    registerView = (iid: string) => {
+        const { photos } = this.photoStore;
+        const { user } = this.userStore;
+
+        for (let photo of photos) {
+            if (photo.iid === iid
+                && user && user.uid !== photo.uploadedBy.uid
+            ) {
+                this.photoService.registerView(iid);
+                break;
+            }
+        }
+    };
+
     private handleActionNullResult = (result: IResponseContainer<null>) => {
         if (result.status === 200) {
             this.stopEditPhoto();
@@ -137,9 +154,13 @@ export class PhotoActions implements IPhotoActions {
 
     private onPatchPhoto = (photo: IPhotoPatch) => {
         this.photoStore.patchPhoto(photo);
-    }
+    };
 
     private onDeletePhoto = (iid: string) => {
         this.photoStore.deletePhoto(iid);
-    }
+    };
+
+    private onViewPhoto = (iid: string) => {
+        this.photoStore.viewPhoto(iid);
+    };
 }

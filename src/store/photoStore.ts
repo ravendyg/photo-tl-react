@@ -35,6 +35,8 @@ export interface IPhotoStore {
     addComment: (comment: IComment) => void;
 
     deleteComment: (iid: string) => void;
+
+    viewPhoto: (iid: string) => void;
 }
 
 export class PhotoStore implements IPhotoStore {
@@ -146,6 +148,20 @@ export class PhotoStore implements IPhotoStore {
                     }
                     this.photos[i] = newPhoto;
                 }
+                break;
+            }
+        }
+    }
+
+    viewPhoto(iid: string) {
+        for (let i = 0; i < this.photos.length; i++) {
+            const photo = this.photos[i];
+            if (photo.iid === iid) {
+                const newPhoto: IPhoto = {
+                    ...photo,
+                    views: photo.views + 1,
+                }
+                this.photos[i] = newPhoto;
                 break;
             }
         }

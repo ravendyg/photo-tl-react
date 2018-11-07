@@ -1,6 +1,4 @@
 import {observable} from 'mobx';
-import {IWebSocketService} from '../services/WebSocketService';
-import {IUser} from '../types';
 
 export interface IConnectionStore {
     status: string;
