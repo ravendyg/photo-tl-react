@@ -26,12 +26,12 @@ export class CommentService implements ICommentService {
                 text,
             },
         };
-        return this.request.post<void>(`${this.config.apiUrl}/comment`, info)
+        return this.request.post(`${this.config.apiUrl}/comment`, info)
         .then(() => {});
     };
 
     getComments = (iid: string) =>
-        this.request.get<IComment[]>(`${this.config.apiUrl}/comment/${iid}`);
+        this.request.get(`${this.config.apiUrl}/comment/${iid}`);
 
     deleteComment = (cid: string) =>
         this.request.delete(`${this.config.apiUrl}/comment/${cid}`)
