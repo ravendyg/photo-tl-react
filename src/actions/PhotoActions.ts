@@ -40,6 +40,7 @@ export class PhotoActions implements IPhotoActions {
         this.connectionAction.subscribe(EWSAction.RATING_UPDATE, this.onRatingUpdate);
         this.connectionAction.subscribe(EWSAction.PATCH_PHOTO, this.onPatchPhoto);
         this.connectionAction.subscribe(EWSAction.DELETE_PHOTO, this.onDeletePhoto);
+        this.connectionAction.subscribe(EWSAction.ADD_VIEW, this.onViewPhoto);
     }
 
     loadPhotos = () => {
@@ -122,7 +123,9 @@ export class PhotoActions implements IPhotoActions {
         const { user } = this.userStore;
 
         for (let photo of photos) {
-            if (user && user.uid !== photo.uploadedBy.uid) {
+            if (photo.iid === iid
+                && user && user.uid !== photo.uploadedBy.uid
+            ) {
                 this.photoService.registerView(iid);
                 break;
             }
@@ -151,9 +154,13 @@ export class PhotoActions implements IPhotoActions {
 
     private onPatchPhoto = (photo: IPhotoPatch) => {
         this.photoStore.patchPhoto(photo);
-    }
+    };
 
     private onDeletePhoto = (iid: string) => {
         this.photoStore.deletePhoto(iid);
-    }
+    };
+
+    private onViewPhoto = (iid: string) => {
+        this.photoStore.viewPhoto(iid);
+    };
 }
