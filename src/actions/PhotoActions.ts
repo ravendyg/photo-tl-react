@@ -24,6 +24,8 @@ export interface IPhotoActions {
     deletePhoto: (iid: string) => Promise<void>;
 
     changeRating: (iid: string, rating: number) => void;
+
+    registerView: (iid: string) => void;
 }
 
 export class PhotoActions implements IPhotoActions {
@@ -114,6 +116,18 @@ export class PhotoActions implements IPhotoActions {
     }
 
     changeRating = this.photoService.chageRating;
+
+    registerView = (iid: string) => {
+        const { photos } = this.photoStore;
+        const { user } = this.userStore;
+
+        for (let photo of photos) {
+            if (user && user.uid !== photo.uploadedBy.uid) {
+                this.photoService.registerView(iid);
+                break;
+            }
+        }
+    };
 
     private handleActionNullResult = (result: IResponseContainer<null>) => {
         if (result.status === 200) {

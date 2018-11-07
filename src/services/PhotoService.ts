@@ -32,7 +32,9 @@ export interface IPhotoService {
 
     deletePhoto: (iid: string) => Promise<IResponseContainer<null>>;
 
-    chageRating: (iid: string, rating: number) => void;
+    chageRating: (iid: string, rating: number) => Promise<IResponseContainer<null>>;
+
+    registerView: (iid: string) => Promise<IResponseContainer<null>>;
 }
 
 export class PhotoService implements IPhotoService {
@@ -81,5 +83,12 @@ export class PhotoService implements IPhotoService {
             },
         };
         return this.request.post<null>(`${this.config.apiUrl}/photo/rating`, info);
+    }
+
+    registerView = (iid: string) => {
+        const info: IHttpInfo = {
+            body: { iid },
+        };
+        return this.request.post<null>(`${this.config.apiUrl}/photo/view`, info);
     }
 }

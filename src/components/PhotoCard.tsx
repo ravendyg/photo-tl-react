@@ -65,10 +65,19 @@ interface IPhotoCardProps {
     deps: IDeps;
     edit: (photo: IPhoto) => void;
     photo: IPhoto;
+    observer: IntersectionObserver | null;
 }
 
 
 export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
+    registerObserver = (ev: React.SyntheticEvent<HTMLImageElement>) => {
+        const { target } = ev;
+        const { observer } = this.props;
+        if (observer && target) {
+            observer.observe(target as HTMLImageElement);
+        }
+    }
+
     edit = () => {
         const {
             edit,
@@ -134,8 +143,10 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
         return (
             <div style={cardStyle}>
                 <img
+                    data-iid={iid}
                     src={`/users_data/images/${iid}.${extension}`}
                     style={imageStyle}
+                    onLoad={this.registerObserver}
                 />
                 <div style={titleStyle}>
                     {title}
