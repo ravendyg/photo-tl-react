@@ -8,7 +8,7 @@ import {IDeps} from './types';
 const pageStyleWrapper = {
     width: '100vw',
     height: '100vh',
-    overflow: 'auto',
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

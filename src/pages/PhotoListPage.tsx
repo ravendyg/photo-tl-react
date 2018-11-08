@@ -58,7 +58,7 @@ export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoLi
         });
     }
 
-    editPhoto = (photo: IPhoto) => this.props.deps.photoActions.editPhoto;
+    editPhoto = this.props.deps.photoActions.editPhoto;
 
     render() {
         const { deps } = this.props;
