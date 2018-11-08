@@ -112,6 +112,10 @@ export class PhotoService implements IPhotoService {
         const info: IHttpInfo = {
             body: { iid },
         };
-        return this.request.post<null>(`${this.config.apiUrl}/photo/view`, info);
+        return this.authService.callWithAuth(
+            this.request.post,
+            `${this.config.apiUrl}/photo/view`,
+            info,
+        );
     }
 }
