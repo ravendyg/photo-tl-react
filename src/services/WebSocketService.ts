@@ -68,7 +68,12 @@ export class WebSocketService implements IWebSocketService {
     }
 
     disconnect() {
-
+        if (this.socket) {
+            this.socket.close();
+        }
+        Object.keys(this.listeners).forEach(action => {
+            delete this.listeners[action];
+        });
     }
 
     subscribe<T>(action: string, cb: (payload: T) => void) {

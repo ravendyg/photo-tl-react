@@ -14,6 +14,7 @@ const signPageStyle = {
     justifyContent: 'center',
     maxWidth: '800px',
     minWidth: '400px',
+    margin: 'auto',
 }
 
 // TODO: move to form?

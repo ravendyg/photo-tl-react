@@ -41,7 +41,8 @@ export class UserService implements IUserService {
         .then(this.handlePostSIgn);
 
     signOut = () =>
-        this.request.delete(`${this.config.apiUrl}/session`);
+        // a placeholder if token deletion will be implemented
+        Promise.resolve() as Promise<any>;
 
     private handlePostSIgn = (resp: IResponseContainer<string | null>) => {
             const token = resp.payload;

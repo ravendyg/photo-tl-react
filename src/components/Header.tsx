@@ -71,6 +71,7 @@ const headerStyle = {
     flexDirection: 'row',
     maxWidth: '800px',
     minWidth: '400px',
+    margin: 'auto',
 };
 
 interface IHeaderProps {
