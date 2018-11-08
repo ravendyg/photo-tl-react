@@ -69,6 +69,7 @@ const userActions = new UserActions(
     connectionActions,
     userService,
     userStore,
+    authService,
 );
 
 const deps: IDeps = {

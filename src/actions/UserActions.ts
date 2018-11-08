@@ -1,8 +1,13 @@
-import {ISignArgs, IUser, IResponseContainer} from '../types';
-import {IUserStore} from '../store/userStore';
-import {IUserService} from '../services/UserService';
-import {ICommonStore} from '../store/commonStore';
-import {IConnectionActions} from './ConnectionActions';
+import {
+    ISignArgs,
+    IUser,
+    IResponseContainer,
+} from '../types';
+import { IUserStore } from '../store/userStore';
+import { IUserService } from '../services/UserService';
+import { ICommonStore } from '../store/commonStore';
+import { IConnectionActions } from './ConnectionActions';
+import { IAuthService } from '../services/AuthService';
 
 export interface IUserActions {
     init: () => void;
@@ -17,6 +22,7 @@ export class UserActions implements IUserActions {
         private connectionActions: IConnectionActions,
         private userService: IUserService,
         private userStore: IUserStore,
+        private authService: IAuthService,
     ) {}
 
     init = () => {
@@ -37,11 +43,10 @@ export class UserActions implements IUserActions {
 
     signOut = () => {
         this.userStore.startLoading()
+        this.connectionActions.disconnect();
+        this.userStore.setUser(null);
+        this.authService.dropAuth();
         return this.userService.signOut()
-            .then(() => {
-                this.connectionActions.disconnect();
-                this.userStore.setUser(null);
-            })
             .catch(err => {
                 this.commonStore.setError(err.message);
             })

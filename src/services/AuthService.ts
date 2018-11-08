@@ -31,6 +31,7 @@ export class AuthService implements IAuthService {
     isAuthorized = () => Boolean(this.token);
 
     dropAuth = () => {
+        this.storage.removeItem('token');
         this.token = null;
     };
 
