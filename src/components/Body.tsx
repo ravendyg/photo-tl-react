@@ -5,6 +5,10 @@ import {SignPage} from '../pages/SignPage';
 import {PholoListPage} from '../pages/PhotoListPage';
 import {IDeps} from '../types';
 
+const pageStyle = {
+    overflow: 'auto',
+};
+
 interface IBodyProps {
     deps: IDeps;
     header: JSX.Element;
@@ -23,10 +27,6 @@ export class Body extends React.Component<IBodyProps, {}> {
             commonStore,
             userStore,
         } = deps;
-        let pageStyle: any = {};
-        if (commonStore.modal) {
-            pageStyle.overflow = 'hidden';
-        }
 
         if (commonStore.error) {
             return <ErrorPage
