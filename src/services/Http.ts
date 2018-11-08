@@ -2,6 +2,8 @@ import {IResponseContainer} from '../types';
 
 // superagent does not want to work with parcel :(
 
+type TCreateRequest = (method: THttpMethod, url: string, info?: IHttpInfo) => Promise<IResponseContainer<any>>;
+
 export interface IHttpHeaders {
     headers?: {
         [key: string]: string;
@@ -13,11 +15,11 @@ export interface IHttpInfo extends IHttpHeaders {
 }
 
 export interface IHttp  {
-    get<T>(url: string, headers?: IHttpHeaders): Promise<IResponseContainer<T | null>>;
+    get(url: string, headers?: IHttpHeaders): Promise<IResponseContainer<any>>;
 
-    post<T>(url: string, info?: IHttpInfo): Promise<IResponseContainer<T | null>>;
+    post(url: string, info?: IHttpInfo): Promise<IResponseContainer<any>>;
 
-    patch<T>(url: string, info?: IHttpInfo): Promise<IResponseContainer<T | null>>;
+    patch(url: string, info?: IHttpInfo): Promise<IResponseContainer<any>>;
 
     delete(url: string, headers?: IHttpHeaders): Promise<IResponseContainer<null>>;
 }
@@ -25,8 +27,8 @@ export interface IHttp  {
 type THttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export class Http implements IHttp {
-    createRequest<T>(method: THttpMethod, url: string, info: IHttpInfo = {})
-        : Promise<IResponseContainer<T | null>> {
+    createRequest: TCreateRequest =
+        (method: THttpMethod, url: string, info: IHttpInfo = {}) => {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
 
@@ -39,7 +41,7 @@ export class Http implements IHttp {
                     });
                 }
                 try {
-                    const response = JSON.parse(request.responseText) as IResponseContainer<T>;
+                    const response = JSON.parse(request.responseText) as IResponseContainer<any>;
                     return resolve(response);
                 } catch (err) {
                     return resolve({
@@ -84,21 +86,17 @@ export class Http implements IHttp {
                 request.send();
             }
         });
-    }
+    };
 
-    get<T>(url: string, info?: IHttpHeaders) {
-        return this.createRequest<T>('GET', url, info);
-    }
+    get = (url: string, info?: IHttpHeaders) =>
+        this.createRequest('GET', url, info);
 
-    post<T>(url: string, info?: IHttpInfo) {
-        return this.createRequest<T>('POST', url, info);
-    }
+    post = (url: string, info?: IHttpInfo) =>
+        this.createRequest('POST', url, info);
 
-    patch<T>(url: string, info?: IHttpInfo) {
-        return this.createRequest<T>('PATCH', url, info);
-    }
+    patch = (url: string, info?: IHttpInfo) =>
+        this.createRequest('PATCH', url, info);
 
-    delete(url: string, info?: IHttpHeaders) {
-        return this.createRequest<null>('DELETE', url, info);
-    }
+    delete = (url: string, info?: IHttpHeaders) =>
+        this.createRequest('DELETE', url, info);
 }

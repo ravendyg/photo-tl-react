@@ -12,6 +12,7 @@ import { App } from './App';
 import { PhotoService } from './services/PhotoService';
 import { CommentService } from './services/CommentService';
 import { UserActions } from './actions/UserActions';
+import { AuthService } from './services/AuthService';
 import { IDeps } from './types';
 import { PhotoActions } from './actions/PhotoActions';
 import { ConnectionStore } from './store/connectionStore';
@@ -32,12 +33,13 @@ location.search
 
 const config = createConfig(serverType);
 const http = new Http();
-const photoService = new PhotoService(http, config);
-const commentService = new CommentService(http, config);
-const userService = new UserService(http, config);
+const userStore = new UserStore();
+const authService = new AuthService(localStorage, userStore);
+const photoService = new PhotoService(http, config, authService);
+const commentService = new CommentService(http, config, authService);
+const userService = new UserService(authService, http, config);
 const webSocketService = new WebSocketService(config.apiUrl, http);
 
-const userStore = new UserStore();
 const commonStore = new CommonStore();
 const photoStore = new PhotoStore();
 const connectionStore = new ConnectionStore();

@@ -20,14 +20,7 @@ interface IAppProps {
 
 export class App extends React.PureComponent<IAppProps, {}> {
     componentWillMount() {
-        const {
-            deps: {
-                photoStore,
-                userActions,
-                userStore,
-            },
-        } = this.props;
-        userActions.load();
+        this.props.deps.userActions.init();
     }
 
     render() {

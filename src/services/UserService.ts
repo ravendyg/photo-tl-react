@@ -1,9 +1,14 @@
-import {IUser, IResponseContainer} from '../types';
-import {IHttp} from './Http';
-import {IConfig, ISignArgs} from '../types';
+import { IHttp } from './Http';
+import {
+    IConfig,
+    IResponseContainer,
+    ISignArgs,
+    IUser,
+} from '../types';
+import { IAuthService } from './AuthService';
 
 export interface IUserService {
-    getUser: () => Promise<IResponseContainer<IUser | null>>;
+    getUser: () => IUser | null;
 
     signIn: (args: ISignArgs) => Promise<IResponseContainer<IUser | null>>;
 
@@ -14,19 +19,43 @@ export interface IUserService {
 
 export class UserService implements IUserService {
     constructor(
+        private authService: IAuthService,
         private request: IHttp,
         private config: IConfig,
     ) {}
 
     getUser = () =>
-        this.request.get<IUser>(`${this.config.apiUrl}/user`)
+        this.authService.getUser();
 
-    signIn = (body: ISignArgs) =>
-        this.request.post<IUser>(`${this.config.apiUrl}/session`, {body})
+    signIn = (signArgs: ISignArgs) =>
+        this.request.get(`${this.config.apiUrl}/user`, {
+            headers:{
+                login: signArgs.login,
+                pas: signArgs.pas,
+            }
+        })
+        .then(this.handlePostSIgn);
 
     signUp = (body: ISignArgs) =>
-        this.request.post<IUser>(`${this.config.apiUrl}/user`, {body})
+        this.request.post(`${this.config.apiUrl}/user`, {body})
+        .then(this.handlePostSIgn);
 
     signOut = () =>
-        this.request.delete(`${this.config.apiUrl}/session`)
+        this.request.delete(`${this.config.apiUrl}/session`);
+
+    private handlePostSIgn = (resp: IResponseContainer<string | null>) => {
+            const token = resp.payload;
+            if (resp.status === 200 && token) {
+                this.authService.updateToken(token)
+                return {
+                    ...resp,
+                    payload: this.authService.getUser(),
+                };
+            } else {
+                return {
+                    ...resp,
+                    payload: null,
+                }
+            }
+        };
 }

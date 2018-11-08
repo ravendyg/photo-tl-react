@@ -5,7 +5,7 @@ import {ICommonStore} from '../store/commonStore';
 import {IConnectionActions} from './ConnectionActions';
 
 export interface IUserActions {
-    load: () => Promise<void>;
+    init: () => void;
     signIn: (args: ISignArgs) => Promise<void>;
     signUp: (args: ISignArgs) => Promise<void>;
     signOut: () => Promise<void>;
@@ -19,27 +19,12 @@ export class UserActions implements IUserActions {
         private userStore: IUserStore,
     ) {}
 
-    load = () => {
-        this.userStore.startLoading();
-        return this.userService.getUser()
-            .then(userContainer => {
-                if (userContainer.status === 200) {
-                    const user = userContainer.payload;
-                    if (user) {
-                        this.connectionActions.connect(user)
-                        this.userStore.setUser(user);
-                    } else {
-                        throw new Error('User is null');
-                    }
-                }
-                // don't handle errors
-            })
-            .catch(err => {
-                this.commonStore.setError(err.message);
-            })
-            .then(() => {
-                this.userStore.endLoading();
-            });
+    init = () => {
+        const maybeUser = this.userService.getUser();
+        if (maybeUser) {
+            this.userStore.setUser(maybeUser);
+            this.connectionActions.connect(maybeUser);
+        }
     }
 
     signIn = (args: ISignArgs) => {
@@ -77,7 +62,7 @@ export class UserActions implements IUserActions {
                     const user = userContainer.payload;
                     if (user) {
                         this.userStore.setUser(user);
-                        this.connectionActions.connect(user)
+                        this.connectionActions.connect(user);
                     } else {
                         throw new Error('User is null');
                     }
