@@ -17,6 +17,12 @@ const signPageStyle = {
     margin: 'auto',
 }
 
+const signFormStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+};
+
 // TODO: move to form?
 const btnWrapperStyle = {
     textAlign: 'center',
@@ -86,7 +92,7 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
 
         return (
             <div style={signPageStyle}>
-                <div>
+                <div style={signFormStyle}>
                     <FormItem
                         label='Login'
                         type={EInputType.TEXT}
