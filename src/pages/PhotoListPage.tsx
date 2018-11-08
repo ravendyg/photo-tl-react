@@ -18,6 +18,7 @@ const photoListPageStyle = {
     maxWidth: '800px',
     minWidth: '400px',
     width: '100%',
+    margin: 'auto',
 }
 
 interface IPhotoListPageProps {
