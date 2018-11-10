@@ -1,17 +1,18 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {ModalWrapper} from './ModalWrapper';
-import {FormItem} from '../FormItem';
-import {EInputType} from '../Input';
-import {EBtnType, Btn} from '../Btn';
-import {ModalHeader} from './ModalHeader';
-import {IFooterActionType, ModalFooter} from './ModalFooter';
-import {IDeps} from '../../types';
-import {ImageLoader} from '../ImageLoader';
+import { observer } from 'mobx-react';
+import { ModalWrapper } from './ModalWrapper';
+import { FormItem } from '../FormItem';
+import { EInputType } from '../Input';
+import { EBtnType, Btn } from '../Btn';
+import { ModalHeader } from './ModalHeader';
+import { IFooterActionType, ModalFooter } from './ModalFooter';
+import { IDeps } from '../../types';
+import { ImageLoader } from '../ImageLoader';
+import { styleConsts } from '../../styleContsts';
 
 const modalBodyStyle = {
     padding: '0 1.5rem',
-    minWidth: '400px',
+    minWidth: styleConsts.minWidth,
 };
 
 const deleteWrapperStyle = {
@@ -33,7 +34,7 @@ interface IEditPhotoModalState {
 
 @observer
 export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditPhotoModalState> {
-    constructor(props: IEditPhotoModalProps) {
+    constructor (props: IEditPhotoModalProps) {
         super(props);
         const {
             deps: {
@@ -87,12 +88,12 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
         if (description && file && title) {
             this.setState({ uploading: true });
             photoActions.uploadPhoto(title, description, file)
-            .catch(err => {
-                this.setState({
-                    error: err.message,
-                    uploading: false,
+                .catch(err => {
+                    this.setState({
+                        error: err.message,
+                        uploading: false,
+                    });
                 });
-            });
         }
     }
 
@@ -110,15 +111,15 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
             title,
         } = this.state;
         if (editedPhoto) {
-            const {iid} = editedPhoto;
+            const { iid } = editedPhoto;
             this.setState({ uploading: true });
             photoActions.patchPhoto(title, description, iid)
-            .catch(err => {
-                this.setState({
-                    error: err.message,
-                    uploading: false,
+                .catch(err => {
+                    this.setState({
+                        error: err.message,
+                        uploading: false,
+                    });
                 });
-            });
         }
     }
 
@@ -132,15 +133,15 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
             },
         } = this.props;
         if (editedPhoto) {
-            const {iid} = editedPhoto;
+            const { iid } = editedPhoto;
             this.setState({ uploading: true });
             photoActions.deletePhoto(iid)
-            .catch(err => {
-                this.setState({
-                    error: err.message,
-                    uploading: false,
+                .catch(err => {
+                    this.setState({
+                        error: err.message,
+                        uploading: false,
+                    });
                 });
-            });
         }
     }
 
@@ -176,7 +177,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
 
         return (
             <ModalWrapper onOverlayClick={this.handleCancel}>
-                <ModalHeader text={headerText}/>
+                <ModalHeader text={headerText} />
                 <div className="modal-body" style={modalBodyStyle}>
                     <FormItem
                         label='Title'
@@ -207,7 +208,7 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
                     )}
                     {error}
                 </div>
-                <ModalFooter actions={actions}/>
+                <ModalFooter actions={actions} />
             </ModalWrapper>
         );
     }

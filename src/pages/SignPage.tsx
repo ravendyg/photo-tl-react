@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {FormItem} from '../components/FormItem';
-import {Btn, EBtnType} from '../components/Btn';
-import {EInputType} from '../components/Input';
-import {pageStyle} from '../styles';
-import {observer} from 'mobx-react';
-import {ISignArgs, IDeps} from '../types';
+import { FormItem } from '../components/FormItem';
+import { Btn, EBtnType } from '../components/Btn';
+import { EInputType } from '../components/Input';
+import { pageStyle } from '../styles';
+import { observer } from 'mobx-react';
+import { ISignArgs, IDeps } from '../types';
+import { styleConsts } from '../styleContsts';
 
 const signPageStyle = {
     ...pageStyle,
@@ -13,7 +14,7 @@ const signPageStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     maxWidth: '800px',
-    minWidth: '400px',
+    minWidth: styleConsts.minWidth,
     margin: 'auto',
 }
 
@@ -34,7 +35,7 @@ interface ISignState {
 
 @observer
 export class SignPage extends React.Component<ISignPageProps, ISignState> {
-    constructor(props: ISignPageProps) {
+    constructor (props: ISignPageProps) {
         super(props);
         this.state = {
             login: '',
@@ -43,17 +44,17 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
     }
 
     changeLogin = (login: string) => {
-        this.setState({login});
+        this.setState({ login });
     }
 
     changePassword = (pas: string) => {
-        this.setState({pas});
+        this.setState({ pas });
     }
 
     sign = (action: (args: ISignArgs) => Promise<void>) => {
         // in case there will be more props in the state
-        const {login, pas,} = this.state;
-        action({login, pas,});
+        const { login, pas, } = this.state;
+        action({ login, pas, });
     }
 
     signIn = () => {
@@ -80,7 +81,7 @@ export class SignPage extends React.Component<ISignPageProps, ISignState> {
                 userStore,
             },
         } = this.props;
-        const {login, pas} = this.state;
+        const { login, pas } = this.state;
         const disabled = login.length < 2 || pas.length < 2;
         const error = userStore.error;
 

@@ -1,7 +1,12 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {Btn, EBtnType, EBtnSize} from './Btn';
-import {IDeps} from '../types';
+import { observer } from 'mobx-react';
+import {
+    Btn,
+    EBtnSize,
+    EBtnType,
+} from './Btn';
+import { IDeps } from '../types';
+import { styleConsts } from '../styleContsts';
 
 const filterPartStyle = {
     flexGrow: 1,
@@ -70,7 +75,7 @@ const headerStyle = {
     display: 'flex',
     flexDirection: 'row',
     maxWidth: '800px',
-    minWidth: '400px',
+    minWidth: styleConsts.minWidth,
     margin: 'auto',
 };
 
@@ -132,7 +137,7 @@ export class Header extends React.Component<IHeaderProps, {}> {
                     </div>
                     <div style={statusRowStyle}>
                         <span style={connectionIndicatorStyle}></span>
-                        <span style={{marginLeft: '1rem'}}>{connectionStore.statusMessage}</span>
+                        <span style={{ marginLeft: '1rem' }}>{connectionStore.statusMessage}</span>
                     </div>
                 </div>
                 <div style={signOutStyle}>
