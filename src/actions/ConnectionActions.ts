@@ -2,6 +2,19 @@ import { IConnectionStore } from '../store/connectionStore';
 import { IUser } from '../types';
 import { IWebSocketService } from '../services/WebSocketService';
 
+function defaultMapper(message: string | ArrayBuffer): IWSContainer | null {
+    if (typeof message === 'string') {
+        try {
+            return JSON.parse(message);
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
+    }
+    console.error('ArrayBuffer deserialisation is not implemented');
+    return null;
+}
+
 export enum EWSAction {
     NEW_PHOTO = 1,
     RATING_UPDATE = 2,
@@ -28,11 +41,14 @@ export class ConnectionActions implements IConnectionActions {
     private listeners: {
         [action: number]: ((data: any) => void)[],
     } = {};
+    private mapper: (message: string | ArrayBuffer) => IWSContainer | null;
 
     constructor (
         private connectionStore: IConnectionStore,
         private webSocketService: IWebSocketService,
-    ) { }
+    ) {
+        this.mapper = defaultMapper;
+    }
 
     connect(user: IUser) {
         if (this.connectionStore.status === 'disconnected') {
@@ -63,12 +79,15 @@ export class ConnectionActions implements IConnectionActions {
         this.connectionStore.setStatus('connected', 'Connected');
     }
 
-    private handleMessage = (message: IWSContainer) => {
+    private handleMessage = (message: string | ArrayBuffer) => {
+        const data = this.mapper(message);
+        if (data === null) {
+            return;
+        }
         const {
             action,
             payload,
-        } = message;
-        // TODO: implement ArrayBuffer deserialisation
+        } = data;
         const listeners = this.listeners[action];
         if (listeners) {
             listeners.forEach(listener => listener(payload));
