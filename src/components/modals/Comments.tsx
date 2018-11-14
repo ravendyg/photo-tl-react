@@ -1,20 +1,21 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {ModalWrapper} from './ModalWrapper';
-import {EInputType, Input} from '../Input';
+import { observer } from 'mobx-react';
+import { ModalWrapper } from './ModalWrapper';
+import { EInputType, Input } from '../Input';
 import {
     EBtnSize,
     EBtnType,
     Btn,
 } from '../Btn';
-import {ModalHeader} from './ModalHeader';
-import {IFooterActionType, ModalFooter} from './ModalFooter';
-import {IDeps} from '../../types';
-import {Comment} from '../Comment';
+import { ModalHeader } from './ModalHeader';
+import { IFooterActionType, ModalFooter } from './ModalFooter';
+import { IDeps } from '../../types';
+import { Comment } from '../Comment';
+import { styleConsts } from '../../styleContsts';
 
 const modalBodyStyle = {
     padding: '0 1.5rem',
-    minWidth: '400px',
+    minWidth: styleConsts.minWidth,
     maxWidth: '400px',
 };
 
@@ -42,7 +43,7 @@ interface ICommentsModalState {
 
 @observer
 export class CommentsModal extends React.Component<ICommentsModalProps, ICommentsModalState> {
-    constructor(props: ICommentsModalProps) {
+    constructor (props: ICommentsModalProps) {
         super(props);
         const {
             deps: {
@@ -118,7 +119,7 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
 
         return (
             <ModalWrapper onOverlayClick={this.handleClose}>
-                <ModalHeader text={headerText}/>
+                <ModalHeader text={headerText} />
                 <div className="modal-body" style={modalBodyStyle}>
                     <div style={addCommentBlockStyle}>
                         <div style={addInputWrapperStyle}>
@@ -147,7 +148,7 @@ export class CommentsModal extends React.Component<ICommentsModalProps, IComment
                         />)}
                     </div>
                 </div>
-                <ModalFooter actions={actions}/>
+                <ModalFooter actions={actions} />
             </ModalWrapper>
         );
     }

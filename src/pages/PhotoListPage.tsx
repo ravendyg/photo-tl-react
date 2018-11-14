@@ -2,7 +2,8 @@ import * as React from 'react';
 import { pageStyle } from '../styles';
 import { observer } from 'mobx-react';
 import { PhotoCard } from '../components/PhotoCard';
-import { IDeps, IPhoto } from '../types';
+import { IDeps } from '../types';
+import { styleConsts } from '../styleContsts';
 
 const observerOptions = {
     root: document.body,
@@ -16,7 +17,7 @@ const photoListPageStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     maxWidth: '800px',
-    minWidth: '400px',
+    minWidth: styleConsts.minWidth,
     width: '100%',
     margin: 'auto',
 }
@@ -31,9 +32,9 @@ interface IPhotoListPageState {
 @observer
 export class PholoListPage extends React.Component<IPhotoListPageProps, IPhotoListPageState> {
     private observer: IntersectionObserver | null;
-    private observedImages: {[iid: string]: boolean} = {};
+    private observedImages: { [iid: string]: boolean } = {};
 
-    constructor(props: IPhotoListPageProps) {
+    constructor (props: IPhotoListPageProps) {
         super(props);
         this.observer = IntersectionObserver
             && new IntersectionObserver(this.registerView, observerOptions)
