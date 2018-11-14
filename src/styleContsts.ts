@@ -1,3 +1,3 @@
 export const styleConsts = {
-    minWidth: '320px',
+    minWidth: '400px',
 };

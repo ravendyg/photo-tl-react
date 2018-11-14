@@ -16,23 +16,28 @@ export interface IAuthService {
         info?: IHttpInfo,
     ): Promise<IResponseContainer<any>>;
 
+    connectWithAuth: (connect: (token?: string) => void) => void;
+
     updateToken: (token: string) => void;
 
     getUser: () => IUser | null;
 }
 
 export class AuthService implements IAuthService {
-    private token: string | null = null;
+    private token?: string;
 
-    constructor(private storage: Storage, private userStore: IUserStore) {
-        this.token = this.storage.getItem('token');
+    constructor (private storage: Storage, private userStore: IUserStore) {
+        const token = this.storage.getItem('token');
+        if (token) {
+            this.token = token;
+        }
     }
 
     isAuthorized = () => Boolean(this.token);
 
     dropAuth = () => {
         this.storage.removeItem('token');
-        this.token = null;
+        delete this.token;
     };
 
     callWithAuth = (
@@ -47,18 +52,22 @@ export class AuthService implements IAuthService {
             info.headers.token = this.token;
         }
         return request(url, info)
-        .then((resp: IResponseContainer<any>) => {
-            if (resp && resp.status === 403) {
-                this.updateToken(null);
-                this.userStore.setUser(null);
-            }
-            return resp;
-        });
+            .then((resp: IResponseContainer<any>) => {
+                if (resp && resp.status === 403) {
+                    this.updateToken(null);
+                    this.userStore.setUser(null);
+                }
+                return resp;
+            });
+    };
+
+    connectWithAuth(connect: (token?: string) => void) {
+        connect(this.token);
     };
 
     updateToken = (token: string | null) => {
-        this.token = token;
         if (token) {
+            this.token = token;
             this.storage.setItem('token', token);
         } else {
             this.storage.removeItem('token');
@@ -73,7 +82,7 @@ export class AuthService implements IAuthService {
             const [_, payload] = this.token.split('.');
             const userStr = atob(payload);
             return JSON.parse(userStr);
-        } catch(err) {
+        } catch (err) {
             console.error(err);
             return null;
         }

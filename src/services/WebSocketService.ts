@@ -16,6 +16,7 @@ export interface IWebSocketService {
         handleConnect: () => void,
         handleMessage: (message: any) => void,
         handleError: (status: string, message: string) => void,
+        protocolStr?: string,
     ) => void;
 
     disconnect: () => void;
@@ -49,13 +50,19 @@ export class WebSocketService implements IWebSocketService {
     private handleMessage: ((message: any) => void) | null = null;
     private disconnectHandler: ((status: string, message: string) => void) | null = null;
 
+    private protocolStr?: string;
+
     constructor (private url: string, private http: IHttp) { }
 
     connect(
         handleConnect: () => void,
         handleMessage: (message: string | ArrayBuffer) => void,
         handleDisconnect: (status: string, msg: string) => void,
+        protocolStr?: string,
     ) {
+        if (protocolStr) {
+            this.protocolStr = protocolStr;
+        }
         this.reset(true);
         this.connectHandler = handleConnect;
         this.handleMessage = handleMessage;
@@ -113,7 +120,11 @@ export class WebSocketService implements IWebSocketService {
 
     private connectWs = () => {
         this.wsAttemptsLeft--;
-        this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`);
+        let args: string[] = [];
+        if (this.protocolStr) {
+            args.push(this.protocolStr);
+        }
+        this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`, ...args);
         this.socket.addEventListener('open', () => {
             this.transportType = 'ws';
             this.handleOpen();
@@ -126,7 +137,13 @@ export class WebSocketService implements IWebSocketService {
         this.lpAttemptsLeft--;
         this.transportType = 'lp';
         this.handleOpen();
-        this.http.get(`${this.url}/lp`)
+        let headers;
+        if (this.protocolStr) {
+            headers = { protocol: this.protocolStr };
+        } else {
+            headers = {};
+        }
+        this.http.get(`${this.url}/lp`, { headers })
             .then((res: IResponseContainer<string | ArrayBuffer>) => {
                 const { status, payload } = res;
                 if (status !== 200) {

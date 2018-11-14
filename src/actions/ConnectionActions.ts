@@ -31,7 +31,7 @@ interface IWSContainer {
 }
 
 export interface IConnectionActions {
-    connect: (user: IUser) => void;
+    connect: (protocolStr?: string) => void;
     disconnect: () => void;
     subscribe: (action: EWSAction, cb: (payload: any) => void) => () => void;
 }
@@ -50,22 +50,23 @@ export class ConnectionActions implements IConnectionActions {
         this.mapper = defaultMapper;
     }
 
-    connect(user: IUser) {
+    connect = (protocolStr?: string) => {
         if (this.connectionStore.status === 'disconnected') {
             this.connectionStore.setStatus('connecting', 'Connecting...');
             this.webSocketService.connect(
                 this.handleConnect,
                 this.handleMessage,
                 this.handleDisconnect,
+                protocolStr,
             );
         }
     }
 
-    disconnect() {
+    disconnect = () => {
         this.webSocketService.disconnect();
     }
 
-    subscribe(action: EWSAction, cb: (message: any) => void) {
+    subscribe = (action: EWSAction, cb: (message: any) => void) => {
         if (!this.listeners[action]) {
             this.listeners[action] = [];
         }
