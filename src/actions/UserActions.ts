@@ -17,19 +17,19 @@ export interface IUserActions {
 }
 
 export class UserActions implements IUserActions {
-    constructor(
+    constructor (
         private commonStore: ICommonStore,
         private connectionActions: IConnectionActions,
         private userService: IUserService,
         private userStore: IUserStore,
         private authService: IAuthService,
-    ) {}
+    ) { }
 
     init = () => {
         const maybeUser = this.userService.getUser();
         if (maybeUser) {
             this.userStore.setUser(maybeUser);
-            this.connectionActions.connect(maybeUser);
+            this.authService.connectWithAuth(this.connectionActions.connect);
         }
     }
 
@@ -67,7 +67,7 @@ export class UserActions implements IUserActions {
                     const user = userContainer.payload;
                     if (user) {
                         this.userStore.setUser(user);
-                        this.connectionActions.connect(user);
+                        this.authService.connectWithAuth(this.connectionActions.connect);
                     } else {
                         throw new Error('User is null');
                     }
