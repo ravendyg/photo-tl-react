@@ -139,7 +139,7 @@ export class WebSocketService implements IWebSocketService {
         this.handleOpen();
         let headers;
         if (this.protocolStr) {
-            headers = { protocol: this.protocolStr };
+            headers = { token: this.protocolStr };
         } else {
             headers = {};
         }

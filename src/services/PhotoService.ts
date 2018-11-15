@@ -114,7 +114,7 @@ export class PhotoService implements IPhotoService {
         };
         return this.authService.callWithAuth(
             this.request.post,
-            `${this.config.apiUrl}/photo/view`,
+            `${this.config.apiUrl}/view`,
             info,
         );
     }
