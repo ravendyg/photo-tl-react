@@ -103,7 +103,7 @@ export class PhotoService implements IPhotoService {
         };
         return this.authService.callWithAuth(
             this.request.post,
-            `${this.config.apiUrl}/photo/rating`,
+            `${this.config.apiUrl}/rating`,
             info,
         );
     }
