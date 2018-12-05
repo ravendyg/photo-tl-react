@@ -10,8 +10,8 @@ const ratingStyle = {
 const arr = [1, 2, 3, 4, 5];
 
 interface IRatingProps {
-    average: number;
-    rating: number;
+    average: string;
+    rating: string;
     onRatingChange: (newRating: number) => void;
 }
 
@@ -20,8 +20,13 @@ export class Rating extends React.PureComponent<IRatingProps, {}> {
 
     render() {
         const {average, rating} = this.props;
-        const floorRating = Math.floor(rating);
-        const ceilRating = Math.ceil(rating);
+        const numRating = +rating;
+        const floorRating = Math.floor(numRating);
+        const ceilRating = Math.ceil(numRating);
+        let averageStr = average;
+        if (average[2] === '0') {
+            averageStr = average[0];
+        }
 
         return (
             <div style={ratingStyle}>
@@ -42,7 +47,7 @@ export class Rating extends React.PureComponent<IRatingProps, {}> {
                         type={type}
                     />;
                 })}
-                <span>{`${rating || '--'} / ${average || '--'}`}</span>
+                <span>{`${rating || '--'} / ${averageStr || '--'}`}</span>
             </div>
         );
     }

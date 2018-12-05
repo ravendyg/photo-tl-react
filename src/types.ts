@@ -37,9 +37,8 @@ export interface IPhoto {
     uploaded: string;
     changed: string;
     commentCount: number;
-    averageRating: number;
-    ratingCount: number
-    userRating: number;
+    averageRating: string;
+    userRating: string;
     views: number;
 }
 
@@ -65,9 +64,8 @@ export interface IDeps {
 export interface IRating {
     uid: string;
     iid: string;
-    value: number;
-    count: number;
-    averageRating: number;
+    value: string;
+    averageRating: string;
 }
 
 export interface IComment {
