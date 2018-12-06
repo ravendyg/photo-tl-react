@@ -116,7 +116,13 @@ export class PhotoActions implements IPhotoActions {
         });
     }
 
-    changeRating = this.photoService.chageRating;
+    changeRating = (iid: string, rating: number) => {
+        const payload = {
+            iid,
+            rating,
+        };
+        this.connectionAction.send(EWSAction.RATING_UPDATE, payload);
+    }
 
     registerView = (iid: string) => {
         const { photos } = this.photoStore;

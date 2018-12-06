@@ -32,8 +32,6 @@ export interface IPhotoService {
 
     deletePhoto: (iid: string) => Promise<IResponseContainer<null>>;
 
-    chageRating: (iid: string, rating: number) => Promise<IResponseContainer<null>>;
-
     registerView: (iid: string) => Promise<IResponseContainer<null>>;
 }
 
@@ -90,20 +88,6 @@ export class PhotoService implements IPhotoService {
         return this.authService.callWithAuth(
             this.request.delete,
             `${this.config.apiUrl}/photo`,
-            info,
-        );
-    }
-
-    chageRating = (iid: string, rating: number) => {
-        const info: IHttpInfo = {
-            body: {
-                iid,
-                rating,
-            },
-        };
-        return this.authService.callWithAuth(
-            this.request.post,
-            `${this.config.apiUrl}/rating`,
             info,
         );
     }
