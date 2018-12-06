@@ -2,7 +2,7 @@ import { IConnectionStore } from '../store/connectionStore';
 import { IUser } from '../types';
 import { IWebSocketService } from '../services/WebSocketService';
 
-function defaultMapper(message: string | ArrayBuffer): IWSContainer | null {
+function defaultUnmarshaller(message: string | ArrayBuffer): IWSContainer | null {
     if (typeof message === 'string') {
         try {
             return JSON.parse(message);
@@ -15,14 +15,18 @@ function defaultMapper(message: string | ArrayBuffer): IWSContainer | null {
     return null;
 }
 
+function defaultMarshaller(message: IWSContainer) {
+    return JSON.stringify(message);
+}
+
 export enum EWSAction {
-    NEW_PHOTO = 1,
-    RATING_UPDATE = 2,
-    PATCH_PHOTO = 3,
-    DELETE_PHOTO = 4,
-    NEW_COMMENT = 5,
-    DELET_COMMENT = 6,
-    ADD_VIEW = 7,
+    NEW_PHOTO = 0,
+    RATING_UPDATE = 1,
+    PATCH_PHOTO = 2,
+    DELETE_PHOTO = 3,
+    NEW_COMMENT = 4,
+    DELET_COMMENT = 5,
+    ADD_VIEW = 6,
 }
 
 interface IWSContainer {
@@ -34,6 +38,7 @@ export interface IConnectionActions {
     connect: (protocolStr?: string) => void;
     disconnect: () => void;
     subscribe: (action: EWSAction, cb: (payload: any) => void) => () => void;
+    send: (action: EWSAction, payload: any) => void;
 }
 
 // service like actions, not sure what it should be
@@ -41,15 +46,18 @@ export class ConnectionActions implements IConnectionActions {
     private listeners: {
         [action: number]: ((data: any) => void)[],
     } = {};
-    private mapper: (message: string | ArrayBuffer) => IWSContainer | null;
+    private unpack: (message: string | ArrayBuffer) => IWSContainer | null;
+    private pack: (message: IWSContainer) => string | ArrayBuffer;
 
     constructor (
         private connectionStore: IConnectionStore,
         private webSocketService: IWebSocketService,
     ) {
-        this.mapper = defaultMapper;
+        this.unpack = defaultUnmarshaller;
+        this.pack = defaultMarshaller;
     }
 
+    // TODO: separate protocol and credentials
     connect = (protocolStr?: string) => {
         if (this.connectionStore.status === 'disconnected') {
             this.connectionStore.setStatus('connecting', 'Connecting...');
@@ -57,7 +65,7 @@ export class ConnectionActions implements IConnectionActions {
                 this.handleConnect,
                 this.handleMessage,
                 this.handleDisconnect,
-                protocolStr,
+                protocolStr || '',
             );
         }
     }
@@ -76,12 +84,21 @@ export class ConnectionActions implements IConnectionActions {
         }
     }
 
+    send = (action: EWSAction, payload: any) => {
+        const message = {
+            action,
+            payload,
+        };
+        const packet = this.pack(message);
+        this.webSocketService.sendMessage(packet);
+    }
+
     private handleConnect = () => {
         this.connectionStore.setStatus('connected', 'Connected');
     }
 
     private handleMessage = (message: string | ArrayBuffer) => {
-        const data = this.mapper(message);
+        const data = this.unpack(message);
         if (data === null) {
             return;
         }

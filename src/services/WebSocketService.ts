@@ -1,27 +1,23 @@
-import { IHttp } from './Http';
+import { IHttp, IHttpInfo } from './Http';
 import { IResponseContainer } from '../types';
-
-export interface ISocketMessage {
-    action: number
-    payload: any;
-};
 
 export type TAction = 'connect' | 'error' | 'disconnect' | 'message';
 
 type TTransport = 'ws' | 'lp';
 type TStatus = 'disconnected' | 'connected';
+type TMessage = string | ArrayBuffer;
 
 export interface IWebSocketService {
     connect: (
         handleConnect: () => void,
         handleMessage: (message: any) => void,
         handleError: (status: string, message: string) => void,
-        protocolStr?: string,
+        protocolStr: string,
     ) => void;
 
     disconnect: () => void;
 
-    sendMessage: (message: ISocketMessage) => void;
+    sendMessage: (message: TMessage) => void;
 
     subscribe: <T>(action: TAction, cb: (payload: T) => void) => () => void;
 }
@@ -43,14 +39,14 @@ export class WebSocketService implements IWebSocketService {
     private wsAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
     private lpAttemptsLeft: number = WebSocketService.RETRY_ATTEMPTS;
     private retryTimeout = -1;
-    private messageQueue: ISocketMessage[] = [];
+    private messageQueue: TMessage[] = [];
     private sendingOverHttp = false;
 
     private connectHandler: (() => void) | null = null;
     private handleMessage: ((message: any) => void) | null = null;
     private disconnectHandler: ((status: string, message: string) => void) | null = null;
 
-    private protocolStr?: string;
+    private protocolStr = '';
 
     constructor (private url: string, private http: IHttp) { }
 
@@ -94,13 +90,13 @@ export class WebSocketService implements IWebSocketService {
         };
     }
 
-    sendMessage(message: ISocketMessage) {
+    sendMessage = (message: TMessage) => {
         if (this.status !== 'connected') {
             this.messageQueue.push(message);
         } else if (this.transportType === 'ws') {
             // TODO: check this.socket.readyState === 1
             if (this.socket) {
-                this.socket.send(JSON.stringify(message));
+                this.socket.send(message);
             }
         } else {
             this.messageQueue.push(message);
@@ -143,8 +139,10 @@ export class WebSocketService implements IWebSocketService {
         } else {
             headers = {};
         }
+        this.status = 'connected';
         this.http.get(`${this.url}/lp`, { headers })
-            .then((res: IResponseContainer<string | ArrayBuffer>) => {
+            .then((res: IResponseContainer<TMessage>) => {
+                this.status = 'disconnected';
                 const { status, payload } = res;
                 if (status !== 200) {
                     this.handleDisconnect(res);
@@ -195,9 +193,17 @@ export class WebSocketService implements IWebSocketService {
         let message = 'Connecting...';
 
         if (this.wsAttemptsLeft > 0) {
-            this.retryTimeout = setTimeout(this.connectWs, WebSocketService.RETRY_AFTER) as any as number;
+            this.retryTimeout = setTimeout(() => {
+                this.connectWs();
+                this.startSendingOverWs();
+            }, WebSocketService.RETRY_AFTER) as any as number;
         } else if (this.lpAttemptsLeft > 0) {
-            this.retryTimeout = setTimeout(this.connectLp, WebSocketService.RETRY_AFTER) as any as number;
+            this.retryTimeout = setTimeout(() => {
+                this.connectLp();
+                if (!this.sendingOverHttp && this.messageQueue.length > 0) {
+                    this.startSendingOverHttp();
+                }
+            }, WebSocketService.RETRY_AFTER) as any as number;
         } else {
             status = 'disconnected';
             message = 'Cannot connect';
@@ -207,6 +213,10 @@ export class WebSocketService implements IWebSocketService {
         }
     }
 
+    private startSendingOverWs() {
+        // TODO: implement
+    }
+
     private startSendingOverHttp() {
         // https://github.com/parcel-bundler/parcel/issues/954
         let pm: Promise<any> = Promise.resolve();
@@ -214,8 +224,21 @@ export class WebSocketService implements IWebSocketService {
             while (this.messageQueue.length > 0) {
                 const message = this.messageQueue.shift();
                 this.sendingOverHttp = true;
+                const info: IHttpInfo = {
+                    headers: {
+                        token: this.protocolStr,
+                    },
+                    body: message,
+                };
+
                 pm = pm
-                    .then(() => this.http.post(`${this.url}/lp`, { body: message }))
+                    .then(() => this.http.post(`${this.url}/lp`, info))
+                    .then(() => {
+                        this.sendingOverHttp = false;
+                        if (this.messageQueue.length > 0) {
+                            this.startSendingOverHttp();
+                        }
+                    })
                     .catch(console.error);
             }
         }

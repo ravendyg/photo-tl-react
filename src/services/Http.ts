@@ -78,9 +78,11 @@ export class Http implements IHttp {
                         request.setRequestHeader('Content-Type', `${headers.type};charset=UTF-8`);
                         request.send(body);
                     }
-                } else {
+                } else if (typeof body === 'object') {
                     request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
                     request.send(JSON.stringify(body));
+                } else {
+                    request.send(body);
                 }
             } else {
                 request.send();
