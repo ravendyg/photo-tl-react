@@ -7,13 +7,16 @@ type TTransport = 'ws' | 'lp';
 type TStatus = 'disconnected' | 'connected';
 type TMessage = string | ArrayBuffer;
 
+interface IConnectWSOptions {
+    handleConnect: () => void;
+    handleMessage: (message: any) => void;
+    handleError: (status: string, message: string) => void;
+    token: string;
+    type?: 'json' | 'binary';
+}
+
 export interface IWebSocketService {
-    connect: (
-        handleConnect: () => void,
-        handleMessage: (message: any) => void,
-        handleError: (status: string, message: string) => void,
-        protocolStr: string,
-    ) => void;
+    connect: (options: IConnectWSOptions) => void;
 
     disconnect: () => void;
 
@@ -46,23 +49,26 @@ export class WebSocketService implements IWebSocketService {
     private handleMessage: ((message: any) => void) | null = null;
     private disconnectHandler: ((status: string, message: string) => void) | null = null;
 
-    private protocolStr = '';
+    private token = '';
+    private type = '';
 
     constructor (private url: string, private http: IHttp) { }
 
-    connect(
-        handleConnect: () => void,
-        handleMessage: (message: string | ArrayBuffer) => void,
-        handleDisconnect: (status: string, msg: string) => void,
-        protocolStr?: string,
-    ) {
-        if (protocolStr) {
-            this.protocolStr = protocolStr;
-        }
+    connect(options: IConnectWSOptions) {
+        const {
+            handleConnect,
+            handleMessage,
+            handleError,
+            token,
+            type = 'json',
+        } = options;
+        this.token = token;
+        this.type = type;
         this.reset(true);
         this.connectHandler = handleConnect;
         this.handleMessage = handleMessage;
-        this.disconnectHandler = handleDisconnect;
+        // TODO: names don't match - bad design. Fix.
+        this.disconnectHandler = handleError;
 
         if (this.status === 'disconnected') {
             this.reset(true);
@@ -117,8 +123,8 @@ export class WebSocketService implements IWebSocketService {
     private connectWs = () => {
         this.wsAttemptsLeft--;
         let args: string[] = [];
-        if (this.protocolStr) {
-            args.push(this.protocolStr);
+        if (this.token) {
+            args.push(this.token);
         }
         this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`, ...args);
         this.socket.addEventListener('open', () => {
@@ -134,8 +140,8 @@ export class WebSocketService implements IWebSocketService {
         this.transportType = 'lp';
         this.handleOpen();
         let headers;
-        if (this.protocolStr) {
-            headers = { token: this.protocolStr };
+        if (this.token) {
+            headers = { token: this.token };
         } else {
             headers = {};
         }
@@ -221,12 +227,19 @@ export class WebSocketService implements IWebSocketService {
         // https://github.com/parcel-bundler/parcel/issues/954
         let pm: Promise<any> = Promise.resolve();
         if (!this.sendingOverHttp) {
+            const {
+                token,
+                type,
+            } = this;
             while (this.messageQueue.length > 0) {
                 const message = this.messageQueue.shift();
                 this.sendingOverHttp = true;
                 const info: IHttpInfo = {
                     headers: {
-                        token: this.protocolStr,
+                        'Content-Type': type === 'json'
+                            ? 'application/json'
+                            : 'application/x-binary',
+                        token,
                     },
                     body: message,
                 };

@@ -14,7 +14,7 @@ export interface ICommentActions {
 
     hideComments: () => void;
 
-    addComment: (iid: string, text: string) => Promise<void>;
+    addComment: (iid: string, text: string) => void;
 
     getComments: (iid: string) => void;
 
@@ -30,7 +30,7 @@ export class CommentActions implements ICommentActions {
         private photoStore: IPhotoStore,
     ) {
         this.connectionAction.subscribe(EWSAction.NEW_COMMENT, this.onNewComment);
-        this.connectionAction.subscribe(EWSAction.DELET_COMMENT, this.onDeleteComment);
+        this.connectionAction.subscribe(EWSAction.DELETE_COMMENT, this.onDeleteComment);
     }
 
     showComments = (iid: string) => {
@@ -43,8 +43,10 @@ export class CommentActions implements ICommentActions {
         this.commonStore.setModal();
     }
 
-    addComment = (iid: string, text: string) =>
-        this.commentService.addComment(iid, text);
+    addComment = (iid: string, text: string) => {
+        const payload = { iid, text, };
+        this.connectionAction.send(EWSAction.NEW_COMMENT, payload);
+    }
 
     getComments = (iid: string) => {
         this.commentService.getComments(iid)
@@ -56,8 +58,10 @@ export class CommentActions implements ICommentActions {
         });
     };
 
-    deleteComment = (cid: string) =>
-        this.commentService.deleteComment(cid);
+    deleteComment = (cid: string) => {
+        const payload = { cid, };
+        this.connectionAction.send(EWSAction.DELETE_COMMENT, payload);
+    }
 
     private onNewComment = (comment: IComment) => {
         this.commentStore.addComment(comment);

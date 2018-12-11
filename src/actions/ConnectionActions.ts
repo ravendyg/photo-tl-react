@@ -25,7 +25,7 @@ export enum EWSAction {
     PATCH_PHOTO = 2,
     DELETE_PHOTO = 3,
     NEW_COMMENT = 4,
-    DELET_COMMENT = 5,
+    DELETE_COMMENT = 5,
     ADD_VIEW = 6,
 }
 
@@ -35,7 +35,7 @@ interface IWSContainer {
 }
 
 export interface IConnectionActions {
-    connect: (protocolStr?: string) => void;
+    connect: (token?: string) => void;
     disconnect: () => void;
     subscribe: (action: EWSAction, cb: (payload: any) => void) => () => void;
     send: (action: EWSAction, payload: any) => void;
@@ -57,16 +57,15 @@ export class ConnectionActions implements IConnectionActions {
         this.pack = defaultMarshaller;
     }
 
-    // TODO: separate protocol and credentials
-    connect = (protocolStr?: string) => {
+    connect = (token?: string) => {
         if (this.connectionStore.status === 'disconnected') {
             this.connectionStore.setStatus('connecting', 'Connecting...');
-            this.webSocketService.connect(
-                this.handleConnect,
-                this.handleMessage,
-                this.handleDisconnect,
-                protocolStr || '',
-            );
+            this.webSocketService.connect({
+                handleConnect: this.handleConnect,
+                handleMessage: this.handleMessage,
+                handleError: this.handleDisconnect,
+                token: token || '',
+            });
         }
     }
 
