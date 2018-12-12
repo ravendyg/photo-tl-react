@@ -84,3 +84,9 @@ export interface IDeletedComment {
     cid: string;
     iid: string;
 }
+
+
+export interface IViewReport {
+    iid: string;
+    uid: string;
+}

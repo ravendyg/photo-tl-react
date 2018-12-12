@@ -7,6 +7,7 @@ import {
     IResponseContainer,
     IPhotoPatch,
     IPhotoPatchRequest,
+    IViewReport,
 } from '../types';
 import { IConnectionActions, EWSAction } from './ConnectionActions';
 import { IUserStore } from '../store/userStore';
@@ -164,7 +165,7 @@ export class PhotoActions implements IPhotoActions {
         this.photoStore.deletePhoto(iid);
     };
 
-    private onViewPhoto = (iid: string) => {
-        this.photoStore.viewPhoto(iid);
+    private onViewPhoto = (view: IViewReport) => {
+        this.photoStore.viewPhoto(view.iid);
     };
 }
