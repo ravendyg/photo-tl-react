@@ -6,6 +6,7 @@ import {
     IRating,
     IResponseContainer,
     IPhotoPatch,
+    IPhotoPatchRequest,
 } from '../types';
 import { IConnectionActions, EWSAction } from './ConnectionActions';
 import { IUserStore } from '../store/userStore';
@@ -97,7 +98,7 @@ export class PhotoActions implements IPhotoActions {
     }
 
     patchPhoto = (title: string, description: string, iid: string) => {
-        const payload = {
+        const payload: IPhotoPatchRequest = {
             description,
             iid,
             title,
