@@ -96,7 +96,7 @@ export class PhotoCard extends React.PureComponent<IPhotoCardProps, {}> {
                 userRating,
             },
         } = this.props;
-        if (userRating !== newRating) {
+        if (+userRating !== newRating) {
             photoActions.changeRating(iid, newRating);
         };
     }

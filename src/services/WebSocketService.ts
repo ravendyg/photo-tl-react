@@ -72,7 +72,7 @@ export class WebSocketService implements IWebSocketService {
 
         if (this.status === 'disconnected') {
             this.reset(true);
-            this.connectWs();
+            this.connectLp();
         }
     }
 
@@ -122,11 +122,10 @@ export class WebSocketService implements IWebSocketService {
 
     private connectWs = () => {
         this.wsAttemptsLeft--;
-        let args: string[] = [];
-        if (this.token) {
-            args.push(this.token);
-        }
-        this.socket = new WebSocket(`${this.url.replace(/^http/, 'ws')}/ws`, ...args);
+        this.socket = new WebSocket(
+            `${this.url.replace(/^http/, 'ws')}/ws?token=${this.token}`,
+            this.type,
+        );
         this.socket.addEventListener('open', () => {
             this.transportType = 'ws';
             this.handleOpen();

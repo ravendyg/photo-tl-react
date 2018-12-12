@@ -19,9 +19,9 @@ export interface IPhotoActions {
 
     uploadPhoto: (title: string, description: string, file: File) => Promise<void>;
 
-    patchPhoto: (title: string, description: string, iid: string) => Promise<void>;
+    patchPhoto: (title: string, description: string, iid: string) => void;
 
-    deletePhoto: (iid: string) => Promise<void>;
+    deletePhoto: (iid: string) => void;
 
     changeRating: (iid: string, rating: number) => void;
 
@@ -96,24 +96,18 @@ export class PhotoActions implements IPhotoActions {
         });
     }
 
-    patchPhoto = (title: string, description: string, iid: string): Promise<void> => {
-        return this.photoService.patchPhoto({
+    patchPhoto = (title: string, description: string, iid: string) => {
+        const payload = {
             description,
             iid,
-            title
-        })
-        .then(this.handleActionNullResult)
-        .catch(() => {
-            throw { message: 'Could not edit' }
-        });
+            title,
+        };
+        this.connectionAction.send(EWSAction.PATCH_PHOTO, payload);
     };
 
-    deletePhoto = (iid: string): Promise<void> => {
-        return this.photoService.deletePhoto(iid)
-        .then(this.handleActionNullResult)
-        .catch(() => {
-            throw { message: 'Could not edit' }
-        });
+    deletePhoto = (iid: string) => {
+        const payload = { iid, };
+        this.connectionAction.send(EWSAction.DELETE_PHOTO, payload);
     }
 
     changeRating = (iid: string, rating: number) => {

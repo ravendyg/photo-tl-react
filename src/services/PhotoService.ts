@@ -28,10 +28,6 @@ export interface IPhotoService {
 
     uploadPhoto: (data: IUploadFile) => Promise<IResponseContainer<null>>;
 
-    patchPhoto: (data: IPatchPhoto) => Promise<IResponseContainer<null>>;
-
-    deletePhoto: (iid: string) => Promise<IResponseContainer<null>>;
-
     registerView: (iid: string) => Promise<IResponseContainer<null>>;
 }
 
@@ -65,28 +61,6 @@ export class PhotoService implements IPhotoService {
         };
         return this.authService.callWithAuth(
             this.request.post,
-            `${this.config.apiUrl}/photo`,
-            info,
-        );
-    }
-
-    patchPhoto = (data: IPatchPhoto) => {
-        const info: IHttpInfo = {
-            headers: data as any,
-        };
-        return this.authService.callWithAuth(
-            this.request.patch,
-            `${this.config.apiUrl}/photo`,
-            info,
-        );
-    }
-
-    deletePhoto = (iid: string) => {
-        const info: IHttpHeaders = {
-            headers: { iid },
-        };
-        return this.authService.callWithAuth(
-            this.request.delete,
             `${this.config.apiUrl}/photo`,
             info,
         );

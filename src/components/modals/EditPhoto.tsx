@@ -100,7 +100,10 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
     handleUpdate = () => {
         const {
             deps: {
-                photoActions,
+                photoActions: {
+                    patchPhoto,
+                    stopEditPhoto,
+                },
                 photoStore: {
                     editedPhoto,
                 },
@@ -112,21 +115,18 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
         } = this.state;
         if (editedPhoto) {
             const { iid } = editedPhoto;
-            this.setState({ uploading: true });
-            photoActions.patchPhoto(title, description, iid)
-                .catch(err => {
-                    this.setState({
-                        error: err.message,
-                        uploading: false,
-                    });
-                });
+            patchPhoto(title, description, iid);
+            stopEditPhoto();
         }
     }
 
     handleDelete = () => {
         const {
             deps: {
-                photoActions,
+                photoActions: {
+                    deletePhoto,
+                    stopEditPhoto,
+                },
                 photoStore: {
                     editedPhoto,
                 },
@@ -134,14 +134,8 @@ export class EditPhotoModal extends React.Component<IEditPhotoModalProps, IEditP
         } = this.props;
         if (editedPhoto) {
             const { iid } = editedPhoto;
-            this.setState({ uploading: true });
-            photoActions.deletePhoto(iid)
-                .catch(err => {
-                    this.setState({
-                        error: err.message,
-                        uploading: false,
-                    });
-                });
+            deletePhoto(iid);
+            stopEditPhoto();
         }
     }
 
