@@ -42,10 +42,13 @@ export interface IPhoto {
     views: number;
 }
 
-export interface IPhotoPatch {
+export interface IPhotoPatchRequest {
     iid: string;
     description: string;
     title: string;
+}
+
+export interface IPhotoPatch extends IPhotoPatchRequest {
     changed: string;
 }
 

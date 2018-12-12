@@ -127,7 +127,10 @@ export class PhotoActions implements IPhotoActions {
             if (photo.iid === iid
                 && user && user.uid !== photo.uploadedBy.uid
             ) {
-                this.photoService.registerView(iid);
+                const payload = {
+                    iid,
+                };
+                this.connectionAction.send(EWSAction.ADD_VIEW, payload);
                 break;
             }
         }
